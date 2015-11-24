@@ -201,6 +201,7 @@ export function compose (root, ...containers) {
     root = null;
   }
 
+  containers = [ ...containers ].map(createContainer);
   composed = createContainer(root || document.createElement('div'));
 
   // derive containers from arguments
@@ -220,6 +221,8 @@ export function compose (root, ...containers) {
     let composite = composed
     for (let child of containers)
       composite = composite.unpipe(child);
+    // remove this function
+    delete composed.decompose;
     return composed;
   };
 
@@ -765,6 +768,21 @@ export class Container {
       return extend(true, clone(state || {}), this.state);
     };
 
+    const pipedReducer = (_, action = {data: {}}) => {
+      const state = this.state;
+      const pipes = this[$pipes].entries();
+      void function next () {
+        const step = pipes.next();
+        const done = step.done;
+        const pipe = step.value ? step.value[1] : null;
+        if (done) return;
+        else if (null == pipe) next();
+        else if (false === pipe(state, action)) return;
+        else next();
+      }();
+      return state;
+    };
+
     /**
      * Container UID
      *
@@ -793,6 +811,15 @@ export class Container {
     this[$reducers] = new Set();
 
     /**
+     * Known container pipes.
+     *
+     * @private
+     * @type {Set}
+     */
+
+    this[$pipes] = new Map();
+
+    /**
      * View model.
      *
      * @private
@@ -817,16 +844,9 @@ export class Container {
      * @type {Object}
      */
 
-    this[$store] = createStore(combineReducers([ rootReducer, ...reducers ]));
-
-    /**
-     * Known container pipes.
-     *
-     * @private
-     * @type {Set}
-     */
-
-    this[$pipes] = new WeakMap();
+    this[$store] = createStore(combineReducers([ rootReducer,
+                                                 ...reducers,
+                                                 pipedReducer ]));
 
     this.replaceDOMElement(domElement);
     ensureContainerStateIdentifiers();
@@ -1156,7 +1176,6 @@ export class Container {
     };
 
     if (false == pipes.has(container)) {
-      this.use(middleware);
       pipes.set(container, middleware);
     }
 
@@ -1179,7 +1198,6 @@ export class Container {
     const middleware = pipes.get(container);
     if (middleware) {
       pipes.delete(container);
-      reducers.delete(middleware);
     }
     return container;
   }
