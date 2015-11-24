@@ -985,7 +985,7 @@ var Container = exports.Container = (function () {
           if (!isBody && identifiers) {
             var parser = new _starplate.Parser();
             var partial = new _starplate.Template(template);
-            var src = partial.render(_this.state);
+            var src = partial.render(_this.state, _this);
             var patch = parser.createPatch(src);
             patch(domElement);
           }
@@ -18179,6 +18179,8 @@ var Template = (function () {
      */
 
     value: function createPartial(string) {
+      var _this = this;
+
       if ('string' == typeof string) string = string.replace(RegExp('`', 'g', '\\`'));
 
       /**
@@ -18191,9 +18193,10 @@ var Template = (function () {
        * @return {String}
        */
 
-      return function (data) {
+      return function (data, scope) {
         data = ensureObject(data);
 
+        scope = scope || _this;
         var wrap = string;
         var header = Object.keys(data).filter(function (key) {
           return false == _view.helpers.has(key);
@@ -18234,9 +18237,9 @@ var Template = (function () {
 
         if ('function' != typeof wrap) wrap = new Function('data', '\'use strict\'; ' + header + ' return `' + string + '`');
 
-        var src = '\'use strict\'; return wrap(data);';
+        var src = '\'use strict\'; return wrap.call(this, data);';
         var fn = new Function('data', 'wrap', src);
-        return String(fn(data, wrap) || '');
+        return String(fn.call(scope, data, wrap) || '');
       };
     }
 
