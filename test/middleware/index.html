@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Stardux Middleware Tests</title>
+    <script type="text/javascript" charset="utf-8" src="/build/build.js"></script>
+  </head>
+  <body>
+    <section id="main">
+      <div id="vector">
+        <input type="text"
+               name="x"
+               value="${x}"
+               onchange="vector.update({x: this.value})"/>
+
+        <input type="text"
+               name="y"
+               value="${y}"
+               onchange="vector.update({y: this.value})"/>
+
+        <input type="text"
+               name="z"
+               value="${z}"
+               onchange="vector.update({z: this.value})"/>
+      </div>
+      <div id="vector-normalized">
+        <input type="text" name="x" value="${x}" readonly />
+        <input type="text" name="y" value="${y}" readonly />
+        <input type="text" name="z" value="${z}" readonly />
+      </div>
+    </section>
+    <script type="text/javascript" charset="utf-8" src="test.js"></script>
+  </body>
+</html>
+

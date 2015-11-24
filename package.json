@@ -1,0 +1,35 @@
+{
+  "name": "stardux",
+  "version": "0.0.1",
+  "description": "Functional DOM containers based on Starplate and Redux",
+  "main": "index.js",
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
+  },
+  "keywords": [
+    "functional",
+    "incremental",
+    "dom",
+    "starplate",
+    "redux",
+    "container",
+    "state"
+  ],
+  "author": "Joseph Werle <werle@littlstar.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.1.18",
+    "babel-preset-es2015": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "uglifyjs": "^2.4.10"
+  },
+  "dependencies": {
+    "domify": "^1.4.0",
+    "esprima": "^2.7.0",
+    "extend": "^3.0.0",
+    "redux": "^3.0.4",
+    "starplate": "0.0.21"
+  }
+}
