@@ -316,6 +316,7 @@ function compose(root) {
     root = null;
   }
 
+  containers = [].concat(_toConsumableArray(containers)).map(createContainer);
   composed = createContainer(root || document.createElement('div'));
 
   // derive containers from arguments
@@ -362,7 +363,7 @@ function compose(root) {
         var child = _step4.value;
 
         composite = composite.unpipe(child);
-      }
+      } // remove this function
     } catch (err) {
       _didIteratorError4 = true;
       _iteratorError4 = err;
@@ -378,6 +379,7 @@ function compose(root) {
       }
     }
 
+    delete composed.decompose;
     return composed;
   };
 
@@ -993,6 +995,20 @@ var Container = exports.Container = (function () {
       return (0, _extend2.default)(true, clone(state || {}), _this.state);
     };
 
+    var pipedReducer = function pipedReducer(_) {
+      var action = arguments.length <= 1 || arguments[1] === undefined ? { data: {} } : arguments[1];
+
+      var state = _this.state;
+      var pipes = _this[$pipes].entries();
+      void (function next() {
+        var step = pipes.next();
+        var done = step.done;
+        var pipe = step.value ? step.value[1] : null;
+        if (done) return;else if (null == pipe) next();else if (false === pipe(state, action)) return;else next();
+      })();
+      return state;
+    };
+
     /**
      * Container UID
      *
@@ -1021,6 +1037,15 @@ var Container = exports.Container = (function () {
     this[$reducers] = new Set();
 
     /**
+     * Known container pipes.
+     *
+     * @private
+     * @type {Set}
+     */
+
+    this[$pipes] = new Map();
+
+    /**
      * View model.
      *
      * @private
@@ -1045,16 +1070,7 @@ var Container = exports.Container = (function () {
      * @type {Object}
      */
 
-    this[$store] = (0, _redux.createStore)((0, _redux.combineReducers)([rootReducer].concat(reducers)));
-
-    /**
-     * Known container pipes.
-     *
-     * @private
-     * @type {Set}
-     */
-
-    this[$pipes] = new WeakMap();
+    this[$store] = (0, _redux.createStore)((0, _redux.combineReducers)([rootReducer].concat(reducers, [pipedReducer])));
 
     this.replaceDOMElement(domElement);
     ensureContainerStateIdentifiers();
@@ -1496,7 +1512,6 @@ var Container = exports.Container = (function () {
       };
 
       if (false == pipes.has(container)) {
-        this.use(middleware);
         pipes.set(container, middleware);
       }
 
@@ -1521,7 +1536,6 @@ var Container = exports.Container = (function () {
       var middleware = pipes.get(container);
       if (middleware) {
         pipes.delete(container);
-        reducers.delete(middleware);
       }
       return container;
     }
