@@ -758,7 +758,7 @@ export class Container {
           if (!isBody && identifiers) {
             const parser = new Parser();
             const partial = new Template(template);
-            const src = partial.render(this.state);
+            const src = partial.render(this.state, this);
             const patch = parser.createPatch(src);
             patch(domElement);
           }
