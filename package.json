@@ -30,6 +30,6 @@
     "esprima": "^2.7.0",
     "extend": "^3.0.0",
     "redux": "^3.0.4",
-    "starplate": "0.0.21"
+    "starplate": "0.0.22"
   }
 }
