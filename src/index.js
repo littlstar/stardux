@@ -89,8 +89,27 @@ const isArrayLike = a => {
  */
 
 const mkdux = (node, data = {}) => {
-  return node[STARDUX_PRIVATE_ATTR] = ( node[STARDUX_PRIVATE_ATTR] || data );
-}
+  if (node instanceof Container)
+    node = node.domElement;
+  node[STARDUX_PRIVATE_ATTR] = ( node[STARDUX_PRIVATE_ATTR] || data );
+  return node[STARDUX_PRIVATE_ATTR];
+};
+
+/**
+ * Remove stardux data object.
+ *
+ * @public
+ * @function
+ * @name rmdux
+ * @param {Object} node
+ */
+
+const rmdux = (node) => {
+  if (null == node) return;
+  if (node instanceof Container)
+    node = node.domElement;
+  delete node[STARDUX_PRIVATE_ATTR];
+};
 
 /**
  * UPDATE event type.
@@ -250,17 +269,18 @@ export function getContainerData (arg) {
   if (arg instanceof Container) {
     domElement = arg.domElement;
   } else if (arg instanceof Element) {
-    data = domElement[STARDUX_PRIVATE_ATTR];
+    domElement = arg;
   } else if ('string' == typeof arg) {
     container = Container.get(arg);
     domElement = container.domElement;
-    data = domElement[STARDUX_PRIVATE_ATTR];
   } else {
     throw new TypeError( "Unexpected input for getContainerData. "
                        + "Expecting an instance of a Container or Element, "
                        + "or a string." );
   }
 
+  if (domElement)
+    data = domElement[STARDUX_PRIVATE_ATTR];
   return data ? Object.freeze(data) : null;
 }
 
@@ -287,16 +307,12 @@ export function restoreOrphanedTree (container, recursive = false) {
 
   for (let child of [ ...children ]) {
     const childDomElement = child.domElement;
-    const parentElement = childDomElement.parentElement;
+
+    if (false == domElement.contains(childDomElement))
+      domElement.appendChild(childDomElement);
 
     if (recursive)
       restoreOrphanedTree(child, true);
-
-    if (null == parentElement)
-      continue;
-
-    if (domElement.contains(childDomElement))
-      domElement.appendChild(childDomElement);
   }
 }
 
@@ -524,6 +540,13 @@ export class Container {
    */
 
   static clear () {
+    for (let kv of [ ...CONTAINERS ]) {
+      const container = kv[1];
+      // remove stardux data
+      rmdux(container.domElement);
+    }
+
+    // clear containers
     CONTAINERS.clear();
   }
 
@@ -1057,7 +1080,7 @@ export class Container {
   replaceDOMElement (domElement) {
     const data = mkdux(this.domElement);
     if (domElement) {
-      mkdux(domElement[STARDUX_PRIVATE_ATTR], data);
+      mkdux(domElement, data);
       this[$domElement] = domElement;
       const sources = [];
       const childElements = [ ...domElement.children ];
@@ -1138,12 +1161,22 @@ export class Container {
     return this.domElement.textContent;
   }
 
+  /**
+   * Converts container to a JSON
+   * serializable object.
+   *
+   * @public
+   * @method
+   * @name toJSON
+   * @return {Object}
+   */
+
   toJSON () {
     const root = {};
     void function traverse (container, node) {
       node.id = container.id;
       node.src = Container.getTemplateFromDomElement(container.domElement);
-      node.state = JSON.stringify(node.state);
+      node.state = container.state || {};
       node.children = [];
       for (let child of container.children()) {
         const next = {};
@@ -1213,10 +1246,11 @@ export class Container {
    * @name appendChild
    * @param {Container|Element|Text|String} child
    * @param {Boolean} [update = true]
+   * @param {Boolean} [realign = true]
    * @return {Container}
    */
 
-  appendChild (child, update = true) {
+  appendChild (child, update = true, realign = true) {
     const domElement = this.domElement;
     let childDomElement = null;
     let container = null;
@@ -1246,7 +1280,8 @@ export class Container {
       this[$children].add(container);
     } catch (e) { console.warn(e) }
 
-    realignContainerTree(this);
+    if (realign)
+      realignContainerTree(this);
 
     return container;
   }
@@ -1262,10 +1297,11 @@ export class Container {
    * @name removeChild
    * @param {Container|Element} child
    * @param {Boolean} [update = true]
+   * @param {Boolean} [realign = true]
    * @return {Container}
    */
 
-  removeChild (child, update = true) {
+  removeChild (child, update = true, realign = true) {
     const domElement = this.domElement;
     let childDomElement = null;
     let container = null;
@@ -1285,7 +1321,8 @@ export class Container {
     if (domElement.contains(childDomElement))
       domElement.removeChild(childDomElement);
 
-    realignContainerTree(this);
+    if (realign)
+      realignContainerTree(this);
 
     return this;
   }
@@ -1298,11 +1335,12 @@ export class Container {
    * @method
    * @name contains
    * @param {Container|Element} container
+   * @param {Boolean} [realign = true]
    * @return {Boolean}
    */
 
-  contains (container) {
-    realignContainerTree(this);
+  contains (container, realign = true) {
+    if (false !== realign) realignContainerTree(this);
     if (container instanceof Element) {
       container = Container.get(container);
       if (null == container) return false;
