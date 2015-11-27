@@ -17,7 +17,7 @@ import domify from 'domify';
  */
 
 const $domElement = Symbol('Element');
-const $reducers = Symbol('reducers');
+const $middleware = Symbol('middleware');
 const $children = Symbol('children');
 const $UPDATE = Symbol('UPDATE');
 const $pipes = Symbol('pipes');
@@ -179,7 +179,7 @@ export function restoreContainerFromJSON (json, initialState = null, ...reducers
   for (let child of json.children)
     children.push(restoreContainerFromJSON(child, initialState));
 
-  realignContainerTree(container);
+  realignContainerTree(container, true, true);
 
   for (let child of children)
     if (false == container.contains(child))
@@ -339,8 +339,15 @@ export function realignContainerTree (container,
   if (true === forceOrphanRestoration)
     restoreOrphanedTree(container, recursive);
 
-  // clear existing
-  children.clear();
+  // purge child containers existing in tree where
+  // the DOM element is not a child of the container
+  // DOM element.
+  for (let child of [ ...children ]) {
+    const childElement = child.domElement;
+    if (false == domElement.contains(childElement)) {
+      children.delete(child);
+    }
+  }
 
   // traverse children
   for (let childElement of [ ...domElement.children ]) {
@@ -760,13 +767,13 @@ export class Container {
       const identifiers = ensureContainerStateIdentifiers();
       const domElement = this[$domElement];
       const template = Container.getTemplateFromDomElement(domElement);
-      const reducers = this[$reducers].entries();
+      const middleware = this[$middleware].entries();
       const isBody = domElement == document.body;
 
       action.data = action.data || {};
 
       void function next () {
-        const step = reducers.next();
+        const step = middleware.next();
         const done = step.done;
         const reducer = step.value ? step.value[0] : null;
         if (done) return;
@@ -825,13 +832,13 @@ export class Container {
     this[$domElement] = domElement;
 
     /**
-     * Reducers set.
+     * Middleware set.
      *
      * @private
      * @type {Set}
      */
 
-    this[$reducers] = new Set();
+    this[$middleware] = new Set();
 
     /**
      * Known container pipes.
@@ -874,6 +881,9 @@ export class Container {
     this.replaceDOMElement(domElement);
     ensureContainerStateIdentifiers();
     Container.save(this);
+
+    if (this.parent) realignContainerTree(this.parent, true, true);
+    else realignContainerTree(this, true, true);
   }
 
   /**
@@ -973,19 +983,19 @@ export class Container {
 
 
   /**
-   * Consume a reducer.
+   * Consume reducer middleware.
    *
    * @public
    * @method
    * @name use
-   * @param {Function} ...reducers
+   * @param {Function} ...plugins
    * @return {Container}
    */
 
-  use (...args) {
-    const reducers = this[$reducers];
-    for (let reducer of args)
-      reducers.add(reducer);
+  use (...plugins) {
+    const middleware = this[$middleware];
+    for (let plugin of plugins)
+      middleware.add(plugin);
     return this;
   }
 
@@ -1013,14 +1023,16 @@ export class Container {
     }
 
     // pre alignment
-    realignContainerTree(this);
+    realignContainerTree(this, true, true);
 
     // update
     this.dispatch($UPDATE, data, { propagate: propagate });
 
-    if (propagate)
-      for (let child of [ ...this.children() ])
-        child.update(data);
+    if (propagate) {
+      for (let child of [ ...this.children() ]) {
+        child.update(data || this.state);
+      }
+    }
 
     // post alignment
     realignContainerTree(this);
@@ -1227,7 +1239,7 @@ export class Container {
 
   unpipe (container) {
     const pipes = this[$pipes];
-    const reducers = this[$reducers];
+    const reducers = this[$middleware];
     const middleware = pipes.get(container);
     if (middleware) {
       pipes.delete(container);
@@ -1335,12 +1347,10 @@ export class Container {
    * @method
    * @name contains
    * @param {Container|Element} container
-   * @param {Boolean} [realign = true]
    * @return {Boolean}
    */
 
-  contains (container, realign = true) {
-    if (false !== realign) realignContainerTree(this);
+  contains (container) {
     if (container instanceof Element) {
       container = Container.get(container);
       if (null == container) return false;

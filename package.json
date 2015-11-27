@@ -20,9 +20,11 @@
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.1.18",
+    "babel-core": "^6.2.1",
     "babel-preset-es2015": "^6.1.18",
     "babelify": "^7.2.0",
     "browserify": "^12.0.1",
+    "mocha": "^2.3.4",
     "uglifyjs": "^2.4.10"
   },
   "dependencies": {
