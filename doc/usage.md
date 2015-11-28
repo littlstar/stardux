@@ -4,11 +4,12 @@ Getting Started
 * [Intro](#intro)
 * [Containers](#containers)
 * [Templating](#templating)
-* [Composition](#composition)
 * [Pipes](#pipes)
 * [Middleware](#middleware)
 * [Reducers](#reducers)
+* [Composition](#composition)
 * [Nesting](#nesting)
+* [Manipulation](#manipulation)
 * [JSON](#json)
 * [Advanced](#advanced)
 
@@ -78,10 +79,58 @@ container.update();
 console.log(date.innerHTML); // "Tue Nov 24 2015 08:41:00 GMT-0500 (EST)"
 ```
 
+## Pipes
+
+Container pipes, much like node streams provide a mechanism for data
+propagation. Containers consume updates, transform data with middleware,
+and reduce into state. This processes is repeated for each container in
+a pipeline.
+
+Here 3 containers are constructed into a pipeline `A -> B -> C`.
+
+```js
+containerA.pipe(containerB).pipe(containerC);
+```
+
+When an update occurs on `containerA`, is propagated to `containerB` and
+then to `containerC`. This is effectively the samething as
+[composition](#composition).
+
+## Middleware
+
+Middleware provides a way of tapping into the root reducer of a
+container and allows consumers to transform the current state and action
+objects in the reducer chain.
+
+They are installed with the `.use(fn)` method.
+
+```js
+container.use((state, action) => {
+  // middleware here ...
+});
+```
+
+## Reducers
+
+Reducers are constructed and passed to the `createContainer()` function
+or to the `Container` constructor.
+[Reducers](http://rackt.org/redux/docs/basics/Reducers.html) are passed
+directly to the internal [redux](https://github.com/rackt/redux) store.
+
+Middleware is always invoked before reducers.
+
+```js
+const container = new Container(domElement, (state, action) => {
+  // reducer here ...
+});
+```
+
 ## Composition
 
 Containers can be composed together for update propagation and data
-filtering.
+filtering. Container composition allows for powerful, flexible, and reusable
+container pipelines.
+
 
 ```js
 import { createContainer, compose } from 'stardux';
@@ -113,16 +162,93 @@ given.
 container object. Once called it is deleted with `delete
 composed.decompose`.
 
-Container composition allows for powerful, flexible, and reusable
-container pipelines.
+## Manipulation
 
-## Pipes
+Container manipulation is made possible by a similar API to that of the
+DOM. Methods like `appendChild()`, `removeChild()`, and `contains()` are
+available on call containers. They accept instances of a `Container` or
+a DOM element. When an insert or removal occurs the container and its
+children are realigned. DOM patches also occur to align DOM tree with
+container tree.
 
-## Middleware
+```js
+const container = new Container();
+const childA = new Container();
+const childB = new Container();
+const childAa = new Container();
+const childAb = new Container();
+const childBa = new Container();
+const childBb = new Container();
 
-## Reducers
+container.appendChild(childA);
+container.appendChild(childB);
+
+childA.appendChild(childAa);
+childA.appendChild(childAb);
+
+childB.appendChild(childBa);
+childB.appendChild(childBb);
+```
+
+We can check if a container is a descendant of another container with
+the `contains()` method.
+
+```js
+container.contains(childBb); // true
+```
+
+Passing `false` as a second argument forces the method to check only
+direct descendants of the container.
+
+```js
+container.contains(childBb, false); // false
+```
+
+Containers can be removed with the `removeChild()` method. Child DOM
+nodes are also removed.
+
+```js
+container.removeChild(childB);
+container.contains(childB); // false
+```
 
 ## Nesting
+
+Containers can be nested and still act independent of each other.
+Containers can propagate updates to their child containers. This makes
+updating multiple contains who share similar data easy.
+
+The following DOM structure yields a container with two child
+containers.
+
+```html
+<div class="parent">
+  <div class="a">${ value }</div>
+  <div class="b">${ value }</div>
+</div>
+```
+
+The containers can be implemented with the following Javascript.
+`childA` and `childB` are implicit children of `parent` and therefore do
+not need to explicitly added with `appendChild()`.
+
+```js
+const parent = createContainer(document.querySelector('.parent'));
+const childA = createContainer(document.querySelector('.a'));
+const childB = createContainer(document.querySelector('.b'));
+```
+
+Both `childA` and `childB` share the variable `value`. Updates to
+`parent` will propagate to `childA` and `childB`.
+
+```js
+parent.update({value: 'hello'});
+```
+
+This makes updates to many containers easy. However, `childA` and `childB`
+are still independent containers. Updates to `childA` are made possible
+by a simple call to `childA.update({value: 'world'})`. `childB` remains
+unchanged while `childA` has.
 
 ## JSON
 
