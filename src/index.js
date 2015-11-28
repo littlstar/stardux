@@ -336,7 +336,9 @@ export function realignContainerTree (container,
   if (null == domElement.children)
     return;
 
-  if (true === forceOrphanRestoration)
+  const delta = [ ...children ].length - domElement.children.length;
+
+  if (delta > 0 || true === forceOrphanRestoration)
     restoreOrphanedTree(container, recursive);
 
   // purge child containers existing in tree where
@@ -1090,17 +1092,29 @@ export class Container {
    */
 
   replaceDOMElement (domElement) {
+    const existingData = mkdux(domElement);
     const data = mkdux(this.domElement);
     if (domElement) {
       mkdux(domElement, data);
-      this[$domElement] = domElement;
+
       const sources = [];
       const childElements = [ ...domElement.children ];
+      const existingContainer = Container.get(existingData.id);
+
+      this[$uid] = existingData.id || data.id || this[$uid];
+      this[$domElement] = domElement;
+
+      this[$children].clear();
 
       for (let childElement of childElements)
         storeChildSource(childElement);
 
       this.update(null, false);
+
+      if (existingContainer) {
+        this[$children] = existingContainer[$children];
+        realignContainerTree(this, true, true);
+      }
 
       const stack = sources.slice();
       for (let childElement of [ ...domElement.children ])
@@ -1327,11 +1341,15 @@ export class Container {
                          + "Expeceting an instance of Container or Element." );
     }
 
+    childDomElement = container.domElement;
+
     if (update)
       this.update();
 
     if (domElement.contains(childDomElement))
       domElement.removeChild(childDomElement);
+
+    this[$children].delete(container);
 
     if (realign)
       realignContainerTree(this);
@@ -1347,15 +1365,22 @@ export class Container {
    * @method
    * @name contains
    * @param {Container|Element} container
+   * @param {Boolean} [recursive = true]
    * @return {Boolean}
    */
 
-  contains (container) {
+  contains (container, recursive = true) {
     if (container instanceof Element) {
       container = Container.get(container);
       if (null == container) return false;
-    } else if (container instanceof Container) {
-      if (this[$children].has(container)) return true;
+    }
+    if (this[$children].has(container)) return true;
+    else if (recursive) {
+      for (let child of this.children()) {
+        if (child.contains(container)) {
+          return true;
+        }
+      }
     }
     return false;
   }
