@@ -20,26 +20,26 @@ Stardux API Reference
 * [traverseContainer()](#traversecontainer)
 * [Container](#container)
   * [Members](#container-members)
-    * [.children](#container-children)
-    * [.domElement](#container-domelement)
-    * [.id](#container-id)
-    * [.innerContents](#container-innercontents)
-    * [.parent](#container-parent)
-    * [.state](#container-state)
+    * [.children](#containerchildren)
+    * [.domElement](#containerdomelement)
+    * [.id](#containerid)
+    * [.innerContents](#containerinnercontents)
+    * [.parent](#containerparent)
+    * [.state](#containerstate)
   * [Methods](#container-methods)
-    * [#appendChild()](#container-appendchild)
-    * [#contains()](#container-contains)
-    * [#dispatch()](#container-dispatch)
-    * [#pipe()](#container-pipe)
-    * [#removeChild()](#container-removechild)
-    * [#render()](#container-render)
-    * [#replaceChildren()](#container-replacechildren)
-    * [#toJSON()](#container-tojson)
-    * [#toString()](#container-tostring)
-    * [#unpipe()](#container-unpipe)
-    * [#update()](#container-update)
-    * [#use()](#container-use)
-    * [#valueOf()](#container-valueOf)
+    * [#appendChild()](#containerappendchild)
+    * [#contains()](#containercontains)
+    * [#dispatch()](#containerdispatch)
+    * [#pipe()](#containerpipe)
+    * [#removeChild()](#containerremovechild)
+    * [#render()](#containerrender)
+    * [#replaceChildren()](#containerreplacechildren)
+    * [#toJSON()](#containertojson)
+    * [#toString()](#containertostring)
+    * [#unpipe()](#containerunpipe)
+    * [#update()](#containerupdate)
+    * [#use()](#containeruse)
+    * [#valueOf()](#containervalueOf)
 
 ## createContainer
 
@@ -305,7 +305,7 @@ Replace child tree with new children.
 
 Converts container to a JSON serializable object.
 
-#### Converts#toString
+#### Container#toString
 
 ```js
 .toString(): String
@@ -313,7 +313,7 @@ Converts container to a JSON serializable object.
 
 Returns the string reprenstation of this container.
 
-#### Converts#unpipe
+#### Container#unpipe
 
 ```js
 .unpipe(container: Container): Container
