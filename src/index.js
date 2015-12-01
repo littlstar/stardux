@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  *
- * @private
+ * @ignore
  */
 
 import { combineReducers, createStore } from 'redux'
@@ -1231,7 +1231,7 @@ export class Container {
   }
 
   /**
-   * Getter to return container DOm element.
+   * Container DOM element.
    *
    * @public
    * @type {Element}
@@ -1245,6 +1245,7 @@ export class Container {
    * DOM element setter that basically just
    * calls replaceDOMElement(domElement).
    *
+   * @ignore
    * @public
    * @type {Element}
    */
@@ -1258,7 +1259,7 @@ export class Container {
   }
 
   /**
-   * Returns inner contents of the container.
+   * Internal contents of the container
    *
    * @public
    * @type {String}
@@ -1278,6 +1279,7 @@ export class Container {
    * string (''). undefined values result
    * in the string 'undefined'.
    *
+   * @ignore
    * @public
    * @type {String}
    */
@@ -1291,8 +1293,7 @@ export class Container {
   }
 
   /**
-   * Getter to return an array
-   * of child containers
+   * Child containers
    *
    * @public
    * @return {Array<Container>}

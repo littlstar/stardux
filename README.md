@@ -55,9 +55,8 @@ setInterval(_ => counter.update({elapsed: ++elapsed}), 1000);
 
 * [Getting Started](manual/usage.md)
 * [API](manual/api.md)
-* [Containers](manual/containers.md)
-* [Advanced](manual/advanced.md)
 * [Examples](manual/examples.md)
+* [FAQ](manual/faq.md)
 
 ## License
 
