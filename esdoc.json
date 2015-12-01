@@ -1,0 +1,9 @@
+{
+  "title": "Stardux",
+  "package": "./package.json",
+  "source": "./src",
+  "destination": "./esdoc",
+  "plugins": [
+    {"name": "esdoc-es7-plugin"}
+  ]
+}

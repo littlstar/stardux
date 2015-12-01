@@ -41,6 +41,10 @@ dist:
 	$(BROWSERIFY) --im -s $(STANDALONE) -t babelify lib/index.js -o $@/$(STANDALONE).js
 	$(UGLIFY) --compress --mangle --output $@/$(STANDALONE).min.js -- $@/$(STANDALONE).js
 
+.PHONY: doc
+doc: $(NODE_MODULES)
+	npm run doc
+
 clean:
 	$(RM) -rf lib/
 	$(RM) -rf components/

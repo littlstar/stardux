@@ -7,10 +7,21 @@
 const restoreContainerFromJSON = stardux.restoreContainerFromJSON;
 const realignContainerTree = stardux.realignContainerTree;
 const restoreOrphanedTree = stardux.restoreOrphanedTree;
+const createContainerUid = stardux.createContainerUid;
+const replaceDOMElement = stardux.replaceDOMElement;
+const composeContainers = stardux.composeContainers;
+const traverseContainer = stardux.traverseContainer;
+const forEachContainer = stardux.forEachContainer;
+const replaceContainer = stardux.replaceContainer;
 const getContainerData = stardux.getContainerData;
+const getAllContainers = stardux.getAllContainers;
 const createContainer = stardux.createContainer;
+const fetchContainer = stardux.fetchContainer;
+const removeContainer = stardux.removeContainer;
+const clearContainers = stardux.clearContainers;
+const makeContainer = stardux.makeContainer;
+const saveContainer = stardux.saveContainer;
 const Container = stardux.Container;
-const compose = stardux.compose;
 
 /**
  * Simple assert helper.
@@ -34,6 +45,11 @@ function assert (cond, message) {
 
 /**
  * Ensure function is called once.
+ * This is useful for wrapping the
+ * `done()` callback provided by `it()
+ * blocks. Mulitple calls to `done()`
+ * creates false failures to mocha's
+ * UI reporter.
  *
  * @public
  * @function
@@ -61,15 +77,15 @@ function once (fn) {
 
 afterEach(() => {
   // remove existing container tree
-  Container.clear();
+  clearContainers();
 });
 
 /**
  * Tests Container class.
  */
 
-describe('Container', () => {
-  describe('#constructor([domElement = null[, ...reducers]])', () => {
+describe('class Container { ... }', () => {
+  describe('#constructor([domElement = null, ...reducers]])', () => {
     it("Should create a container with a default DOM Element.", () => {
       const container = new Container();
       assert(container);
@@ -84,6 +100,7 @@ describe('Container', () => {
     });
 
     it("Should apply a given reducer.", done => {
+      done = once(done);
       const container = new Container(null, () => (done(), true));
     });
 
@@ -98,6 +115,121 @@ describe('Container', () => {
     });
   });
 
+  describe('.state', () => {
+    it("Should be an object.", () => {
+      const container = createContainer();
+      assert('object' == typeof container.state);
+    });
+
+    it("Should be a cloned object.", () => {
+      const container = createContainer();
+      const a = container.state;
+      const b = container.state;
+      assert('object' == typeof a);
+      assert('object' == typeof b);
+      assert(a != b);
+    });
+
+    it("Should be immutable.", () => {
+      const container = createContainer();
+      const value = {foo: 'bar'};
+      container.state = value;
+      assert(undefined === container.state.foo);
+    });
+  });
+
+  describe('.id', () => {
+    it("Should be a string.", () => {
+      const container = createContainer();
+      assert('string' == typeof container.id);
+    });
+
+    it("Should be immutable.", () => {
+      const container = createContainer();
+      const id = container.id;
+      container.id = '123';
+      assert(container.id == id);
+    });
+  });
+
+  describe('.parent', () => {
+    it("Should be null when container is an orphaned.", () => {
+      const container = createContainer();
+      assert(null == container.parent);
+    });
+
+    it("Should derive parent from parent DOM element.", () => {
+      const parent = createContainer();
+      const child = createContainer();
+      parent.appendChild(child);
+      assert(parent == child.parent);
+    });
+
+    it("Should derive parent from parent DOM element from existing DOM tree.", () => {
+      const tree = document.createElement('div');
+      tree.innerHTML = '<div><span></span></div>';
+      const container = createContainer(tree.children[0]); // div
+      const child = createContainer(tree.children[0].children[0]);
+      assert(container == child.parent);
+    });
+  });
+
+  describe('.domElement', () => {
+    it("Should be an instance of Element", () => {
+      const container = createContainer();
+      assert(container.domElement instanceof Element);
+    });
+
+    it("Should be mutable effectively replacing the container DOM element.", () => {
+      const container = createContainer();
+      const domElement = document.createElement('span');
+      domElement.innerHTML = 'hello ${name}';
+      container.domElement = domElement;
+      assert(domElement == container.domElement);
+      container.update({name: 'kinkajou'});
+      assert('hello kinkajou' == domElement.innerHTML);
+      assert('hello kinkajou' == container.domElement.innerHTML);
+    });
+
+    it("Should throw a TypeError when value set is not a DOM element.", done => {
+      const container = createContainer();
+      try {
+        container.domElement = 'foo';
+        throw new Error("Error not thrown.");
+      } catch (e) {
+        assert(e instanceof TypeError);
+        done();
+      }
+    });
+  });
+
+  describe('.innerContents', () => {
+    it("Should be a string.", () => {
+      const container = createContainer();
+      assert('string' == typeof container.innerContents);
+    });
+
+    it("Should be a string representation of the containers DOM element.", () => {
+      const container = createContainer();
+      container.domElement.innerHTML = 'hello';
+      assert('hello' == container.innerContents);
+    });
+  });
+
+  describe('.children', () => {
+    it("Should return an array of child containers.", () => {
+      const container = new Container();
+      const childA = new Container();
+      const childB = new Container();
+      container.appendChild(childA);
+      container.appendChild(childB);
+      const children = container.children;
+      assert(children);
+      assert(childA == children[0]);
+      assert(childB == children[1]);
+    });
+  });
+
   describe('#define(model)', () => {
     it("Should extend the container state object.", () => {
       const container = new Container();
@@ -106,22 +238,9 @@ describe('Container', () => {
     });
   });
 
-  describe('#children()', () => {
-    it("Should return an array of child containers.", () => {
-      const container = new Container();
-      const childA = new Container();
-      const childB = new Container();
-      container.appendChild(childA);
-      container.appendChild(childB);
-      const children = container.children();
-      assert(children);
-      assert(childA == children[0]);
-      assert(childB == children[1]);
-    });
-  });
-
   describe('#use(...plugins)', () => {
     it("Should install reducer middleware.", done => {
+      done = once(done);
       const container = new Container();
       container.use(() => done());
       container.update();
@@ -143,7 +262,7 @@ describe('Container', () => {
       container.appendChild(childA);
       container.appendChild(childB);
       childA.appendChild(childAA);
-      assert(childA.children().length)
+      assert(childA.children.length)
       container.update({value: 123});
       assert(123 == container.state.value);
       assert(123 == childA.state.value);
@@ -164,6 +283,7 @@ describe('Container', () => {
     });
 
     it("Should dispatch `stardux.UPDATE` event type in a reducer.", done => {
+      done = once(done);
       const container = new Container(null, (state, action) => {
         if (stardux.UPDATE == action.type) done();
         return {};
@@ -183,51 +303,13 @@ describe('Container', () => {
 
   describe('#dispatch(type[, data = {}, args = {}])', () =>  {
     it("Should dispatch any arbitrary event type and propagate to a reducer.", done => {
+      done = once(done);
       const type = Symbol('foo');
       const container = new Container(null, (state, action) => {
         if (type == action.type) done();
         return {};
       });
       container.dispatch(type);
-    });
-  });
-
-  describe('#replaceDOMElement(domElement)', () => {
-    it("Should replace the internal DOM element associated witht the container.", () => {
-      const domElement = document.createElement('div');
-      const container = new Container();
-      assert(container.domElement);
-      container.replaceDOMElement(domElement);
-      assert(domElement == container.domElement);
-    });
-
-    it("Should restore existing child containers in new DOM tree", () => {
-      const domElement = document.createElement('div');
-      const containerA = new Container(domElement);
-      const containerB = new Container();
-      const childA1 = new Container();
-      const childA2 = new Container();
-      const childB1 = new Container();
-      const childB2 = new Container();
-
-      containerA.appendChild(childA1);
-      containerA.appendChild(childA2);
-
-      assert(2 == containerA.children().length);
-
-      containerB.appendChild(childB1);
-      containerB.appendChild(childB2);
-
-      assert(2 == containerB.children().length);
-
-      containerA.replaceDOMElement(containerB.domElement);
-      assert(containerA.domElement == containerB.domElement);
-
-      assert(2 == containerA.children().length);
-      assert(2 == containerB.children().length);
-
-      assert(childB1 == containerA.children()[0]);
-      assert(childB2 == containerA.children()[1]);
     });
   });
 
@@ -262,7 +344,7 @@ describe('Container', () => {
   describe('#toString()', () => {
     it("Should return a text representation of the container contents.", () => {
       const container = new Container();
-      container.domElement.innerHTML = '${value}';
+      container.innerContents = '${value}';
       container.update({value: 'hello'});
       assert('hello' == String(container));
       container.update({value: 'kinkajou'});
@@ -273,7 +355,7 @@ describe('Container', () => {
   describe('#toJSON()', () => {
     it("Should return a JSON object representation.", () => {
       const container = new Container();
-      container.domElement.innerHTML = 'hello ${value}';
+      container.innerContents = 'hello ${value}';
       container.update({value: 'world'});
       const json = container.toJSON();
       assert('object' == typeof json);
@@ -286,6 +368,7 @@ describe('Container', () => {
 
   describe('#pipe(container)', () => {
     it("Should pipe update to another container.", done => {
+      done = once(done);
       const containerA = new Container();
       const containerB = new Container();
       containerA.pipe(containerB);
@@ -310,8 +393,8 @@ describe('Container', () => {
       const container = new Container();
       const child = new Container();
       container.appendChild(child);
-      assert(container.children()[0] == child);
-      assert(container.children()[0].domElement == child.domElement);
+      assert(container.children[0] == child);
+      assert(container.children[0].domElement == child.domElement);
     });
   });
 
@@ -320,10 +403,10 @@ describe('Container', () => {
       const container = new Container();
       const child = new Container();
       container.appendChild(child);
-      assert(container.children()[0] == child);
+      assert(container.children[0] == child);
       container.removeChild(child);
-      assert(container.children()[0] != child);
-      assert(0 == container.children().length);
+      assert(container.children[0] != child);
+      assert(0 == container.children.length);
     });
   });
 
@@ -348,13 +431,10 @@ describe('Container', () => {
       assert(false == container.contains(other, false));
     });
   });
+
 });
 
-/**
- * Tests container creation.
- */
-
-describe('createContainer', () => {
+describe('createContainer([domElement = null, initialState = {}, ...reducers]', () => {
 
   it("Should create an instance of a Container", () => {
     assert(createContainer() instanceof Container);
@@ -401,6 +481,7 @@ describe('createContainer', () => {
   });
 
   it("Should apply a set of given reducers.", done => {
+    done = once(done);
     const called = [0, 0, 0, 0];
     const container = createContainer(null, null,
                                       (state, action) => (called[0] = true),
@@ -417,12 +498,16 @@ describe('createContainer', () => {
   });
 });
 
-/**
- * Tests container restoration and creation
- * from JSON objects.
- */
+describe('makeContainer(domElement)', () => {
+  it("Should make a container from a DOM element.", () => {
+    const domElement = document.createElement('div');
+    const container = makeContainer(domElement);
+    assert(container);
+    assert(container.domElement == domElement);
+  });
+});
 
-describe('restoreContainerFromJSON', () => {
+describe('restoreContainerFromJSON(object)', () => {
   it("Should be able to restore a container from a JSON structure.", () => {
     const container = createContainer();
     const json = JSON.stringify(container);
@@ -453,37 +538,35 @@ describe('restoreContainerFromJSON', () => {
   });
 });
 
-/**
- * Tests container composition.
- */
-
-describe('compose', () => {
+describe('composeContainers([...containers]', () => {
   it("Should return a new Container instance with no arguments.", () => {
-    const composite = compose();
+    const composite = composeContainers();
     assert(composite);
   });
 
   it("Should use the first argument as the root composite.", () => {
     const container = createContainer();
-    const composite = compose(container);
+    const composite = composeContainers(container);
     assert(composite);
     assert(composite == container);
   });
 
   it("Should create a new container when given an array of containers.", done => {
+    done = once(done);
     const containerA = createContainer();
     const containerB = createContainer();
-    const composite = compose([containerA, containerB]);
+    const composite = composeContainers([containerA, containerB]);
     assert(composite);
     containerB.use(_ => done());
     composite.update();
   });
 
   it("Should return a root container with chained containers.", done => {
+    done = once(done);
     const root = createContainer();
     const containerA = createContainer();
     const containerB = createContainer();
-    const composite = compose(root, containerA, containerB);
+    const composite = composeContainers(root, containerA, containerB);
     assert(composite);
     assert(composite == root);
     containerB.use(_ => done());
@@ -491,11 +574,7 @@ describe('compose', () => {
   });
 });
 
-/**
- * Tests getting container data.
- */
-
-describe('getContainerData', () => {
+describe('getContainerData([container | id | domElement])', () => {
   it("Should return null for DOM Elements that have not been claimed by a container.", () => {
     const domElement = document.createElement('div');
     const data = getContainerData(domElement);
@@ -527,11 +606,7 @@ describe('getContainerData', () => {
   });
 });
 
-/**
- * Tests orphaned restoration.
- */
-
-describe('restoreOrphanedTree', () => {
+describe('restoreOrphanedTree(container | domElement)', () => {
   it("Should restore orphaned containers DOM elements", () => {
     const domElement = document.createElement('div');
     const childDomElementA = document.createElement('div');
@@ -616,5 +691,251 @@ describe('realignContainerTree(container[, recursive = false])', () => {
     assert(childContainerA.contains(childContainerAA));
     realignContainerTree(container, true);
     assert(childDomElementA.contains(childDomElementAA));
+  });
+});
+
+describe('replaceDOMElement(container, domElement)', () => {
+  it("Should replace the internal DOM element associated witht the container.", () => {
+    const domElement = document.createElement('div');
+    const container = createContainer();
+    assert(container.domElement);
+    replaceDOMElement(container, domElement);
+    assert(domElement == container.domElement);
+  });
+
+  it("Should restore existing child containers in new DOM tree", () => {
+    const domElement = document.createElement('div');
+    const containerA = createContainer(domElement);
+    const containerB = createContainer();
+    const childA1 = createContainer();
+    const childA2 = createContainer();
+    const childB1 = createContainer();
+    const childB2 = createContainer();
+
+    containerA.appendChild(childA1);
+    containerA.appendChild(childA2);
+
+    assert(2 == containerA.children.length);
+
+    containerB.appendChild(childB1);
+    containerB.appendChild(childB2);
+
+    assert(2 == containerB.children.length);
+
+    replaceDOMElement(containerA, containerB.domElement);
+    assert(containerA.domElement == containerB.domElement);
+
+    assert(2 == containerA.children.length);
+    assert(2 == containerB.children.length);
+
+    assert(childB1 == containerA.children[0]);
+    assert(childB2 == containerA.children[1]);
+  });
+});
+
+
+describe('createContainerUid()', () => {
+  it("Should return a string.", () => {
+    assert('string' == typeof createContainerUid());
+  });
+
+  it("Should return a UID prefixed with a '.'.", () => {
+    assert('.' == createContainerUid()[0]);
+  });
+});
+
+describe('getAllContainers()', () => {
+  it("Should return all created containers.", () => {
+    const a = createContainer();
+    const b = createContainer();
+    const c = createContainer();
+    const containers = [ ...getAllContainers() ].map(_ => _[1]); // [id, container]
+    assert(containers.indexOf(a) > -1);
+    assert(containers.indexOf(b) > -1);
+    assert(containers.indexOf(c) > -1);
+  });
+});
+
+describe('fetchContainer(container | domElement | id)', () => {
+  it("Should return a container if a container is given.", () => {
+    const container = createContainer();
+    assert(container == fetchContainer(container));
+  });
+
+  it("Should return a container if a DOM element is given.", () => {
+    const container = createContainer();
+    assert(container == fetchContainer(container.domElement));
+  });
+
+  it("Should return a container if a id is given.", () => {
+    const container = createContainer();
+    assert(container == fetchContainer(container.id));
+  });
+
+  it("Should return a container if an object with id is given.", () => {
+    const container = createContainer();
+    assert(container == fetchContainer({id: container.id}));
+  });
+});
+
+describe('removeContainer(container | domElement | id)', () => {
+  it("Should remove a container from its parent.", () => {
+    const parent = createContainer();
+    const child = createContainer();
+    parent.appendChild(child);
+    assert(true == removeContainer(child));
+    assert(false == parent.contains(child));
+  });
+
+  it("Should remove a container from the internal tree.", () => {
+    const container = createContainer();
+    assert(true == removeContainer(container));
+    const containers = [ ...getAllContainers() ];
+    assert(0 == containers.length);
+  });
+
+  it("Should remove a container by a given DOM element.", () => {
+    const container = createContainer();
+    assert(true == removeContainer(container.domElement));
+    const containers = [ ...getAllContainers() ];
+    assert(0 == containers.length);
+  });
+
+  it("Should remove a container by a given id.", () => {
+    const container = createContainer();
+    assert(true == removeContainer(container.id));
+    const containers = [ ...getAllContainers() ];
+    assert(0 == containers.length);
+  });
+});
+
+describe('saveContainer(container)', () => {
+  it("Should save a container.", () => {
+    const container = createContainer();
+    // containers are saved automatically
+    assert(true == removeContainer(container));
+    assert(null == fetchContainer(container.id));
+    assert(true === saveContainer(container));
+  });
+});
+
+describe('replaceContainer(existing, replacement[, create = false])', () => {
+  it("Should replace an existing container with another existing one.", () => {
+    const a = createContainer();
+    const b = createContainer();
+    assert(replaceContainer(a, b));
+    assert(1 == [ ...getAllContainers() ].length);
+    assert(a.id == b.id);
+    a.innerContents = 'hello';
+    assert(a.innerContents == b.innerContents);
+    assert(a.domElement.innerHTML == b.domElement.innerHTML);
+    assert(a.domElement == b.domElement);
+  });
+
+  it("Should replace an existing container with a an existing container when given a DOM element.", () => {
+    const a = createContainer();
+    const b = createContainer();
+    replaceContainer(a, b.domElement);
+    assert(1 == [ ...getAllContainers() ].length);
+    assert(a.id == b.id);
+    a.innerContents = 'hello';
+    assert(a.innerContents == b.innerContents);
+    assert(a.domElement.innerHTML == b.domElement.innerHTML);
+    assert(a.domElement == b.domElement);
+  });
+
+  it("Should replace an existing container with a new container when given a DOM element when [create = true]. ", () => {
+    const domElement = document.createElement('div');
+    const a = createContainer();
+    const b = replaceContainer(a, domElement, true);
+    assert(b.domElement == domElement);
+    assert(1 == [ ...getAllContainers() ].length);
+    assert(a.id == b.id);
+    a.innerContents = 'hello ${value}';
+    assert(a.innerContents == b.innerContents);
+    assert(a.domElement.innerHTML == b.domElement.innerHTML);
+    assert(a.domElement == b.domElement);
+    a.update({value: 'world'});
+    assert(a.innerContents == b.innerContents);
+  });
+});
+
+describe('clearContainers()', () => {
+  it("Should clear all existing containers.", () => {
+    const count = 10;
+    for (let i = 0; i < count; ++i) createContainer();
+    assert(count == [ ...getAllContainers() ].length);
+    clearContainers();
+    assert(0 == [ ...getAllContainers() ].length);
+  });
+});
+
+describe('forEachContainer(fn[, scope])', () => {
+  it("Should iterate over each container in the order in which they were created.", () => {
+    const a = createContainer();
+    const b = createContainer();
+    const c = createContainer();
+    const d = createContainer();
+    const seen = [];
+    forEachContainer(container => seen.push(container));
+    assert(seen.length);
+    assert(a == seen[0]);
+    assert(b == seen[1]);
+    assert(c == seen[2]);
+    assert(d == seen[3]);
+  });
+
+  it("Should iterate over each container with an optional scope.", () => {
+    const a = createContainer();
+    const b = createContainer();
+    const c = createContainer();
+    const seen = [];
+
+    forEachContainer(function (container) {
+      assert(this == seen);
+      this.push(container);
+    }, seen);
+
+    assert(seen.length);
+    assert(a == seen[0]);
+    assert(b == seen[1]);
+    assert(c == seen[2]);
+  });
+});
+
+describe('traverseContainer(container, fn[, scope])', () => {
+  it("Should traverse a container's children.", () => {
+    const root = createContainer();
+    const a = createContainer();
+    const b = createContainer();
+    const c = createContainer();
+    const d = createContainer();
+    const e = createContainer();
+    const seen = [];
+    a.appendChild(c);
+    a.appendChild(d);
+    traverseContainer(a, container => seen.push(container));
+    assert(seen.length);
+    assert(c == seen[0]);
+    assert(d == seen[1]);
+  });
+
+  it("Should traverse a container's children with an optional scope.", () => {
+    const root = createContainer();
+    const a = createContainer();
+    const b = createContainer();
+    const c = createContainer();
+    const d = createContainer();
+    const e = createContainer();
+    const seen = [];
+    a.appendChild(c);
+    a.appendChild(d);
+    traverseContainer(a, function (container) {
+      assert(this == seen);
+      this.push(container);
+    }, seen);
+    assert(seen.length);
+    assert(c == seen[0]);
+    assert(d == seen[1]);
   });
 });

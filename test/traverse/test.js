@@ -2,8 +2,11 @@
 const main = document.querySelector('#main');
 
 function assert (cond, message) {
-  if (false == Boolean(cond))
-    throw new Error( "AssertionError: "+ message );
+  if (false == Boolean(cond)) {
+    let err = new Error( "AssertionError: "+ message );
+    if (Error.captureStackTrace) Error.captureStackTrace(err);
+    throw err;
+  }
 }
 
 const containerA = stardux.createContainer(main.querySelector('.a'));
@@ -20,12 +23,15 @@ assert('beep' == containerC.domElement.textContent.trim());
 containerOne.update({value: 'boop'});
 assert('boop' == containerThree.domElement.textContent.trim());
 
-let expected = 6;
-let n = 0;
-stardux.Container.traverse((id, container) => {
-  n++;
-  assert(id);
-  assert(container);
-});
+testContainerTraversal(2, containerA);
+testContainerTraversal(3, containerOne);
 
-assert(n == expected);
+function testContainerTraversal (expected, container) {
+  let n = 0;
+  stardux.traverseContainer(container, (child) => {
+    assert(child instanceof stardux.Container)
+    n++;
+  });
+
+  assert(n == expected);
+}

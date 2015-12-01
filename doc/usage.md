@@ -252,6 +252,8 @@ unchanged while `childA` has.
 
 ## JSON
 
+Containers can be serialized 
+
 ## Advanced
 
 

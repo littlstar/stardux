@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Stardux API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clearContainers">clearContainers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-composeContainers">composeContainers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createContainer">createContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createContainerUid">createContainerUid</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fetchContainer">fetchContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-forEachContainer">forEachContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getAllContainers">getAllContainers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getContainerData">getContainerData</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-makeContainer">makeContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-realignContainerTree">realignContainerTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceDOMElement">replaceDOMElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreContainerFromJSON">restoreContainerFromJSON</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreOrphanedTree">restoreOrphanedTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-saveContainer">saveContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-traverseContainer">traverseContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-UPDATE">UPDATE</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="stardux">Stardux</h1>
+<p>Functional DOM containers based on Starplate and Redux.</p>
+<h2 id="about">About</h2>
+<p><em>stardux</em> makes it easy to create predictable and functional DOM containers.
+A <code>Container</code> is a wrapper around a DOM element and its state. State is
+represented in objects and expressed in the DOM with ES6 template
+notation. Containers use reducers and middleware to transform input
+into state. If you are familiar with
+<a href="https://github.com/rackt/redux">redux</a> and reducers then this should be
+easy for you. DOM updates are made possible with
+<a href="https://github.com/littlstar/starplate">starplate</a> and it&apos;s internal
+patching algorithm built on
+<a href="https://github.com/google/incremental-dom">IncrementalDOM</a>.</p>
+<p><em>stardux</em> manages an internal <code>Map</code> of containers allowing for container
+traversal. Containers are aware of nested (child) containers and are
+made available through <a href="doc/advanced.md#traversal">traversal mechanisms</a>.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="lang-js"><code class="source-code prettyprint">$ npm install stardux --save</code>
+</code></pre>
+<h2 id="example">Example</h2>
+<p>Consider the following simple DOM container that renders seconds elapsed
+since the moment it was renderer.</p>
+<p>The HTML can simply be expressed with a <code>div</code> tag and a child <code>span</code> node
+with text content.</p>
+<pre><code class="lang-html"><code class="source-code prettyprint">&lt;div id=&quot;counter&quot;&gt;
+  &lt;span&gt;Seconds Elapsed: ${ elapsed }&lt;/span&gt;
+&lt;/div&gt;</code>
+</code></pre>
+<p>Creating a container for this DOM element is achieved by passing the DOM
+element object to the <code>createContainer()</code> method.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer } from &apos;stardux&apos;;
+let domElement = document.querySelector(&apos;#counter&apos;);
+let elapsed = 0;
+let counter = createContainer(domElement);
+// update elapsed seconds every second
+setInterval(_ =&gt; counter.update({elapsed: ++elapsed}), 1000);</code>
+</code></pre>
+<h2 id="documentation">Documentation</h2>
+<ul>
+<li><a href="doc/usage.md">Getting Started</a></li>
+<li><a href="doc/api.md">API</a></li>
+<li><a href="doc/containers.md">Containers</a></li>
+<li><a href="doc/advanced.md">Advanced</a></li>
+<li><a href="doc/examples.md">Examples</a></li>
+</ul>
+<h2 id="license">License</h2>
+<p>MIT</p>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

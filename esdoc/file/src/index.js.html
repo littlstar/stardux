@@ -1,4 +1,62 @@
-'use strict';
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/index.js | Stardux API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clearContainers">clearContainers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-composeContainers">composeContainers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createContainer">createContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createContainerUid">createContainerUid</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fetchContainer">fetchContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-forEachContainer">forEachContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getAllContainers">getAllContainers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getContainerData">getContainerData</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-makeContainer">makeContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-realignContainerTree">realignContainerTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceDOMElement">replaceDOMElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreContainerFromJSON">restoreContainerFromJSON</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreOrphanedTree">restoreOrphanedTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-saveContainer">saveContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-traverseContainer">traverseContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-UPDATE">UPDATE</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
 
 /**
  * Module dependencies.
@@ -6,11 +64,11 @@
  * @private
  */
 
-import { combineReducers, createStore } from 'redux';
-import { Parser, Template } from 'starplate';
-import esprima from 'esprima';
-import extend from 'extend';
-import domify from 'domify';
+import { combineReducers, createStore } from &apos;redux&apos;;
+import { Parser, Template } from &apos;starplate&apos;;
+import esprima from &apos;esprima&apos;;
+import extend from &apos;extend&apos;;
+import domify from &apos;domify&apos;;
 
 /**
  * Container symbols.
@@ -18,13 +76,13 @@ import domify from 'domify';
  * @private
  */
 
-const $domElement = Symbol('Element');
-const $middleware = Symbol('middleware');
-const $children = Symbol('children');
-const $pipes = Symbol('pipes');
-const $model = Symbol('model');
-const $store = Symbol('store');
-const $uid = Symbol('uid');
+const $domElement = Symbol(&apos;Element&apos;);
+const $middleware = Symbol(&apos;middleware&apos;);
+const $children = Symbol(&apos;children&apos;);
+const $pipes = Symbol(&apos;pipes&apos;);
+const $model = Symbol(&apos;model&apos;);
+const $store = Symbol(&apos;store&apos;);
+const $uid = Symbol(&apos;uid&apos;);
 
 /**
  * Private stardux data attached to
@@ -35,7 +93,7 @@ const $uid = Symbol('uid');
  * @type {String}
  */
 
-const STARDUX_PRIVATE_ATTR = '__starduxData';
+const STARDUX_PRIVATE_ATTR = &apos;__starduxData&apos;;
 
 /**
  * Reducer action type symbols.
@@ -45,7 +103,7 @@ const STARDUX_PRIVATE_ATTR = '__starduxData';
  * @type {Symbol)
  */
 
-const $UPDATE_ACTION = Symbol('UPDATE');
+const $UPDATE_ACTION = Symbol(&apos;UPDATE&apos;);
 
 /**
  * Known container map by ID
@@ -69,7 +127,7 @@ function clone (object) {
 }
 
 /**
- * Detects if input is "like" an array.
+ * Detects if input is &quot;like&quot; an array.
  *
  * @private
  * @param {Mixed} a
@@ -77,7 +135,7 @@ function clone (object) {
  */
 
 function isArrayLike (a) {
-  if ('object' != typeof a)
+  if (&apos;object&apos; != typeof a)
     return false;
   else if (null == a)
     return false;
@@ -129,7 +187,7 @@ function rmdux (node) {
 
 function getTokens (string) {
   let tokens = null;
-  try { tokens = esprima.tokenize('`'+ string +'`'); }
+  try { tokens = esprima.tokenize(&apos;`&apos;+ string +&apos;`&apos;); }
   catch (e) { tokens = []; }
   return tokens;
 }
@@ -155,7 +213,7 @@ function getIdentifiersFromTokens (tokens) {
    * @return {Boolean}
    */
 
-  const isIdentifier = token => 'Identifier' == token.type;
+  const isIdentifier = token =&gt; &apos;Identifier&apos; == token.type;
 
   /**
    * Mark token as a function identifier.
@@ -166,12 +224,12 @@ function getIdentifiersFromTokens (tokens) {
    * @return {Object} token
    */
 
-  const markFunction = (token, index) => {
+  const markFunction = (token, index) =&gt; {
     const next = tokens[index + 1] || null;
-    token.isFunction = ( 'Identifier' == token.type
-                        && 'object' == typeof next && next
-                        && 'Punctuator' == next.type
-                        && '(' == next.value
+    token.isFunction = ( &apos;Identifier&apos; == token.type
+                        &amp;&amp; &apos;object&apos; == typeof next &amp;&amp; next
+                        &amp;&amp; &apos;Punctuator&apos; == next.type
+                        &amp;&amp; &apos;(&apos; == next.value
                           ? true : false );
                           return token;
   };
@@ -185,12 +243,12 @@ function getIdentifiersFromTokens (tokens) {
    * @return {Object} token
    */
 
-  const markObject = (token, index) => {
+  const markObject = (token, index) =&gt; {
     const next = tokens[index + 1] || null;
-    token.isObject = ( 'Identifier' == token.type
-                      && 'object' == typeof next && next
-                      && 'Punctuator' == next.type
-                      && '.' == next.value
+    token.isObject = ( &apos;Identifier&apos; == token.type
+                      &amp;&amp; &apos;object&apos; == typeof next &amp;&amp; next
+                      &amp;&amp; &apos;Punctuator&apos; == next.type
+                      &amp;&amp; &apos;.&apos; == next.value
                         ? true : false );
                         return token;
   };
@@ -204,23 +262,23 @@ function getIdentifiersFromTokens (tokens) {
    * @return {Object} map
    */
 
-  const assign = (map, token) => {
+  const assign = (map, token) =&gt; {
     const value = token.value;
     if (token.isFunction)
-      map[value] = _ => '';
+      map[value] = _ =&gt; &apos;&apos;;
     else if (token.isObject)
       map[value] = {};
     else
-      map[value] = '';
+      map[value] = &apos;&apos;;
     return map;
   };
 
   // resolve identifierss and return map
   return ( tokens
-          .map((t, i) => markFunction(t, i))
-          .map((t, i) => markObject(t, i))
-          .filter(t => isIdentifier(t))
-          .reduce((map, t) => assign(map, t), identifiers) );
+          .map((t, i) =&gt; markFunction(t, i))
+          .map((t, i) =&gt; markObject(t, i))
+          .filter(t =&gt; isIdentifier(t))
+          .reduce((map, t) =&gt; assign(map, t), identifiers) );
 }
 
 /**
@@ -231,8 +289,8 @@ function getIdentifiersFromTokens (tokens) {
  * @return {String}
  */
 
-function ensureDOMString (html = '') {
-  html = 'string' == typeof html ? html : String(html || '');
+function ensureDOMString (html = &apos;&apos;) {
+  html = &apos;string&apos; == typeof html ? html : String(html || &apos;&apos;);
   return html.trim();
 }
 
@@ -248,10 +306,10 @@ function ensureDOMElement (input) {
   let domElement = null;
   if (input instanceof Element) {
     return input;
-  } else if ('string' == typeof input) {
+  } else if (&apos;string&apos; == typeof input) {
     domElement = domify(input) || new Text(input);
   } else {
-    domElement = domify('<div></div>');
+    domElement = domify(&apos;&lt;div&gt;&lt;/div&gt;&apos;);
   }
   return domElement;
 }
@@ -270,14 +328,14 @@ function getTemplateFromDomElement (domElement) {
   let data = {};
   let src = null;
 
-  if (domElement && domElement[STARDUX_PRIVATE_ATTR])
+  if (domElement &amp;&amp; domElement[STARDUX_PRIVATE_ATTR])
     data = mkdux(domElement);
 
-  if ('string' == typeof domElement)
+  if (&apos;string&apos; == typeof domElement)
     src = domElement;
   else if (data.src)
     src = data.src;
-  else if (domElement.children && 0 == domElement.children.length)
+  else if (domElement.children &amp;&amp; 0 == domElement.children.length)
     src = ensureDOMString(domElement.textContent);
   else if (domElement.firstChild instanceof Text)
     src = ensureDOMString(domElement.innerHTML);
@@ -293,7 +351,7 @@ function getTemplateFromDomElement (domElement) {
  * Ensures container state identifiers (tokens) derived from
  * the DOM element source are defined on the state if not
  * already. This is useful to prevent reference errors from
- * being thrown when ES6 templates are evaulated in starplate's
+ * being thrown when ES6 templates are evaulated in starplate&apos;s
  * VM.
  *
  * @private
@@ -329,7 +387,7 @@ function ensureContainerStateIdentifiers (container) {
  */
 
 function createRootReducer (container) {
-  return (state = Object.create(null), action = {data: {}}) => {
+  return (state = Object.create(null), action = {data: {}}) =&gt; {
     const identifiers = ensureContainerStateIdentifiers(container);
     const domElement = container[$domElement];
     const template = getTemplateFromDomElement(domElement);
@@ -351,7 +409,7 @@ function createRootReducer (container) {
     switch (action.type) {
       case $UPDATE_ACTION:
         container.define(action.data || state);
-      if (!isBody && identifiers) {
+      if (!isBody &amp;&amp; identifiers) {
         const parser = new Parser();
         const partial = new Template(template);
         const src = partial.render(container.state, container);
@@ -375,7 +433,7 @@ function createRootReducer (container) {
  */
 
 function createPipeReducer (container) {
-  return (_, action = {data: {}}) => {
+  return (_, action = {data: {}}) =&gt; {
     const state = container.state;
     const pipes = container[$pipes].entries();
     void function next () {
@@ -430,7 +488,7 @@ export function createContainer (domElement, initialState = null, ...reducers) {
 export function makeContainer (domElement) {
   let container = null;
   if (false == (domElement instanceof Element))
-    throw new TypeError("makeContainer() expects a DOM element.");
+    throw new TypeError(&quot;makeContainer() expects a DOM element.&quot;);
   container = fetchContainer(domElement) || new Container(domElement);
   return container;
 }
@@ -486,9 +544,9 @@ export function restoreContainerFromJSON (json, initialState = null, ...reducers
  * If a Container or Element is given as first argument then
  * it is treated as the root and all subsequent arguments are
  * treated as direct descendants of the root. If the second
- * argument is an array or an "array like" object then it is
+ * argument is an array or an &quot;array like&quot; object then it is
  * treated as direct descendants of the root and all subsequent
- * arguments are ignored. If an array or "array like" object is
+ * arguments are ignored. If an array or &quot;array like&quot; object is
  * passed as the first argument a new root container is created
  * and the first argument is treated as direct descendants of
  * the newly created root container. The root container, newly
@@ -527,7 +585,7 @@ export function composeContainers (root, ...containers) {
   realignContainerTree(composed, true);
 
   // allow consumer to unwind composition
-  composed.decompose = _ => {
+  composed.decompose = _ =&gt; {
     let composite = composed
     for (let child of containers)
       composite = composite.unpipe(child);
@@ -559,13 +617,13 @@ export function getContainerData (arg) {
     domElement = arg.domElement;
   } else if (arg instanceof Element) {
     domElement = arg;
-  } else if ('string' == typeof arg) {
+  } else if (&apos;string&apos; == typeof arg) {
     container = fetchContainer(arg);
     domElement = container.domElement;
   } else {
-    throw new TypeError( "Unexpected input for getContainerData. "
-                       + "Expecting an instance of a Container or Element, "
-                       + "or a string." );
+    throw new TypeError( &quot;Unexpected input for getContainerData. &quot;
+                       + &quot;Expecting an instance of a Container or Element, &quot;
+                       + &quot;or a string.&quot; );
   }
 
   if (domElement)
@@ -623,7 +681,7 @@ export function realignContainerTree (container,
 
   const delta = [ ...children ].length - domElement.children.length;
 
-  if (delta > 0 || true === forceOrphanRestoration)
+  if (delta &gt; 0 || true === forceOrphanRestoration)
     restoreOrphanedTree(container, recursive);
 
   // purge child containers existing in tree where
@@ -638,7 +696,7 @@ export function realignContainerTree (container,
   // traverse children
   for (let childElement of [ ...domElement.children ]) {
     const data = childElement[STARDUX_PRIVATE_ATTR];
-    const child = 'object' == typeof data ? fetchContainer(data.id) : null;
+    const child = &apos;object&apos; == typeof data ? fetchContainer(data.id) : null;
 
     // skip DOM elements which are not claimed
     // by any existing containers
@@ -665,7 +723,7 @@ export function realignContainerTree (container,
 
 export function saveContainer (container) {
   container = fetchContainer(container) || container;
-  if (container && container.id && !CONTAINERS.has(container.id)) {
+  if (container &amp;&amp; container.id &amp;&amp; !CONTAINERS.has(container.id)) {
     CONTAINERS.set(container.id, container);
     return true;
   }
@@ -681,9 +739,9 @@ export function saveContainer (container) {
  */
 
 export function fetchContainer (arg) {
-  const id = ( arg && arg.id )
+  const id = ( arg &amp;&amp; arg.id )
              ? arg.id
-             : ( arg && arg[STARDUX_PRIVATE_ATTR] )
+             : ( arg &amp;&amp; arg[STARDUX_PRIVATE_ATTR] )
                ? arg[STARDUX_PRIVATE_ATTR].id
                : arg;
   return id ? CONTAINERS.get(id) : null;
@@ -697,7 +755,7 @@ export function fetchContainer (arg) {
  */
 
 export function createContainerUid () {
-  return ( Math.random() ).toString('16').slice(1);
+  return ( Math.random() ).toString(&apos;16&apos;).slice(1);
 }
 
 /**
@@ -722,7 +780,7 @@ export function getAllContainers () {
 
 export function forEachContainer (fn, scope = null) {
   const containers = getAllContainers();
-  fn = 'function' == typeof fn ? fn : _ => void 0;
+  fn = &apos;function&apos; == typeof fn ? fn : _ =&gt; void 0;
   for (let kv of containers)
     fn.call(scope || global, kv[1], containers);
   return Container;
@@ -757,7 +815,7 @@ export function traverseContainer (container, fn, scope) {
 export function removeContainer  (arg) {
   const container = fetchContainer(arg);
   const id = container ? container.id : null;
-  if (id && CONTAINERS.has(id)) {
+  if (id &amp;&amp; CONTAINERS.has(id)) {
     // remove from parent
     if (container.parent)
       container.parent.removeChild(container, false, true);
@@ -785,8 +843,8 @@ export function replaceContainer (existing, replacement, create = false) {
   // does not exist then throw an error
   existingContainer = fetchContainer(existing);
   if (null == existingContainer) {
-    throw Error( "replaceContainer() called for a container "
-               + "that does not exist." );
+    throw Error( &quot;replaceContainer() called for a container &quot;
+               + &quot;that does not exist.&quot; );
   }
 
   // get replacement container if input is not
@@ -796,16 +854,16 @@ export function replaceContainer (existing, replacement, create = false) {
   else
     replacementContainer = replacement;
 
-  // if the a replacement didn't exist and
+  // if the a replacement didn&apos;t exist and
   // create was set to true then create the
   // replacement from the replacement input
-  if (null == replacementContainer && true === create)
+  if (null == replacementContainer &amp;&amp; true === create)
     replacementContainer = createContainer(replacement);
 
   // replace existing container with the replacement container
   // by replacing its internal DOM element and updating the
   // internal container map
-  if (existingContainer instanceof Container &&
+  if (existingContainer instanceof Container &amp;&amp;
       replacementContainer instanceof Container) {
     removeContainer(existingContainer);
     replaceDOMElement(existingContainer, replacementContainer.domElement);
@@ -824,7 +882,7 @@ export function replaceContainer (existing, replacement, create = false) {
 
 export function clearContainers () {
   // remove stardux data for each container
-  forEachContainer(container => rmdux(container.domElement));
+  forEachContainer(container =&gt; rmdux(container.domElement));
   // clear containers
   CONTAINERS.clear();
 }
@@ -989,7 +1047,7 @@ export class Container {
       // Piped reducers are applied when composition occurs between
       // two containers. They are achievd with the pipe() method. All
       // dispatched actions are propagated to the piped container via
-      // this reducer. They actually don't reduce state, but simply pass
+      // this reducer. They actually don&apos;t reduce state, but simply pass
       // it on. When an update action occurs via an update() on a container
       // all containers it has been piped to will effectively have their
       // update() methods called with the provided data arguments. Please
@@ -1067,7 +1125,7 @@ export class Container {
    * Getter to return parent container if
    * available. Parent is determined with
    * DOM traversal up the tree. A container can
-   * be considered orphaned if it doesn't have a
+   * be considered orphaned if it doesn&apos;t have a
    * parent DOM element.
    *
    * @public
@@ -1076,7 +1134,7 @@ export class Container {
 
   get parent () {
     const domElement = this.domElement;
-    let parentElement = domElement && domElement.parentElement;
+    let parentElement = domElement &amp;&amp; domElement.parentElement;
     let parentContainerData = {};
     let parentElementContainer = null;
     do {
@@ -1118,8 +1176,8 @@ export class Container {
   set domElement (domElement) {
     if (domElement instanceof Element)
       replaceDOMElement(this, domElement);
-    else throw new TypeError( "Cannot set property .domElement. Value must "
-                            + "be an Element." );
+    else throw new TypeError( &quot;Cannot set property .domElement. Value must &quot;
+                            + &quot;be an Element.&quot; );
     return this.domElement;
   }
 
@@ -1131,7 +1189,7 @@ export class Container {
    */
 
   get innerContents () {
-    return this.domElement.innerHTML || '';
+    return this.domElement.innerHTML || &apos;&apos;;
   }
 
   /**
@@ -1141,8 +1199,8 @@ export class Container {
    * containers exist in tree they will
    * become orphaned. If value is null
    * then the value becomes an empty
-   * string (''). undefined values result
-   * in the string 'undefined'.
+   * string (&apos;&apos;). undefined values result
+   * in the string &apos;undefined&apos;.
    *
    * @public
    * @type {String}
@@ -1150,7 +1208,7 @@ export class Container {
 
   set innerContents (value) {
     if (null === value)
-      value = '';
+      value = &apos;&apos;;
     const data = mkdux(this);
     data.src = String(value);
     this.update();
@@ -1165,7 +1223,7 @@ export class Container {
    */
 
   define (model) {
-    if ('object' == typeof model)
+    if (&apos;object&apos; == typeof model)
       extend(true, this[$model], model);
     return this;
   }
@@ -1180,8 +1238,8 @@ export class Container {
 
   get children () {
     return ( [ ...this[$children].entries() ]
-             .map(kv => kv[0])
-             .filter(child => child instanceof Container) );
+             .map(kv =&gt; kv[0])
+             .filter(child =&gt; child instanceof Container) );
   }
 
   /**
@@ -1264,7 +1322,7 @@ export class Container {
    */
 
   dispatch (type, data = {}, args = {}) {
-    if (!type) throw new TypeError("Failed to dispatch event without type.");
+    if (!type) throw new TypeError(&quot;Failed to dispatch event without type.&quot;);
     const store = this[$store];
     const payload = {type: type, data: data};
     for (let key in args)
@@ -1348,7 +1406,7 @@ export class Container {
 
   pipe (container) {
     const pipes = this[$pipes];
-    const middleware = (state, action) => {
+    const middleware = (state, action) =&gt; {
       switch (action.type) {
         case $UPDATE_ACTION:
           if (action.data) container.update(clone(action.data));
@@ -1405,12 +1463,12 @@ export class Container {
       container = child;
     } else if (child instanceof Element) {
       container = createContainer(child);
-    } else if ('string' == typeof child || child instanceof Text) {
+    } else if (&apos;string&apos; == typeof child || child instanceof Text) {
       container = createContainer(child);
     } else {
-      throw new TypeError( "Unexpected input for appendChild. "
-                         + "Expecting an instance of a Container, Element, Text "
-                         + "or a string." );
+      throw new TypeError( &quot;Unexpected input for appendChild. &quot;
+                         + &quot;Expecting an instance of a Container, Element, Text &quot;
+                         + &quot;or a string.&quot; );
     }
 
     childDomElement = container.domElement;
@@ -1418,7 +1476,7 @@ export class Container {
     if (update) this.update();
 
     try {
-      if (container.parent && container.parent != this) {
+      if (container.parent &amp;&amp; container.parent != this) {
         container.parent.removeChild(container);
       }
       domElement.appendChild(childDomElement);
@@ -1490,3 +1548,20 @@ export class Container {
     return false;
   }
 }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
