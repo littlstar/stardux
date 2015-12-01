@@ -5,19 +5,41 @@ Stardux API Reference
 * [clearContainers()](#clearcontainers)
 * [composeContainers()](#composecontainers)
 * [createContainerUid()](#createcontaineruid)
-* [fetchContainer()](#fetchContainer)
-* [forEachContainer()](#forEachContainer)
-* [getAllContainers()](#getAllContainers)
-* [getContainerData()](#getContainerData)
-* [makeContainer()](#makeContainer)
-* [realignContainerTree()](#realignContainerTree)
-* [removeContainer()](#removeContainer)
-* [replaceContainer()](#replaceContainer)
-* [replaceDOMElement()](#replaceDOMElement)
-* [restoreContainerFromJSON()](#restoreContainerFromJSON)
-* [restoreOrphanedTree()](#restoreOrphanedTree)
-* [saveContainer()](#saveContainer)
-* [traverseContainer()](#traverseContainer)
+* [fetchContainer()](#fetchcontainer)
+* [forEachContainer()](#foreachcontainer)
+* [getAllContainers()](#getallcontainers)
+* [getContainerData()](#getcontainerdata)
+* [makeContainer()](#makecontainer)
+* [realignContainerTree()](#realigncontainertree)
+* [removeContainer()](#removecontainer)
+* [replaceContainer()](#replacecontainer)
+* [replaceDOMElement()](#replacedomelement)
+* [restoreContainerFromJSON()](#restorecontainerfromjson)
+* [restoreOrphanedTree()](#restoreorphanedtree)
+* [saveContainer()](#savecontainer)
+* [traverseContainer()](#traversecontainer)
+* [Container](#container)
+  * [Members](#container-members)
+    * [.children](#container-children)
+    * [.domElement](#container-domelement)
+    * [.id](#container-id)
+    * [.innerContents](#container-innercontents)
+    * [.parent](#container-parent)
+    * [.state](#container-state)
+  * [Methods](#container-methods)
+    * [#appendChild()](#container-appendchild)
+    * [#contains()](#container-contains)
+    * [#dispatch()](#container-dispatch)
+    * [#pipe()](#container-pipe)
+    * [#removeChild()](#container-removechild)
+    * [#render()](#container-render)
+    * [#replaceChildren()](#container-replacechildren)
+    * [#toJSON()](#container-tojson)
+    * [#toString()](#container-tostring)
+    * [#unpipe()](#container-unpipe)
+    * [#update()](#container-update)
+    * [#use()](#container-use)
+    * [#valueOf()](#container-valueOf)
 
 ## createContainer
 
@@ -155,88 +177,170 @@ function traverseContainer(container: Container, fn: Function, scope: Object): u
 
 Traverse a container's tree recursively.
 
-## class Container
+## Container
 
-###  Members
+### Container Members
 
-#### .children: Array: Container
+#### Container.children
 
-Child containers.
+```js
+get children(): Array<Container>
+```
 
-#### .domElement: Element
+An array of child containers.
+
+#### Container.domElement
+
+```js
+get domElement(): Element
+set domElement(domElement: Element): Element
+```
 
 Container DOM element.
 
-#### .id: String
+#### Container.id
 
-Container id.
+```js
+get id(): String
+```
 
-#### .innerContents: String
+Container ID.
+
+#### Container.innerContents
+
+```js
+get innerContents(): String
+set innerContents(contents): String
+```
 
 Inner contents of the container.
 
-#### .parent: Container | null
+#### Container.parent
+
+```js
+get parent(): Container | null
+```
 
 Parent container if available.
 
-#### state: Object
+#### Container.state
+
+```js
+get state(): Object
+```
 
 Copy of the internal state object.
 
-### Method Summary
+### Container Methods
 
-#### #appendChild(child: Container | Element | Text | String, update: Boolean, realign: Boolean): Container
+#### Container#appendChild
+
+```js
+.appendChild(child: Container | Element | Text | String, update: Boolean, realign: Boolean): Container
+```
 
 Append a child container.
 
-#### #contains(container: Container | Element, recursive: Boolean): Boolean
+#### Container#contains
+
+```js
+.contains(container: Container | Element, recursive: Boolean): Boolean
+```
 
 Predicate to determine if a container or its DOM element is a child of the container.
 
-#### #define(model: Object): Container
+#### Container#define
+
+```js
+.define(model: Object): Container
+```
 
 Extend view model.
 
-#### #dispatch(type: Mixed, data: Object, args: Object): Container
+#### Container#dispatch
+
+```js
+.dispatch(type: Mixed, data: Object, args: Object): Container
+```
 
 Dispatch an event with type, optional data and optional arguments to the internal redux store.
 
-#### #pipe(container: Container): Container
+#### Container#pipe
+
+```js
+.pipe(container: Container): Container
+```
 
 Pipe container updates to a given container.
 
-#### #removeChild(child: Container | Element, update: Boolean, realign: Boolean): Container
+#### Container#removeChild
+
+```js
+.removeChild(child: Container | Element, update: Boolean, realign: Boolean): Container
+```
 
 Remove a child container.
 
-#### #render(domElement: Element): Container
+#### Container#render
+
+```js
+.render(domElement: Element): Container
+```
 
 Render container to a DOM element.
 
-#### #replaceChildren(children: Array): Container
+#### Container#replaceChildren
+
+```js
+.replaceChildren(children: Array): Container
+```
 
 Replace child tree with new children.
 
-#### #toJSON(): Object
+#### Container#toJSON
+
+```js
+.toJSON(): Object
+```
 
 Converts container to a JSON serializable object.
 
-#### #toString(): String
+#### Converts#toString
+
+```js
+.toString(): String
+```
 
 Returns the string reprenstation of this container.
 
-#### #unpipe(container: Container): Container
+#### Converts#unpipe
+
+```js
+.unpipe(container: Container): Container
+```
 
 Unpipe container updates for a given container.
 
-#### #update(data: Object, propagate: Boolean): Container
+#### Container#update
+
+```js
+.update(data: Object, propagate: Boolean): Container
+```
 
 Updates container and all child containers.
 
-#### #use(plugins: ...Function): Container
+#### Container#use
+
+```js
+.use(plugins: ...Function): Container
+```
 
 Consume reducer middleware.
 
-#### #valueOf(): Element
+#### Consume#valueOf
+
+```js
+.valueOf(): Element
+```
 
 Returns the associated value of the container.
