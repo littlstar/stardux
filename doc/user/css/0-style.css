@@ -97,3 +97,10 @@ a {
   padding-top: 60px;
 }
 
+.layout-container .github-markdown pre > code {
+  padding: 1rem;
+}
+
+.layout-container p > code, li > code {
+  padding: 0.5rem;
+}

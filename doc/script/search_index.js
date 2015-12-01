@@ -492,21 +492,9 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/index.js~container#domelement",
-    "class/src/index.js~Container.html#instance-set-domElement",
-    "src/index.js~Container#domElement",
-    "member"
-  ],
-  [
     "src/index.js~container#id",
     "class/src/index.js~Container.html#instance-get-id",
     "src/index.js~Container#id",
-    "member"
-  ],
-  [
-    "src/index.js~container#innercontents",
-    "class/src/index.js~Container.html#instance-set-innerContents",
-    "src/index.js~Container#innerContents",
     "member"
   ],
   [

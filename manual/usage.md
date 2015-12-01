@@ -41,8 +41,8 @@ const container = createContainer(domElement);
 ```
 
 Once created, containers provide mechanisms for
-[composition](api.md#compose), [manipulation](api.md#appendChild),
-[state pipes](api.md#pipe), and more.
+[composition](#composition), [manipulation](#manipulation),
+[state pipes](#pipes), and more.
 
 ## Templating
 
