@@ -1,0 +1,11 @@
+{
+  "name": "stardux",
+  "repo": "littlstar/stardux",
+  "description": "Functional DOM containers based on Starplate and Redux",
+  "version": "0.0.1",
+  "main": "src/stardux.min.js",
+  "author": "Joseph Werle <werle@littlstar.com>",
+  "license": "MIT",
+  "scripts": [ "src/stardux.min.js" ],
+  "keywords": [ "container", "dom", "reactive" ]
+}

@@ -56,8 +56,11 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="stardux">Stardux</h1>
-<p><em>stardux</em> makes it easy to create predictable and functional DOM containers.</p>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h2 id="introduction">Introduction</h2>
+<p><em>stardux</em> builds upon the container concept introduced in
+<a href="https://github.com/rackt/redux">redux</a>. Containers provide
+a predictable interface around DOM elements. State is represented
+in objects and expressed in the DOM with ES6 template notation.</p>
 <p>A <code>Container</code> is a wrapper around a DOM element and its state. State is
 represented in objects and expressed in the DOM with ES6 template
 notation. Containers use reducers and middleware to transform input
@@ -67,6 +70,54 @@ easy for you. DOM updates are made possible with
 <a href="https://github.com/littlstar/starplate">starplate</a> and it&apos;s internal
 patching algorithm built on
 <a href="https://github.com/google/incremental-dom">IncrementalDOM</a>.</p>
+<h2 id="containers">Containers</h2>
+<p>Containers are created with the <code>createContainer()</code> function.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer } from &apos;stardux&apos;;
+const container = createContainer(domElement);</code>
+</code></pre>
+<h2 id="reducers">Reducers</h2>
+<p>Containers apply reducers when an action is dispatched. When a container
+is updated with a call to the <code>.update()</code> method, an <code>UPDATE</code> action is
+dispatched with optional data. Every container instance has an internal
+root reducer that applies middleware to the <code>state</code> and <code>action</code> values
+provided by <code>redux</code>. User reducers given to <code>createContainer()</code> or the
+<code>Container</code> constructor are applied after.</p>
+<h2 id="templating">Templating</h2>
+<p>Containers provide a way to express state to the DOM. A containers DOM
+can be expressed with ES6 template notation and thefore make it easy to
+create resuable dynamic views.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const container = createContainer(domElement);
+domElement.innerHTML = &apos;Hello ${name}&apos;;
+container.update({ name: &apos;kinkajou&apos; });
+console.log(domElement.innerHTML); // &quot;Hello kinkajou&quot;</code>
+</code></pre>
+<h2 id="pipes-and-composition">Pipes and Composition</h2>
+<p>Containers can be composed into a container chain and even allow for
+middleware to transform input data. Piping and middleware are provided by
+familiar interfaces such as <code>.pipe(container)</code> and <code>.use(middleware)</code>
+respectively. The <code>state</code> and <code>action</code> values given to a container from
+a pipe are transformed by any middleware given to a container with the
+<code>.use()</code> method.</p>
+<p>Here 3 containers are constructed into a pipeline <code>A -&gt; B -&gt; C</code>.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">containerA.pipe(containerB).pipe(containerC);</code>
+</code></pre>
+<p>When an update occurs on <code>containerA</code>, is propagated to <code>containerB</code> and
+then to <code>containerC</code>. This is effectively the samething as container
+composition.</p>
+<p>Middleware has the following usage.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.use((state, action) =&gt; {
+  // middleware here ...
+});</code>
+</code></pre>
+<h2 id="subset-containers">Subset Containers</h2>
+<p>Containers can have child containers which are added and removed with
+familiar methods like <code>.appendChild()</code> and <code>.removeChild()</code>.</p>
+<p><em>Adding a child to a container.</em></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.appendChild(child);</code>
+</code></pre>
+<p><em>Removing a child to a container.</em></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.appendChild(child);</code>
+</code></pre>
 </div>
 </div>
 

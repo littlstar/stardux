@@ -29,7 +29,7 @@
   transition: all ease-in 80ms;
 }
 
-.layout-container header a:first-child {
+.layout-container header > a:first-child {
   background-repeat: no-repeat;
   background-image: url(/public/img/logo-small.png);
   background-size: contain;
@@ -71,15 +71,22 @@
 }
 
 .layout-container .search-box {
-  top: 15px;
+  top: 17px;
+}
+
+.layout-container .search-box .search-result li a {
+  color: #141414 !important;
 }
 
 .layout-container .search-input-edge {
-  background-color: #f96b6b;
+  background-color: transparent !important;
+  border-color: transparent !important;
 }
 
 .layout-container .search-input {
   border-color: #f96b6b;
+  border-radius: 4px;
+  color: #fff;
 }
 
 .layout-container .content {
@@ -89,3 +96,4 @@
 .layout-container .navigation {
   padding-top: 60px;
 }
+
