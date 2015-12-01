@@ -1,0 +1,91 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: none;
+  font-family: helvetica neue;
+  font-size: 100;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.layout-container header {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+  background-image: -moz-linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+  background-image: -ms-linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+  background-image: -wbekit-linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+  background-color: rgba(0, 0, 0, 0.85);
+  border-bottom: 2px solid rgba(249, 107, 107, 0.75);
+  padding: .5rem;
+}
+
+.layout-container header a {
+  color: #fff;
+  -ms-transition: all ease-in 80ms;
+  -moz-transition: all ease-in 80ms;
+  -webkit-transition: all ease-in 80ms;
+  transition: all ease-in 80ms;
+}
+
+.layout-container header a:first-child {
+  background-repeat: no-repeat;
+  background-image: url(/public/img/logo-small.png);
+  background-size: contain;
+  padding-top: .5rem;
+  padding-left: 3rem;
+  padding-bottom: .5rem;
+}
+
+.layout-container header a:hover {
+  color: #f96b6b;
+  -ms-transition: all ease-in 80ms;
+  -moz-transition: all ease-in 80ms;
+  -webkit-transition: all ease-in 80ms;
+  transition: all ease-in 80ms;
+}
+
+.layout-container header .repo-url-github {
+  opacity: 0.8;
+  width: 40px !important;
+  width: 40px !important;
+  padding: 0 !important;
+  margin-top: -.25rem !important;
+  border-radius: 50% !important;
+  border: 1px solid #171516 !important;
+  background-color: #fff !important;
+  background-size: 42px !important;
+  -ms-transition: all ease-in 80ms;
+  -moz-transition: all ease-in 80ms;
+  -webkit-transition: all ease-in 80ms;
+  transition: all ease-in 80ms;
+}
+
+.layout-container header .repo-url-github {
+  opacity: 1;
+  -ms-transition: all ease-in 80ms;
+  -moz-transition: all ease-in 80ms;
+  -webkit-transition: all ease-in 80ms;
+  transition: all ease-in 80ms;
+}
+
+.layout-container .search-box {
+  top: 15px;
+}
+
+.layout-container .search-input-edge {
+  background-color: #f96b6b;
+}
+
+.layout-container .search-input {
+  border-color: #f96b6b;
+}
+
+.layout-container .content {
+  margin-top: 60px;
+}
+
+.layout-container .navigation {
+  padding-top: 60px;
+}
