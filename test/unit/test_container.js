@@ -331,6 +331,16 @@ describe('class Container { ... }', () => {
       assert(container.contains(childA));
       assert(container.contains(childB));
       assert(container.contains(childC));
+
+      container.replaceChildren([childX, childY, childZ]);
+
+      assert(false == container.contains(childA));
+      assert(false == container.contains(childB));
+      assert(false == container.contains(childC));
+
+      assert(container.contains(childX));
+      assert(container.contains(childY));
+      assert(container.contains(childZ));
     });
   });
 

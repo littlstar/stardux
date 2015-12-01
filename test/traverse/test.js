@@ -24,7 +24,7 @@ containerOne.update({value: 'boop'});
 assert('boop' == containerThree.domElement.textContent.trim());
 
 testContainerTraversal(2, containerA);
-testContainerTraversal(3, containerOne);
+testContainerTraversal(2, containerOne);
 
 function testContainerTraversal (expected, container) {
   let n = 0;

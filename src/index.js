@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Module dependencies.
@@ -6,11 +6,11 @@
  * @private
  */
 
-import { combineReducers, createStore } from 'redux';
-import { Parser, Template } from 'starplate';
-import esprima from 'esprima';
-import extend from 'extend';
-import domify from 'domify';
+import { combineReducers, createStore } from 'redux'
+import { Parser, Template } from 'starplate'
+import esprima from 'esprima'
+import extend from 'extend'
+import domify from 'domify'
 
 /**
  * Container symbols.
@@ -18,13 +18,13 @@ import domify from 'domify';
  * @private
  */
 
-const $domElement = Symbol('Element');
-const $middleware = Symbol('middleware');
-const $children = Symbol('children');
-const $pipes = Symbol('pipes');
-const $model = Symbol('model');
-const $store = Symbol('store');
-const $uid = Symbol('uid');
+const $domElement = Symbol('Element')
+const $middleware = Symbol('middleware')
+const $children = Symbol('children')
+const $pipes = Symbol('pipes')
+const $model = Symbol('model')
+const $store = Symbol('store')
+const $uid = Symbol('uid')
 
 /**
  * Private stardux data attached to
@@ -35,7 +35,7 @@ const $uid = Symbol('uid');
  * @type {String}
  */
 
-const STARDUX_PRIVATE_ATTR = '__starduxData';
+const STARDUX_PRIVATE_ATTR = '__starduxData'
 
 /**
  * Reducer action type symbols.
@@ -45,7 +45,7 @@ const STARDUX_PRIVATE_ATTR = '__starduxData';
  * @type {Symbol)
  */
 
-const $UPDATE_ACTION = Symbol('UPDATE');
+const $UPDATE_ACTION = Symbol('UPDATE')
 
 /**
  * Known container map by ID
@@ -54,7 +54,7 @@ const $UPDATE_ACTION = Symbol('UPDATE');
  * @type {Map}
  */
 
-const CONTAINERS = new Map();
+const CONTAINERS = new Map()
 
 /**
  * Clones an object.
@@ -65,7 +65,7 @@ const CONTAINERS = new Map();
  */
 
 function clone (object) {
-  return extend(true, {}, object);
+  return extend(true, {}, object)
 }
 
 /**
@@ -78,14 +78,14 @@ function clone (object) {
 
 function isArrayLike (a) {
   if ('object' != typeof a)
-    return false;
+    return false
   else if (null == a)
-    return false;
+    return false
   else
     return Boolean( Array.isArray(a)
                     || null != a.length
-                    || a[0] );
-};
+                    || a[0] )
+}
 
 /**
  * Make stardux data object on a
@@ -99,10 +99,10 @@ function isArrayLike (a) {
 
 function mkdux (node, data = {}) {
   if (node instanceof Container)
-    node = node.domElement;
-  node[STARDUX_PRIVATE_ATTR] = ( node[STARDUX_PRIVATE_ATTR] || data );
-  return node[STARDUX_PRIVATE_ATTR];
-};
+    node = node.domElement
+  node[STARDUX_PRIVATE_ATTR] = ( node[STARDUX_PRIVATE_ATTR] || data )
+  return node[STARDUX_PRIVATE_ATTR]
+}
 
 /**
  * Remove stardux data object.
@@ -112,11 +112,11 @@ function mkdux (node, data = {}) {
  */
 
 function rmdux (node) {
-  if (null == node) return;
+  if (null == node) return
   if (node instanceof Container)
-    node = node.domElement;
-  delete node[STARDUX_PRIVATE_ATTR];
-};
+    node = node.domElement
+  delete node[STARDUX_PRIVATE_ATTR]
+}
 
 /**
  * Returns an array of known tokens
@@ -128,10 +128,10 @@ function rmdux (node) {
  */
 
 function getTokens (string) {
-  let tokens = null;
-  try { tokens = esprima.tokenize('`'+ string +'`'); }
-  catch (e) { tokens = []; }
-  return tokens;
+  let tokens = null
+  try { tokens = esprima.tokenize('`'+ string +'`') }
+  catch (e) { tokens = [] }
+  return tokens
 }
 
 /**
@@ -145,7 +145,7 @@ function getTokens (string) {
  */
 
 function getIdentifiersFromTokens (tokens) {
-  const identifiers = {};
+  const identifiers = {}
 
   /**
    * Predicate to determine if token is an identifier.
@@ -155,7 +155,7 @@ function getIdentifiersFromTokens (tokens) {
    * @return {Boolean}
    */
 
-  const isIdentifier = token => 'Identifier' == token.type;
+  const isIdentifier = token => 'Identifier' == token.type
 
   /**
    * Mark token as a function identifier.
@@ -167,14 +167,14 @@ function getIdentifiersFromTokens (tokens) {
    */
 
   const markFunction = (token, index) => {
-    const next = tokens[index + 1] || null;
+    const next = tokens[index + 1] || null
     token.isFunction = ( 'Identifier' == token.type
                         && 'object' == typeof next && next
                         && 'Punctuator' == next.type
                         && '(' == next.value
-                          ? true : false );
-                          return token;
-  };
+                          ? true : false )
+    return token
+  }
 
   /**
    * Mark token as a object identifier.
@@ -186,14 +186,14 @@ function getIdentifiersFromTokens (tokens) {
    */
 
   const markObject = (token, index) => {
-    const next = tokens[index + 1] || null;
+    const next = tokens[index + 1] || null
     token.isObject = ( 'Identifier' == token.type
                       && 'object' == typeof next && next
                       && 'Punctuator' == next.type
                       && '.' == next.value
-                        ? true : false );
-                        return token;
-  };
+                        ? true : false )
+    return token
+  }
 
   /**
    * Assign token value to identifierss map.
@@ -205,22 +205,22 @@ function getIdentifiersFromTokens (tokens) {
    */
 
   const assign = (map, token) => {
-    const value = token.value;
+    const value = token.value
     if (token.isFunction)
-      map[value] = _ => '';
+      map[value] = _ => ''
     else if (token.isObject)
-      map[value] = {};
+      map[value] = {}
     else
-      map[value] = '';
-    return map;
-  };
+      map[value] = ''
+    return map
+  }
 
   // resolve identifierss and return map
   return ( tokens
           .map((t, i) => markFunction(t, i))
           .map((t, i) => markObject(t, i))
           .filter(t => isIdentifier(t))
-          .reduce((map, t) => assign(map, t), identifiers) );
+          .reduce((map, t) => assign(map, t), identifiers) )
 }
 
 /**
@@ -232,8 +232,8 @@ function getIdentifiersFromTokens (tokens) {
  */
 
 function ensureDOMString (html = '') {
-  html = 'string' == typeof html ? html : String(html || '');
-  return html.trim();
+  html = 'string' == typeof html ? html : String(html || '')
+  return html.trim()
 }
 
 /**
@@ -245,15 +245,18 @@ function ensureDOMString (html = '') {
  */
 
 function ensureDOMElement (input) {
-  let domElement = null;
+  let domElement = null
+  let tmp = null
   if (input instanceof Element) {
-    return input;
+    return input
   } else if ('string' == typeof input) {
-    domElement = domify(input) || new Text(input);
+    tmp = document.createElement('div')
+    tmp.innerHTML = input
+    domElement = tmp.innerHTML.length ? tmp.children[0] : new Template(input)
   } else {
-    domElement = domify('<div></div>');
+    domElement = document.createElement('div')
   }
-  return domElement;
+  return domElement
 }
 
 /**
@@ -267,26 +270,26 @@ function ensureDOMElement (input) {
  */
 
 function getTemplateFromDomElement (domElement) {
-  let data = {};
-  let src = null;
+  let data = {}
+  let src = null
 
   if (domElement && domElement[STARDUX_PRIVATE_ATTR])
-    data = mkdux(domElement);
+    data = mkdux(domElement)
 
   if ('string' == typeof domElement)
-    src = domElement;
+    src = domElement
   else if (data.src)
-    src = data.src;
+    src = data.src
   else if (domElement.children && 0 == domElement.children.length)
-    src = ensureDOMString(domElement.textContent);
+    src = ensureDOMString(domElement.textContent)
   else if (domElement.firstChild instanceof Text)
-    src = ensureDOMString(domElement.innerHTML);
+    src = ensureDOMString(domElement.innerHTML)
   else if (domElement instanceof Text)
-    src = ensureDOMString(domElement.textContent);
+    src = ensureDOMString(domElement.textContent)
   else if (domElement)
-    src = domElement.innerHTML || domElement.textContent;
+    src = domElement.innerHTML || domElement.textContent
 
-  return src;
+  return src
 }
 
 /**
@@ -302,21 +305,21 @@ function getTemplateFromDomElement (domElement) {
  */
 
 function ensureContainerStateIdentifiers (container) {
-  const domElement = container[$domElement];
-  const template = getTemplateFromDomElement(domElement);
-  const tokens = getTokens(template);
-  const identifiers = getIdentifiersFromTokens(tokens);
-  const update = {};
-  const state = container.state;
+  const domElement = container[$domElement]
+  const template = getTemplateFromDomElement(domElement)
+  const tokens = getTokens(template)
+  const identifiers = getIdentifiersFromTokens(tokens)
+  const update = {}
+  const state = container.state
   if (identifiers) {
     for (let key in identifiers) {
       if (undefined === state[key])
-        update[key] = identifiers[key];
+        update[key] = identifiers[key]
     }
 
-    container.define(update);
+    container.define(update)
   }
-  return identifiers || null;
+  return identifiers || null
 }
 
 /**
@@ -329,40 +332,40 @@ function ensureContainerStateIdentifiers (container) {
  */
 
 function createRootReducer (container) {
-  return (state = Object.create(null), action = {data: {}}) => {
-    const identifiers = ensureContainerStateIdentifiers(container);
-    const domElement = container[$domElement];
-    const template = getTemplateFromDomElement(domElement);
-    const middleware = container[$middleware].entries();
-    const isBody = domElement == document.body;
+  return (state = {}, action = {data: {}}) => {
+    const identifiers = ensureContainerStateIdentifiers(container)
+    const domElement = container[$domElement]
+    const template = getTemplateFromDomElement(domElement)
+    const middleware = container[$middleware].entries()
+    const isBody = domElement == document.body
 
-    action.data = action.data || {};
+    action.data = action.data || {}
 
     void function next () {
-      const step = middleware.next();
-      const done = step.done;
-      const reducer = step.value ? step.value[0] : null;
-      if (done) return;
-      else if (null == reducer) next();
-      else if (false === reducer(state, action)) return;
-      else next();
-    }();
+      const step = middleware.next()
+      const done = step.done
+      const reducer = step.value ? step.value[0] : null
+      if (done) return
+      else if (null == reducer) next()
+      else if (false === reducer(state, action)) return
+      else next()
+    }()
 
     switch (action.type) {
       case $UPDATE_ACTION:
-        container.define(action.data || state);
-      if (!isBody && identifiers) {
-        const parser = new Parser();
-        const partial = new Template(template);
-        const src = partial.render(container.state, container);
-        const patch = parser.createPatch(src);
-        patch(domElement);
+        container.define(action.data)
+        if (!isBody && identifiers) {
+          const parser = new Parser()
+          const partial = new Template(template)
+          const src = partial.render(container.state, container)
+          const patch = parser.createPatch(src)
+          patch(domElement)
       }
-      break;
+      break
     }
 
-    return extend(true, clone(state || {}), container.state);
-  };
+    return extend(true, container.state, state, action.data)
+  }
 }
 
 /**
@@ -376,19 +379,19 @@ function createRootReducer (container) {
 
 function createPipeReducer (container) {
   return (_, action = {data: {}}) => {
-    const state = container.state;
-    const pipes = container[$pipes].entries();
-    void function next () {
-      const step = pipes.next();
-      const done = step.done;
-      const pipe = step.value ? step.value[1] : null;
-      if (done) return;
-      else if (null == pipe) next();
-      else if (false === pipe(state, action)) return;
-      else next();
-    }();
-    return state;
-  };
+    const state = container.state
+    const pipes = container[$pipes].entries()
+    reduce()
+    return container.state
+    function reduce () {
+      const step = pipes.next()
+      const done = step.done
+      const pipe = step.value ? step.value[1] : null
+      if (done) return
+      else if (false === pipe(state, action)) return
+      else return reduce()
+    }
+  }
 }
 
 /**
@@ -399,7 +402,7 @@ function createPipeReducer (container) {
  * @type {Symbol}
  */
 
-export const UPDATE = $UPDATE_ACTION;
+export const UPDATE = $UPDATE_ACTION
 
 /**
  * Create a new Container instance.
@@ -411,11 +414,11 @@ export const UPDATE = $UPDATE_ACTION;
  * @return {Container}
  */
 
-export default createContainer;
+export default createContainer
 export function createContainer (domElement, initialState = null, ...reducers) {
   const container = ( fetchContainer(domElement)
-                   || new Container(domElement, ...reducers) );
-  return container.update(initialState);
+                   || new Container(domElement, ...reducers) )
+  return container.update(initialState)
 }
 
 /**
@@ -428,11 +431,11 @@ export function createContainer (domElement, initialState = null, ...reducers) {
  */
 
 export function makeContainer (domElement) {
-  let container = null;
+  let container = null
   if (false == (domElement instanceof Element))
-    throw new TypeError("makeContainer() expects a DOM element.");
-  container = fetchContainer(domElement) || new Container(domElement);
-  return container;
+    throw new TypeError("makeContainer() expects a DOM element.")
+  container = fetchContainer(domElement) || new Container(domElement)
+  return container
 }
 
 /**
@@ -447,38 +450,38 @@ export function makeContainer (domElement) {
  */
 
 export function restoreContainerFromJSON (json, initialState = null, ...reducers) {
-  const id = json.id;
-  const src = json.src;
-  let data = null;
-  let children = [];
-  let container = fetchContainer(id);
-  let domElement = null;
+  const id = json.id
+  const src = json.src
+  let data = null
+  let children = []
+  let container = fetchContainer(id)
+  let domElement = null
 
   if (null == container)
-    container = new Container(null, ...reducers);
+    container = new Container(null, ...reducers)
 
-  container[$uid] = id;
-  domElement = container.domElement;
-  data = mkdux(domElement);
+  container[$uid] = id
+  domElement = container.domElement
+  data = mkdux(domElement)
 
-  saveContainer(container);
+  saveContainer(container)
 
   if (src != data.src)
-    data.src = src;
+    data.src = src
 
   if (initialState)
-    container.update(initialState);
+    container.update(initialState)
 
   for (let child of json.children)
-    children.push(restoreContainerFromJSON(child, initialState));
+    children.push(restoreContainerFromJSON(child, initialState))
 
-  realignContainerTree(container, true, true);
+  realignContainerTree(container, true, true)
 
   for (let child of children)
     if (false == container.contains(child))
-      container.appendChild(child, false);
+      container.appendChild(child, false)
 
-  return container.update();
+  return container.update()
 }
 
 /**
@@ -501,42 +504,42 @@ export function restoreContainerFromJSON (json, initialState = null, ...reducers
  */
 
 export function composeContainers (root, ...containers) {
-  let composed = null;
-  let updateChildren = false;
-  const children = [];
+  let composed = null
+  let updateChildren = false
+  const children = []
 
   // array of containers
   if (isArrayLike(root)) {
-    containers = [ ...root ].map(createContainer);
-    root = null;
+    containers = [ ...root ].map(createContainer)
+    root = null
   } else {
     // derive containers from arguments
     if (isArrayLike(containers[0]))
-      containers = [ ...containers[0] ];
-    containers = [ ...containers ].map(createContainer);
+      containers = [ ...containers[0] ]
+    containers = [ ...containers ].map(createContainer)
   }
 
-  composed = createContainer(root || undefined);
+  composed = createContainer(root || undefined)
 
   // create composite
-  let composite = composed;
+  let composite = composed
   for (let child of containers)
-    composite = composite.pipe(child);
+    composite = composite.pipe(child)
 
   // realign root tree
-  realignContainerTree(composed, true);
+  realignContainerTree(composed, true)
 
   // allow consumer to unwind composition
   composed.decompose = _ => {
     let composite = composed
     for (let child of containers)
-      composite = composite.unpipe(child);
+      composite = composite.unpipe(child)
     // remove this function
-    delete composed.decompose;
-    return composed;
-  };
+    delete composed.decompose
+    return composed
+  }
 
-  return composed;
+  return composed
 }
 
 /**
@@ -551,26 +554,26 @@ export function composeContainers (root, ...containers) {
  */
 
 export function getContainerData (arg) {
-  let data = null;
-  let container = null;
-  let domElement = null;
+  let data = null
+  let container = null
+  let domElement = null
 
   if (arg instanceof Container) {
-    domElement = arg.domElement;
+    domElement = arg.domElement
   } else if (arg instanceof Element) {
-    domElement = arg;
+    domElement = arg
   } else if ('string' == typeof arg) {
-    container = fetchContainer(arg);
-    domElement = container.domElement;
+    container = fetchContainer(arg)
+    domElement = container.domElement
   } else {
     throw new TypeError( "Unexpected input for getContainerData. "
                        + "Expecting an instance of a Container or Element, "
-                       + "or a string." );
+                       + "or a string." )
   }
 
   if (domElement)
-    data = domElement[STARDUX_PRIVATE_ATTR];
-  return data ? Object.freeze(data) : null;
+    data = domElement[STARDUX_PRIVATE_ATTR]
+  return data ? Object.freeze(data) : null
 }
 
 /**
@@ -584,22 +587,22 @@ export function getContainerData (arg) {
 
 export function restoreOrphanedTree (container, recursive = false) {
   if (container instanceof Element)
-    container = fetchContainer(container);
+    container = fetchContainer(container)
 
   if (null == container)
-    return;
+    return
 
-  const domElement = container.domElement;
-  const children = container[$children];
+  const domElement = container.domElement
+  const children = container[$children]
 
   for (let child of [ ...children ]) {
-    const childDomElement = child.domElement;
+    const childDomElement = child.domElement
 
     if (false == domElement.contains(childDomElement))
-      domElement.appendChild(childDomElement);
+      domElement.appendChild(childDomElement)
 
     if (recursive)
-      restoreOrphanedTree(child, true);
+      restoreOrphanedTree(child, true)
   }
 }
 
@@ -615,41 +618,41 @@ export function restoreOrphanedTree (container, recursive = false) {
 export function realignContainerTree (container,
                                       recursive = false,
                                       forceOrphanRestoration = false) {
-  const domElement = container.domElement;
-  const children = container[$children];
+  const domElement = container.domElement
+  const children = container[$children]
 
   if (null == domElement.children)
-    return;
+    return
 
-  const delta = [ ...children ].length - domElement.children.length;
+  const delta = [ ...children ].length - domElement.children.length
 
   if (delta > 0 || true === forceOrphanRestoration)
-    restoreOrphanedTree(container, recursive);
+    restoreOrphanedTree(container, recursive)
 
   // purge child containers existing in tree where
   // the DOM element is not a child of the container
   // DOM element.
   for (let child of [ ...children ]) {
-    const childElement = child.domElement;
+    const childElement = child.domElement
     if (false == domElement.contains(childElement))
-      children.delete(child);
+      children.delete(child)
   }
 
   // traverse children
   for (let childElement of [ ...domElement.children ]) {
-    const data = childElement[STARDUX_PRIVATE_ATTR];
-    const child = 'object' == typeof data ? fetchContainer(data.id) : null;
+    const data = childElement[STARDUX_PRIVATE_ATTR]
+    const child = 'object' == typeof data ? fetchContainer(data.id) : null
 
     // skip DOM elements which are not claimed
     // by any existing containers
     if (null == child)
-      continue;
+      continue
 
-    children.add(child);
+    children.add(child)
 
     // recurse child containers
     if (true === recursive)
-      realignContainerTree(child, true, forceOrphanRestoration);
+      realignContainerTree(child, true, forceOrphanRestoration)
   }
 }
 
@@ -664,12 +667,12 @@ export function realignContainerTree (container,
  */
 
 export function saveContainer (container) {
-  container = fetchContainer(container) || container;
+  container = fetchContainer(container) || container
   if (container && container.id && !CONTAINERS.has(container.id)) {
-    CONTAINERS.set(container.id, container);
-    return true;
+    CONTAINERS.set(container.id, container)
+    return true
   }
-  return false;
+  return false
 }
 
 /**
@@ -685,8 +688,8 @@ export function fetchContainer (arg) {
              ? arg.id
              : ( arg && arg[STARDUX_PRIVATE_ATTR] )
                ? arg[STARDUX_PRIVATE_ATTR].id
-               : arg;
-  return id ? CONTAINERS.get(id) : null;
+               : arg
+  return id ? CONTAINERS.get(id) : null
 }
 
 /**
@@ -697,7 +700,7 @@ export function fetchContainer (arg) {
  */
 
 export function createContainerUid () {
-  return ( Math.random() ).toString('16').slice(1);
+  return ( Math.random() ).toString('16').slice(1)
 }
 
 /**
@@ -708,7 +711,7 @@ export function createContainerUid () {
  */
 
 export function getAllContainers () {
-  return CONTAINERS.entries();
+  return CONTAINERS.entries()
 }
 
 /**
@@ -721,11 +724,11 @@ export function getAllContainers () {
  */
 
 export function forEachContainer (fn, scope = null) {
-  const containers = getAllContainers();
-  fn = 'function' == typeof fn ? fn : _ => void 0;
+  const containers = getAllContainers()
+  fn = 'function' == typeof fn ? fn : _ => void 0
   for (let kv of containers)
-    fn.call(scope || global, kv[1], containers);
-  return Container;
+    fn.call(scope || global, kv[1], containers)
+  return Container
 }
 
 /**
@@ -738,10 +741,10 @@ export function forEachContainer (fn, scope = null) {
  */
 
 export function traverseContainer (container, fn, scope) {
-  const children = container.children;
+  const children = container.children
   for (let child of [ ...children ]) {
-    fn.call(scope || global, child, children);
-    traverseContainer(child, fn, scope);
+    fn.call(scope || global, child, children)
+    traverseContainer(child, fn, scope)
   }
 }
 
@@ -755,17 +758,17 @@ export function traverseContainer (container, fn, scope) {
  */
 
 export function removeContainer  (arg) {
-  const container = fetchContainer(arg);
-  const id = container ? container.id : null;
+  const container = fetchContainer(arg)
+  const id = container ? container.id : null
   if (id && CONTAINERS.has(id)) {
     // remove from parent
     if (container.parent)
-      container.parent.removeChild(container, false, true);
+      container.parent.removeChild(container, false, true)
 
-    CONTAINERS.delete(id);
-    return true;
+    CONTAINERS.delete(id)
+    return true
   }
-  return false;
+  return false
 }
 
 /**
@@ -778,41 +781,41 @@ export function removeContainer  (arg) {
  */
 
 export function replaceContainer (existing, replacement, create = false) {
-  let replacementContainer = null;
-  let existingContainer = null;
+  let replacementContainer = null
+  let existingContainer = null
 
   // get existing container, if the container
   // does not exist then throw an error
-  existingContainer = fetchContainer(existing);
+  existingContainer = fetchContainer(existing)
   if (null == existingContainer) {
     throw Error( "replaceContainer() called for a container "
-               + "that does not exist." );
+               + "that does not exist." )
   }
 
   // get replacement container if input is not
   // a container already like an ID or DOM element.
   if (false == (replacement instanceof Container))
-    replacementContainer = fetchContainer(replacement);
+    replacementContainer = fetchContainer(replacement)
   else
-    replacementContainer = replacement;
+    replacementContainer = replacement
 
   // if the a replacement didn't exist and
   // create was set to true then create the
   // replacement from the replacement input
   if (null == replacementContainer && true === create)
-    replacementContainer = createContainer(replacement);
+    replacementContainer = createContainer(replacement)
 
   // replace existing container with the replacement container
   // by replacing its internal DOM element and updating the
   // internal container map
   if (existingContainer instanceof Container &&
       replacementContainer instanceof Container) {
-    removeContainer(existingContainer);
-    replaceDOMElement(existingContainer, replacementContainer.domElement);
-    saveContainer(replacementContainer);
+    removeContainer(existingContainer)
+    replaceDOMElement(existingContainer, replacementContainer.domElement)
+    saveContainer(replacementContainer)
   }
 
-  return replacementContainer || null;
+  return replacementContainer || null
 }
 
 /**
@@ -824,9 +827,9 @@ export function replaceContainer (existing, replacement, create = false) {
 
 export function clearContainers () {
   // remove stardux data for each container
-  forEachContainer(container => rmdux(container.domElement));
+  forEachContainer(container => rmdux(container.domElement))
   // clear containers
-  CONTAINERS.clear();
+  CONTAINERS.clear()
 }
 
 /**
@@ -839,52 +842,52 @@ export function clearContainers () {
  */
 
 export function replaceDOMElement (container, domElement) {
-  const existingData = mkdux(domElement);
-  const data = mkdux(container.domElement);
+  const existingData = mkdux(domElement)
+  const data = mkdux(container.domElement)
   if (domElement) {
-    mkdux(domElement, data);
+    mkdux(domElement, data)
 
-    const sources = [];
-    const childElements = [ ...domElement.children ];
-    const existingContainer = fetchContainer(existingData.id);
+    const sources = []
+    const childElements = [ ...domElement.children ]
+    const existingContainer = fetchContainer(existingData.id)
 
-    container[$uid] = existingData.id || data.id || container[$uid];
-    container[$domElement] = domElement;
+    container[$uid] = existingData.id || data.id || container[$uid]
+    container[$domElement] = domElement
 
-    container[$children].clear();
+    container[$children].clear()
 
     for (let childElement of childElements)
-      storeChildSource(childElement);
+      storeChildSource(childElement)
 
-    container.update(null, false);
+    container.update(null, false)
 
     if (existingContainer) {
-      container[$children] = existingContainer[$children];
-      realignContainerTree(container, true, true);
+      container[$children] = existingContainer[$children]
+      realignContainerTree(container, true, true)
     }
 
-    const stack = sources.slice();
+    const stack = sources.slice()
     for (let childElement of [ ...domElement.children ])
-      restoreChildElementSource(childElement, stack);
+      restoreChildElementSource(childElement, stack)
 
     function storeChildSource (node) {
-      const data = mkdux(node);
-      sources.push(data.src || node.innerHTML);
+      const data = mkdux(node)
+      sources.push(data.src || node.innerHTML)
       for (let child of [ ...node.children ])
-        storeChildSource(child);
+        storeChildSource(child)
     }
 
     function restoreChildElementSource (node, stack) {
-      const parser = new Parser();
-      const source = stack.shift();
-      const data = extend(mkdux(node), {src: source});
-      const patch = source ? parser.createPatch(source) : null;
-      if (patch) patch(node);
+      const parser = new Parser()
+      const source = stack.shift()
+      const data = extend(mkdux(node), {src: source})
+      const patch = source ? parser.createPatch(source) : null
+      if (patch) patch(node)
       for (let child of [ ...node.children ])
-        restoreChildElementSource(child, stack);
+        restoreChildElementSource(child, stack)
     }
   }
-  return container;
+  return container
 }
 
 
@@ -908,7 +911,7 @@ export class Container {
 
   constructor (domElement = null, ...reducers) {
     // ensure DOM element instance
-    domElement = ensureDOMElement(domElement);
+    domElement = ensureDOMElement(domElement)
 
     /**
      * Container UID
@@ -917,7 +920,7 @@ export class Container {
      * @type {String}
      */
 
-    this[$uid] = createContainerUid();
+    this[$uid] = createContainerUid()
 
     /**
      * Instance root DOM Element.
@@ -926,7 +929,7 @@ export class Container {
      * @type {Element}
      */
 
-    this[$domElement] = domElement;
+    this[$domElement] = domElement
 
     /**
      * Middleware set.
@@ -935,7 +938,7 @@ export class Container {
      * @type {Set}
      */
 
-    this[$middleware] = new Set();
+    this[$middleware] = new Set()
 
     /**
      * Known container pipes.
@@ -944,7 +947,7 @@ export class Container {
      * @type {Set}
      */
 
-    this[$pipes] = new Map();
+    this[$pipes] = new Map()
 
     /**
      * View model.
@@ -953,7 +956,7 @@ export class Container {
      * @type {Object}
      */
 
-    this[$model] = Object.create(null);
+    this[$model] = {}
 
     /**
      * Child containers.
@@ -962,7 +965,7 @@ export class Container {
      * @type {Set}
      */
 
-    this[$children] = new Set();
+    this[$children] = new Set()
 
     /**
      * Redux store.
@@ -996,68 +999,67 @@ export class Container {
       // note that any middleware applied to parent of a pipe chain will
       // affect the input of the child of a pipe chain.
       createPipeReducer(this),
-    ]));
+    ]))
 
     // Replace DOM element with itself effectively
     // restoring orphaned or lost stardux data.
-    replaceDOMElement(this, domElement);
+    replaceDOMElement(this, domElement)
 
     // ensure container state identifers found in
     // DOM element source is predefined on the internal
     // state object.
-    ensureContainerStateIdentifiers(this);
+    ensureContainerStateIdentifiers(this)
 
     // Save this container to the internal container map
-    saveContainer(this);
+    saveContainer(this)
 
     // Realign parent tree recursively if it exists and restore
     // orphaned child containers. This will cause all
     // child containers to realign themselves recursively.
     if (this.parent)
-      realignContainerTree(this.parent, true, true);
+      realignContainerTree(this.parent, true, true)
     // Realign container and all orphaned child containers if
     // found in the tree. This will cause child containers to
     // realign themselves.
     else
-      realignContainerTree(this, true, true);
+      realignContainerTree(this, true, true)
   }
 
   /**
-   * Getter to retrieve a copy of the
-   * internal state object.
+   * Copy of the internal state object.
    *
    * @public
    * @type {Object}
    */
 
   get state () {
-    return clone(this[$model]);
+    return clone(this[$model])
   }
 
   /**
    * Dummy setter for the state property.
    *
-   * @public
+   * @private
    * @type {Object}
    */
 
   set state (_) { }
 
   /**
-   * Getter to retrieve container id.
+   * Container id.
    *
    * @public
    * @type {String}
    */
 
   get id () {
-    return this[$uid];
+    return this[$uid]
   }
 
   /**
    * Dummy setter for the id property.
    *
-   * @public
+   * @private
    * @type {String}
    */
 
@@ -1075,16 +1077,16 @@ export class Container {
    */
 
   get parent () {
-    const domElement = this.domElement;
-    let parentElement = domElement && domElement.parentElement;
-    let parentContainerData = {};
-    let parentElementContainer = null;
+    const domElement = this.domElement
+    let parentElement = domElement && domElement.parentElement
+    let parentContainerData = {}
+    let parentElementContainer = null
     do {
-      if (null == parentElement) break;
-      parentContainerData = parentElement[STARDUX_PRIVATE_ATTR] || {};
-      parentElement = parentElement.parentElement;
-    } while (!(parentElementContainer = fetchContainer(parentContainerData.id)));
-    return parentElementContainer;
+      if (null == parentElement) break
+      parentContainerData = parentElement[STARDUX_PRIVATE_ATTR] || {}
+      parentElement = parentElement.parentElement
+    } while (!(parentElementContainer = fetchContainer(parentContainerData.id)))
+    return parentElementContainer
   }
 
   /**
@@ -1104,7 +1106,7 @@ export class Container {
    */
 
   get domElement () {
-    return this[$domElement];
+    return this[$domElement]
   }
 
   /**
@@ -1117,10 +1119,10 @@ export class Container {
 
   set domElement (domElement) {
     if (domElement instanceof Element)
-      replaceDOMElement(this, domElement);
+      replaceDOMElement(this, domElement)
     else throw new TypeError( "Cannot set property .domElement. Value must "
-                            + "be an Element." );
-    return this.domElement;
+                            + "be an Element." )
+    return this.domElement
   }
 
   /**
@@ -1131,7 +1133,7 @@ export class Container {
    */
 
   get innerContents () {
-    return this.domElement.innerHTML || '';
+    return this.domElement.innerHTML || ''
   }
 
   /**
@@ -1150,10 +1152,10 @@ export class Container {
 
   set innerContents (value) {
     if (null === value)
-      value = '';
-    const data = mkdux(this);
-    data.src = String(value);
-    this.update();
+      value = ''
+    const data = mkdux(this)
+    data.src = String(value)
+    this.update()
   }
 
   /**
@@ -1166,8 +1168,8 @@ export class Container {
 
   define (model) {
     if ('object' == typeof model)
-      extend(true, this[$model], model);
-    return this;
+      extend(true, this[$model], model)
+    return this
   }
 
   /**
@@ -1179,9 +1181,7 @@ export class Container {
    */
 
   get children () {
-    return ( [ ...this[$children].entries() ]
-             .map(kv => kv[0])
-             .filter(child => child instanceof Container) );
+    return [ ...this[$children].entries() ].map(kv => kv[0])
   }
 
   /**
@@ -1193,10 +1193,10 @@ export class Container {
    */
 
   use (...plugins) {
-    const middleware = this[$middleware];
+    const middleware = this[$middleware]
     for (let plugin of plugins)
-      middleware.add(plugin);
-    return this;
+      middleware.add(plugin)
+    return this
   }
 
   /**
@@ -1209,32 +1209,32 @@ export class Container {
    */
 
   update (data, propagate = true) {
-    const domElement = this.domElement;
-    const template = getTemplateFromDomElement(domElement);
+    const domElement = this.domElement
+    const template = getTemplateFromDomElement(domElement)
 
     // init/update DOM data
-    extend(mkdux(domElement), { id: this[$uid] });
+    extend(mkdux(domElement), { id: this[$uid] })
     if (template) {
       extend(mkdux(domElement), {
         src: getTemplateFromDomElement(domElement)
-      });
+      })
     }
 
     // pre alignment
-    realignContainerTree(this, true, true);
+    realignContainerTree(this, true, true)
 
     // update
-    this.dispatch($UPDATE_ACTION, data, { propagate: propagate });
+    this.dispatch($UPDATE_ACTION, data, { propagate: propagate })
 
     if (propagate) {
       for (let child of [ ...this.children ]) {
-        child.update(data || this.state);
+        child.update(data || this.state)
       }
     }
 
     // post alignment
-    realignContainerTree(this);
-    return this;
+    realignContainerTree(this)
+    return this
   }
 
   /**
@@ -1246,10 +1246,10 @@ export class Container {
    */
 
   render (domElement) {
-    if (!domElement) return this;
+    if (!domElement) return this
     if (false == domElement.contains(this[$domElement]))
-      domElement.appendChild(this[$domElement]);
-    return this;
+      domElement.appendChild(this[$domElement])
+    return this
   }
 
   /**
@@ -1264,13 +1264,13 @@ export class Container {
    */
 
   dispatch (type, data = {}, args = {}) {
-    if (!type) throw new TypeError("Failed to dispatch event without type.");
-    const store = this[$store];
-    const payload = {type: type, data: data};
+    if (!type) throw new TypeError("Failed to dispatch event without type.")
+    const store = this[$store]
+    const payload = {type: type, data: data}
     for (let key in args)
-      payload[key] = args[key];
-    store.dispatch(payload);
-    return this;
+      payload[key] = args[key]
+    store.dispatch(payload)
+    return this
   }
 
   /**
@@ -1283,11 +1283,11 @@ export class Container {
 
   replaceChildren (children) {
     for (let child of this.children)
-      this.removeChild(child);
+      this.removeChild(child, false)
 
     for (let child of children)
-      this.appendChild(child);
-    return this;
+      this.appendChild(child, false)
+    return this.update()
   }
 
   /**
@@ -1299,7 +1299,7 @@ export class Container {
    */
 
   valueOf () {
-    return this.domElement;
+    return this.domElement
   }
 
   /**
@@ -1311,7 +1311,7 @@ export class Container {
    */
 
   toString () {
-    return this.domElement.textContent;
+    return this.domElement.textContent
   }
 
   /**
@@ -1323,19 +1323,19 @@ export class Container {
    */
 
   toJSON () {
-    const root = {};
+    const root = {}
     void function traverse (container, node) {
-      node.id = container.id;
-      node.src = getTemplateFromDomElement(container.domElement);
-      node.state = container.state || {};
-      node.children = [];
+      node.id = container.id
+      node.src = getTemplateFromDomElement(container.domElement)
+      node.state = container.state || {}
+      node.children = []
       for (let child of container.children) {
-        const next = {};
-        node.children.push(next);
-        traverse(child, next);
+        const next = {}
+        node.children.push(next)
+        traverse(child, next)
       }
-    }(this, root);
-    return root;
+    }(this, root)
+    return root
   }
 
   /**
@@ -1347,22 +1347,22 @@ export class Container {
    */
 
   pipe (container) {
-    const pipes = this[$pipes];
+    const pipes = this[$pipes]
     const middleware = (state, action) => {
       switch (action.type) {
         case $UPDATE_ACTION:
-          if (action.data) container.update(clone(action.data));
-          break;
+          if (action.data) container.update(clone(action.data))
+          break
         default:
-          container.dispatch(action.type, action.data, action);
+          container.dispatch(action.type, action.data, action)
       }
-    };
-
-    if (false == pipes.has(container)) {
-      pipes.set(container, middleware);
     }
 
-    return container;
+    if (false == pipes.has(container)) {
+      pipes.set(container, middleware)
+    }
+
+    return container
   }
 
   /**
@@ -1374,13 +1374,13 @@ export class Container {
    */
 
   unpipe (container) {
-    const pipes = this[$pipes];
-    const reducers = this[$middleware];
-    const middleware = pipes.get(container);
+    const pipes = this[$pipes]
+    const reducers = this[$middleware]
+    const middleware = pipes.get(container)
     if (middleware) {
-      pipes.delete(container);
+      pipes.delete(container)
     }
-    return container;
+    return container
   }
 
   /**
@@ -1397,37 +1397,37 @@ export class Container {
    */
 
   appendChild (child, update = true, realign = true) {
-    const domElement = this.domElement;
-    let childDomElement = null;
-    let container = null;
+    const domElement = this.domElement
+    let childDomElement = null
+    let container = null
 
     if (child instanceof Container) {
-      container = child;
+      container = child
     } else if (child instanceof Element) {
-      container = createContainer(child);
+      container = createContainer(child)
     } else if ('string' == typeof child || child instanceof Text) {
-      container = createContainer(child);
+      container = createContainer(child)
     } else {
       throw new TypeError( "Unexpected input for appendChild. "
                          + "Expecting an instance of a Container, Element, Text "
-                         + "or a string." );
+                         + "or a string." )
     }
 
-    childDomElement = container.domElement;
+    childDomElement = container.domElement
 
-    if (update) this.update();
+    if (update) this.update()
 
     try {
       if (container.parent && container.parent != this) {
-        container.parent.removeChild(container);
+        container.parent.removeChild(container)
       }
-      domElement.appendChild(childDomElement);
-      this[$children].add(container);
+      domElement.appendChild(childDomElement)
+      this[$children].add(container)
     } catch (e) { console.warn(e) }
 
-    if (realign) realignContainerTree(this);
+    if (realign) realignContainerTree(this)
 
-    return container;
+    return container
   }
 
   /**
@@ -1444,26 +1444,26 @@ export class Container {
    */
 
   removeChild (child, update = true, realign = true) {
-    const domElement = this.domElement;
-    let childDomElement = null;
-    let container = fetchContainer(child);
+    const domElement = this.domElement
+    let childDomElement = null
+    let container = fetchContainer(child)
 
     // bail if there is nothing to do
-    if (null == container) return this;
+    if (null == container) return this
 
-    childDomElement = container.domElement;
+    childDomElement = container.domElement
 
     // remove child if it is in tree
     if (domElement.contains(childDomElement))
-      domElement.removeChild(childDomElement);
+      domElement.removeChild(childDomElement)
 
     // remove from container children tree
-    this[$children].delete(container);
+    this[$children].delete(container)
 
     // realign tree
-    if (realign) realignContainerTree(this);
+    if (realign) realignContainerTree(this)
 
-    return this;
+    return this
   }
 
   /**
@@ -1477,16 +1477,16 @@ export class Container {
    */
 
   contains (container, recursive = true) {
-    container = fetchContainer(container);
+    container = fetchContainer(container)
     if (this[$children].has(container)) {
-      return true;
+      return true
     } else if (recursive) {
       for (let child of this.children) {
         if (child.contains(container)) {
-          return true;
+          return true
         }
       }
     }
-    return false;
+    return false
   }
 }

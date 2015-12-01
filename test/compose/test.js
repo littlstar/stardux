@@ -13,7 +13,7 @@ function text (domElement) {
 composed.update({data: [1, 2, 3, 4]});
 
 let i = 0;
-for (let child of composed.children()) {
+for (let child of composed.children) {
   assert(++i == Number(text(child.domElement)),
          `Failed assertion i=${i} where ` +
          `(${i} != ${Number(text(child.domElement))})`);

@@ -17,7 +17,7 @@ const json = {
   ]
 };
 const container = stardux.restoreContainerFromJSON(json);
-const child = container.children()[0];
+const child = container.children[0];
 container.render(main);
 
 child.update({a: 'beep', b: 'boop'});
