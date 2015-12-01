@@ -1,9 +1,27 @@
 {
   "title": "Stardux",
   "package": "./package.json",
+  "index": "./manual/overview.md",
   "source": "./src",
-  "destination": "./esdoc",
-  "plugins": [
-    {"name": "esdoc-es7-plugin"}
-  ]
+  "destination": "./doc",
+  "plugins": [ {"name": "esdoc-es7-plugin"} ],
+
+  "test": {
+    "type": "mocha",
+    "source": "./test/unit",
+    "includes": ["./test/unit/test_container.js"]
+  },
+
+  "manual": {
+    "installation": ["./manual/installation.md"],
+    "containers": ["./manual/containers.md"],
+    "changelog": ["./CHANGELOG.md"],
+    "advanced": ["./manual/advanced.md"],
+    "overview": ["./manual/overview.md"],
+    "examples": ["./manual/examples.md"],
+    "usage": ["./manual/usage.md"],
+    "json": ["./manual/json.md"],
+    "api": ["./manual/api.md"],
+    "faq": ["./manual/faq.md"]
+  }
 }

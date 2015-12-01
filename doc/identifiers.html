@@ -15,11 +15,11 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
-  
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/littlstar/stardux.git" class="repo-url-github">Repository</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -188,7 +188,7 @@
       <div>
         
         
-        <div data-ice="description"><p>Generates a unique hex ID.</p>
+        <div data-ice="description"><p>Generates a unique hex ID for Container instances.</p>
 </div>
       </div>
     </td>
@@ -208,13 +208,14 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-fetchContainer">fetchContainer</a></span></span><span data-ice="signature">(arg: <span>Mixed</span>): <span>class Container</span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-fetchContainer">fetchContainer</a></span></span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>): <span>class Container</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Fetch a saved container by id.</p>
+        <div data-ice="description"><p>Fetch a saved container by container ID,
+DOM element, or by a container instance.</p>
 </div>
       </div>
     </td>
@@ -234,13 +235,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-forEachContainer">forEachContainer</a></span></span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, scope: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>class Container</span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-forEachContainer">forEachContainer</a></span></span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, scope: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Run fn on each container.</p>
+        <div data-ice="description"><p>Execute a function for each container.</p>
 </div>
       </div>
     </td>
@@ -266,7 +267,7 @@
       <div>
         
         
-        <div data-ice="description"><p>Returns an interator of all containers.</p>
+        <div data-ice="description"><p>Returns an interator for all containers.</p>
 </div>
       </div>
     </td>
@@ -319,8 +320,8 @@ input.</p>
       <div>
         
         
-        <div data-ice="description"><p>Claims a DOM element as a container and
-returns container.</p>
+        <div data-ice="description"><p>Creates a or returns a new Container instance
+from a given DOM element.</p>
 </div>
       </div>
     </td>
@@ -346,7 +347,8 @@ returns container.</p>
       <div>
         
         
-        <div data-ice="description"><p>Realign container DOM tree.</p>
+        <div data-ice="description"><p>Realign container DOM tree by removing containers
+not found in container DOM tree.</p>
 </div>
       </div>
     </td>
@@ -366,14 +368,13 @@ returns container.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Remove a container by id or the
-instance itself.</p>
+        <div data-ice="description"><p>Removes a container from the internal tree.</p>
 </div>
       </div>
     </td>
@@ -393,13 +394,13 @@ instance itself.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>, create: <span>Boolen</span>): <span>*</span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, create: <span>Boolen</span>): <span>*</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Replace container with another</p>
+        <div data-ice="description"><p>Replace a container with another.</p>
 </div>
       </div>
     </td>
@@ -425,7 +426,7 @@ instance itself.</p>
       <div>
         
         
-        <div data-ice="description"><p>Replace container element with another</p>
+        <div data-ice="description"><p>Replace container element with another.</p>
 </div>
       </div>
     </td>
@@ -452,7 +453,8 @@ instance itself.</p>
         
         
         <div data-ice="description"><p>Create or restore a Container instance
-from a JSON object.</p>
+from a JSON object with an optional state
+object a reducers.</p>
 </div>
       </div>
     </td>
@@ -499,14 +501,13 @@ still attached to a container.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-saveContainer">saveContainer</a></span></span><span data-ice="signature">(container: <span><a href="class/src/index.js~Container.html">Container</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-saveContainer">saveContainer</a></span></span><span data-ice="signature">(container: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Save a container to the known
-containers map.</p>
+        <div data-ice="description"><p>Save a container to the known containers map.</p>
 </div>
       </div>
     </td>
@@ -532,7 +533,7 @@ containers map.</p>
       <div>
         
         
-        <div data-ice="description"><p>Traverse container tree.</p>
+        <div data-ice="description"><p>Traverse a container&apos;s tree recursively.</p>
 </div>
       </div>
     </td>
@@ -565,7 +566,8 @@ containers map.</p>
       <div>
         
         
-        <div data-ice="description"><p>UPDATE event type.</p>
+        <div data-ice="description"><p>UPDATE event type called with dispatch
+by the update() method.</p>
 </div>
       </div>
     </td>

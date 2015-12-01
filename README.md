@@ -17,7 +17,7 @@ patching algorithm built on
 
 *stardux* manages an internal `Map` of containers allowing for container
 traversal. Containers are aware of nested (child) containers and are
-made available through [traversal mechanisms](doc/advanced.md#traversal).
+made available through [traversal mechanisms](manual/advanced.md#traversal).
 
 ## Installation
 
@@ -53,11 +53,11 @@ setInterval(_ => counter.update({elapsed: ++elapsed}), 1000);
 
 ## Documentation
 
-* [Getting Started](doc/usage.md)
-* [API](doc/api.md)
-* [Containers](doc/containers.md)
-* [Advanced](doc/advanced.md)
-* [Examples](doc/examples.md)
+* [Getting Started](manual/usage.md)
+* [API](manual/api.md)
+* [Containers](manual/containers.md)
+* [Advanced](manual/advanced.md)
+* [Examples](manual/examples.md)
 
 ## License
 

@@ -395,7 +395,8 @@ function createPipeReducer (container) {
 }
 
 /**
- * UPDATE event type.
+ * UPDATE event type called with dispatch
+ * by the update() method.
  *
  * @public
  * @const
@@ -405,12 +406,13 @@ function createPipeReducer (container) {
 export const UPDATE = $UPDATE_ACTION
 
 /**
- * Create a new Container instance.
+ * Create a new Container instance with optional
+ * initial state and n reducers.
  *
  * @public
  * @param {Element} domElement
- * @param {Object} [initialState = null]
- * @param {Function} [...reducers]
+ * @param {?(Object)} [initialState] - Initial state object
+ * @param {Function} [...reducers] reducers
  * @return {Container}
  */
 
@@ -422,8 +424,12 @@ export function createContainer (domElement, initialState = null, ...reducers) {
 }
 
 /**
- * Claims a DOM element as a container and
- * returns container.
+ * Creates a or returns a new Container instance
+ * from a given DOM element.
+ *
+ * If a DOM element is already associated with
+ * a container then the container is just
+ * returned, otherwise a new one is created.
  *
  * @public
  * @param {Element} domElement
@@ -440,11 +446,15 @@ export function makeContainer (domElement) {
 
 /**
  * Create or restore a Container instance
- * from a JSON object.
+ * from a JSON object with an optional state
+ * object a reducers.
+ *
+ * Containers are created if they do not already
+ * exist internally.
  *
  * @public
  * @param {Object} json
- * @param {Object} [initialState = null]
+ * @param {?(Object)} [initialState] - Initial state object
  * @param {Function} [...reducers]
  * @return {Container}
  */
@@ -578,11 +588,15 @@ export function getContainerData (arg) {
 
 /**
  * Restores orphaned children containers
- * still attached to a container.
+ * still attached to a container. An orphan
+ * container is a container who belongs to
+ * a set of containers and it's DOM element
+ * is not attched to a DOM tree. (The parent
+ * container's DOM element.)
  *
  * @public
  * @param {Container|Element} container
- * @param {Boolean} [recursive = false]
+ * @param {Boolean} [recursive]
  */
 
 export function restoreOrphanedTree (container, recursive = false) {
@@ -607,12 +621,16 @@ export function restoreOrphanedTree (container, recursive = false) {
 }
 
 /**
- * Realign container DOM tree.
+ * Realign container DOM tree by removing containers
+ * not found in container DOM tree. If recursive is set to
+ * true then realignment is applied to all subsequent child
+ * containers. If forceOrphanRestoration is set to true then
+ * orphan containers are restored.
  *
  * @public
  * @param {Container} container
- * @param {Boolean} [recursive = false]
- * @param {Boolean} [forceOrphanRestoration = false]
+ * @param {Boolean} [recursive]
+ * @param {Boolean} [forceOrphanRestoration]
  */
 
 export function realignContainerTree (container,
@@ -658,11 +676,12 @@ export function realignContainerTree (container,
 
 
 /**
- * Save a container to the known
- * containers map.
+ * Save a container to the known containers map. A
+ * DOM element may be passed if it has been claimed by
+ * a Container instance.
  *
  * @public
- * @param {Container} container
+ * @param {(Container|Element)} container
  * @return {Boolean}
  */
 
@@ -676,10 +695,12 @@ export function saveContainer (container) {
 }
 
 /**
- * Fetch a saved container by id.
+ * Fetch a saved container by container ID,
+ * DOM element, or by a container instance.
  *
  * @public
- * @param {Mixed} arg
+ * @param {(String|Element|Object|Container)} arg
+ * @param {String} [arg.id] - Container ID
  * @return {class Container}
  */
 
@@ -693,7 +714,7 @@ export function fetchContainer (arg) {
 }
 
 /**
- * Generates a unique hex ID.
+ * Generates a unique hex ID for Container instances.
  *
  * @public
  * @return {String}
@@ -704,7 +725,7 @@ export function createContainerUid () {
 }
 
 /**
- * Returns an interator of all containers.
+ * Returns an interator for all containers.
  *
  * @public
  * @return {Array}
@@ -715,12 +736,11 @@ export function getAllContainers () {
 }
 
 /**
- * Run fn on each container.
+ * Execute a function for each container.
  *
  * @public
  * @param {Function} fn
- * @param {Object} [scope = this]
- * @return {class Container}
+ * @param {Object} [scope]
  */
 
 export function forEachContainer (fn, scope = null) {
@@ -728,16 +748,15 @@ export function forEachContainer (fn, scope = null) {
   fn = 'function' == typeof fn ? fn : _ => void 0
   for (let kv of containers)
     fn.call(scope || global, kv[1], containers)
-  return Container
 }
 
 /**
- * Traverse container tree.
+ * Traverse a container's tree recursively.
  *
  * @public
  * @param {Container} container
  * @param {Function} fn
- * @param {Object} [scope = this]
+ * @param {Object} [scope]
  */
 
 export function traverseContainer (container, fn, scope) {
@@ -749,11 +768,13 @@ export function traverseContainer (container, fn, scope) {
 }
 
 /**
- * Remove a container by id or the
- * instance itself.
+ * Removes a container from the internal tree.
+ * The container is also removed from its parent
+ * if it is attched to one. A string ID, DOM element,
+ * or Container may be used as an argument.
  *
  * @public
- * @param {String|Container} arg
+ * @param {(String|Container|Element)} arg
  * @return {Boolean}
  */
 
@@ -765,6 +786,10 @@ export function removeContainer  (arg) {
     if (container.parent)
       container.parent.removeChild(container, false, true)
 
+    // remove stardux data
+    rmdux(container.domElement);
+
+    // remove from tree
     CONTAINERS.delete(id)
     return true
   }
@@ -772,12 +797,17 @@ export function removeContainer  (arg) {
 }
 
 /**
- * Replace container with another
+ * Replace a container with another. Arguments may be
+ * a container ID, Container instance, or DOM elements
+ * claimed by a Container instance. If create is set to true
+ * then the replacement container is created if it does not
+ * already exist. The function will throw an Error if the
+ * existing input container does not exist or is not a Container.
  *
  * @public
- * @param {String|Container} existing
- * @param {String|Container} replacement
- * @param {Boolen} [create = false]
+ * @param {(String|Container|Element)} existing
+ * @param {(String|Container|Element)} replacement
+ * @param {Boolen} [create]
  */
 
 export function replaceContainer (existing, replacement, create = false) {
@@ -788,7 +818,7 @@ export function replaceContainer (existing, replacement, create = false) {
   // does not exist then throw an error
   existingContainer = fetchContainer(existing)
   if (null == existingContainer) {
-    throw Error( "replaceContainer() called for a container "
+    throw Error( "replaceContainer() called for an existing  container "
                + "that does not exist." )
   }
 
@@ -819,7 +849,8 @@ export function replaceContainer (existing, replacement, create = false) {
 }
 
 /**
- * Clears all saved containers.
+ * Clears all saved containers. This will call
+ * removeContainer for every saved container.
  *
  * @public
  * @return {undefined}
@@ -827,13 +858,15 @@ export function replaceContainer (existing, replacement, create = false) {
 
 export function clearContainers () {
   // remove stardux data for each container
-  forEachContainer(container => rmdux(container.domElement))
-  // clear containers
+  forEachContainer(container => removeContainer(container))
+
+  // sanity clear containers
   CONTAINERS.clear()
 }
 
 /**
- * Replace container element with another
+ * Replace container element with another. This will remove all
+ * children containers and realign the container tree.
  *
  * @public
  * @param {Container} container
@@ -1200,11 +1233,11 @@ export class Container {
   }
 
   /**
-   * Updates container
+   * Updates container and all child containers.
    *
    * @public
-   * @param {Object} [data = {}]
-   * @param {Boolean} [propagate = true]
+   * @param {Object} [data] - New state data
+   * @param {Boolean} [propagate] - Propagate updates to child containers.
    * @return {Container}
    */
 
@@ -1253,13 +1286,13 @@ export class Container {
   }
 
   /**
-   * Dispatch an event with type and data
-   * and optional arguments.
+   * Dispatch an event with type, optional data
+   * and optional arguments to the internal redux store.
    *
    * @public
    * @param {Mixed} type
-   * @param {Object} [data = {}]
-   * @param {Object} [args = {}]
+   * @param {Object} [data]
+   * @param {Object} [args]
    * @return {Container}
    */
 
@@ -1275,8 +1308,8 @@ export class Container {
 
   /**
    * Replace child tree with new children.
-   *
    * @public
+   *
    * @param {Array} children
    * @return {Container}
    */
@@ -1358,9 +1391,8 @@ export class Container {
       }
     }
 
-    if (false == pipes.has(container)) {
+    if (false == pipes.has(container))
       pipes.set(container, middleware)
-    }
 
     return container
   }
@@ -1391,8 +1423,8 @@ export class Container {
    *
    * @public
    * @param {Container|Element|Text|String} child
-   * @param {Boolean} [update = true]
-   * @param {Boolean} [realign = true]
+   * @param {Boolean} [update]
+   * @param {Boolean} [realign]
    * @return {Container}
    */
 
@@ -1438,8 +1470,8 @@ export class Container {
    *
    * @public
    * @param {Container|Element} child
-   * @param {Boolean} [update = true]
-   * @param {Boolean} [realign = true]
+   * @param {Boolean} [update]
+   * @param {Boolean} [realign]
    * @return {Container}
    */
 
@@ -1472,7 +1504,7 @@ export class Container {
    *
    * @public
    * @param {Container|Element} container
-   * @param {Boolean} [recursive = true]
+   * @param {Boolean} [recursive]
    * @return {Boolean}
    */
 

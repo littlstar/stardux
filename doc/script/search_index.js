@@ -499,25 +499,19 @@ window.esdocSearchIndex = [
   ],
   [
     "src/index.js~container#id",
-    "class/src/index.js~Container.html#instance-set-id",
-    "src/index.js~Container#id",
-    "member"
-  ],
-  [
-    "src/index.js~container#id",
     "class/src/index.js~Container.html#instance-get-id",
     "src/index.js~Container#id",
     "member"
   ],
   [
     "src/index.js~container#innercontents",
-    "class/src/index.js~Container.html#instance-set-innerContents",
+    "class/src/index.js~Container.html#instance-get-innerContents",
     "src/index.js~Container#innerContents",
     "member"
   ],
   [
     "src/index.js~container#innercontents",
-    "class/src/index.js~Container.html#instance-get-innerContents",
+    "class/src/index.js~Container.html#instance-set-innerContents",
     "src/index.js~Container#innerContents",
     "member"
   ],
@@ -556,12 +550,6 @@ window.esdocSearchIndex = [
     "class/src/index.js~Container.html#instance-method-replaceChildren",
     "src/index.js~Container#replaceChildren",
     "method"
-  ],
-  [
-    "src/index.js~container#state",
-    "class/src/index.js~Container.html#instance-set-state",
-    "src/index.js~Container#state",
-    "member"
   ],
   [
     "src/index.js~container#state",

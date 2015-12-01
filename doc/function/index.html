@@ -15,11 +15,11 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
-  
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/littlstar/stardux.git" class="repo-url-github">Repository</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -154,7 +154,7 @@
       <div>
         
         
-        <div data-ice="description"><p>Generates a unique hex ID.</p>
+        <div data-ice="description"><p>Generates a unique hex ID for Container instances.</p>
 </div>
       </div>
     </td>
@@ -174,13 +174,14 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-fetchContainer">fetchContainer</a></span></span><span data-ice="signature">(arg: <span>Mixed</span>): <span>class Container</span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-fetchContainer">fetchContainer</a></span></span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>): <span>class Container</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Fetch a saved container by id.</p>
+        <div data-ice="description"><p>Fetch a saved container by container ID,
+DOM element, or by a container instance.</p>
 </div>
       </div>
     </td>
@@ -200,13 +201,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-forEachContainer">forEachContainer</a></span></span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, scope: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>class Container</span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-forEachContainer">forEachContainer</a></span></span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, scope: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Run fn on each container.</p>
+        <div data-ice="description"><p>Execute a function for each container.</p>
 </div>
       </div>
     </td>
@@ -232,7 +233,7 @@
       <div>
         
         
-        <div data-ice="description"><p>Returns an interator of all containers.</p>
+        <div data-ice="description"><p>Returns an interator for all containers.</p>
 </div>
       </div>
     </td>
@@ -285,8 +286,8 @@ input.</p>
       <div>
         
         
-        <div data-ice="description"><p>Claims a DOM element as a container and
-returns container.</p>
+        <div data-ice="description"><p>Creates a or returns a new Container instance
+from a given DOM element.</p>
 </div>
       </div>
     </td>
@@ -312,7 +313,8 @@ returns container.</p>
       <div>
         
         
-        <div data-ice="description"><p>Realign container DOM tree.</p>
+        <div data-ice="description"><p>Realign container DOM tree by removing containers
+not found in container DOM tree.</p>
 </div>
       </div>
     </td>
@@ -332,14 +334,13 @@ returns container.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Remove a container by id or the
-instance itself.</p>
+        <div data-ice="description"><p>Removes a container from the internal tree.</p>
 </div>
       </div>
     </td>
@@ -359,13 +360,13 @@ instance itself.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>, create: <span>Boolen</span>): <span>*</span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, create: <span>Boolen</span>): <span>*</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Replace container with another</p>
+        <div data-ice="description"><p>Replace a container with another.</p>
 </div>
       </div>
     </td>
@@ -391,7 +392,7 @@ instance itself.</p>
       <div>
         
         
-        <div data-ice="description"><p>Replace container element with another</p>
+        <div data-ice="description"><p>Replace container element with another.</p>
 </div>
       </div>
     </td>
@@ -418,7 +419,8 @@ instance itself.</p>
         
         
         <div data-ice="description"><p>Create or restore a Container instance
-from a JSON object.</p>
+from a JSON object with an optional state
+object a reducers.</p>
 </div>
       </div>
     </td>
@@ -465,14 +467,13 @@ still attached to a container.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-saveContainer">saveContainer</a></span></span><span data-ice="signature">(container: <span><a href="class/src/index.js~Container.html">Container</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+           <span data-ice="name"><span><a href="function/index.html#static-function-saveContainer">saveContainer</a></span></span><span data-ice="signature">(container: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Save a container to the known
-containers map.</p>
+        <div data-ice="description"><p>Save a container to the known containers map.</p>
 </div>
       </div>
     </td>
@@ -498,7 +499,7 @@ containers map.</p>
       <div>
         
         
-        <div data-ice="description"><p>Traverse container tree.</p>
+        <div data-ice="description"><p>Traverse a container&apos;s tree recursively.</p>
 </div>
       </div>
     </td>
@@ -523,14 +524,15 @@ containers map.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber825">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber859">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {clearContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber825">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {clearContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber859">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Clears all saved containers.</p>
+  <div data-ice="description"><p>Clears all saved containers. This will call
+removeContainer for every saved container.</p>
 </div>
 
   
@@ -574,11 +576,11 @@ containers map.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber503">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber516">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {composeContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber503">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {composeContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber516">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Compose a container from containers or DOM elements.
@@ -657,11 +659,11 @@ created or restored is returned.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber415">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber420">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber415">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber420">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -736,14 +738,14 @@ created or restored is returned.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber699">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber723">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainerUid} from &apos;<span><a href="file/src/index.js.html#lineNumber699">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainerUid} from &apos;<span><a href="file/src/index.js.html#lineNumber723">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Generates a unique hex ID.</p>
+  <div data-ice="description"><p>Generates a unique hex ID for Container instances.</p>
 </div>
 
   
@@ -783,18 +785,19 @@ created or restored is returned.</p>
     
     
     
-    <span data-ice="name">fetchContainer</span><span data-ice="signature">(arg: <span>Mixed</span>): <span>class Container</span></span>
+    <span data-ice="name">fetchContainer</span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>): <span>class Container</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber683">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber707">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {fetchContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber683">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {fetchContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber707">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Fetch a saved container by id.</p>
+  <div data-ice="description"><p>Fetch a saved container by container ID,
+DOM element, or by a container instance.</p>
 </div>
 
   
@@ -809,9 +812,16 @@ created or restored is returned.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">arg</td>
-      <td data-ice="type"><span>Mixed</span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">arg.id</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Container ID</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -850,18 +860,18 @@ created or restored is returned.</p>
     
     
     
-    <span data-ice="name">forEachContainer</span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, scope: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>class Container</span></span>
+    <span data-ice="name">forEachContainer</span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, scope: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber723">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber746">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {forEachContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber723">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {forEachContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber746">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Run fn on each container.</p>
+  <div data-ice="description"><p>Execute a function for each container.</p>
 </div>
 
   
@@ -884,25 +894,14 @@ created or restored is returned.</p>
       <td data-ice="name" data-depth="0">scope</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= this]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
 </div>
 </div>
 
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span>class Container</span></td>
-        
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
+  
 
   
 
@@ -928,14 +927,14 @@ created or restored is returned.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber710">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber734">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAllContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber710">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAllContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber734">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Returns an interator of all containers.</p>
+  <div data-ice="description"><p>Returns an interator for all containers.</p>
 </div>
 
   
@@ -979,11 +978,11 @@ created or restored is returned.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber553">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber566">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getContainerData} from &apos;<span><a href="file/src/index.js.html#lineNumber553">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getContainerData} from &apos;<span><a href="file/src/index.js.html#lineNumber566">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns immutable private stardux data for a given
@@ -1049,15 +1048,18 @@ not found then null is returned.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber430">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber439">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {makeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber430">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {makeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber439">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Claims a DOM element as a container and
-returns container.</p>
+  <div data-ice="description"><p>Creates a or returns a new Container instance
+from a given DOM element.</p>
+<p>If a DOM element is already associated with
+a container then the container is just
+returned, otherwise a new one is created.</p>
 </div>
 
   
@@ -1117,14 +1119,18 @@ returns container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber615">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber636">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {realignContainerTree} from &apos;<span><a href="file/src/index.js.html#lineNumber615">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {realignContainerTree} from &apos;<span><a href="file/src/index.js.html#lineNumber636">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Realign container DOM tree.</p>
+  <div data-ice="description"><p>Realign container DOM tree by removing containers
+not found in container DOM tree. If recursive is set to
+true then realignment is applied to all subsequent child
+containers. If forceOrphanRestoration is set to true then
+orphan containers are restored.</p>
 </div>
 
   
@@ -1147,15 +1153,13 @@ returns container.</p>
       <td data-ice="name" data-depth="0">recursive</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= false]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">forceOrphanRestoration</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= false]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
@@ -1184,19 +1188,21 @@ returns container.</p>
     
     
     
-    <span data-ice="name">removeContainer</span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+    <span data-ice="name">removeContainer</span><span data-ice="signature">(arg: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber757">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber781">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {removeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber757">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {removeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber781">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Remove a container by id or the
-instance itself.</p>
+  <div data-ice="description"><p>Removes a container from the internal tree.
+The container is also removed from its parent
+if it is attched to one. A string ID, DOM element,
+or Container may be used as an argument.</p>
 </div>
 
   
@@ -1211,7 +1217,7 @@ instance itself.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">arg</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -1252,18 +1258,23 @@ instance itself.</p>
     
     
     
-    <span data-ice="name">replaceContainer</span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span>, create: <span>Boolen</span>): <span>*</span></span>
+    <span data-ice="name">replaceContainer</span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, create: <span>Boolen</span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber780">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber813">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {replaceContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber780">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {replaceContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber813">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Replace container with another</p>
+  <div data-ice="description"><p>Replace a container with another. Arguments may be
+a container ID, Container instance, or DOM elements
+claimed by a Container instance. If create is set to true
+then the replacement container is created if it does not
+already exist. The function will throw an Error if the
+existing input container does not exist or is not a Container.</p>
 </div>
 
   
@@ -1278,13 +1289,13 @@ instance itself.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">existing</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">replacement</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -1292,8 +1303,7 @@ instance itself.</p>
       <td data-ice="name" data-depth="0">create</td>
       <td data-ice="type"><span>Boolen</span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= false]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
@@ -1336,14 +1346,15 @@ instance itself.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber841">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber877">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {replaceDOMElement} from &apos;<span><a href="file/src/index.js.html#lineNumber841">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {replaceDOMElement} from &apos;<span><a href="file/src/index.js.html#lineNumber877">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Replace container element with another</p>
+  <div data-ice="description"><p>Replace container element with another. This will remove all
+children containers and realign the container tree.</p>
 </div>
 
   
@@ -1409,15 +1420,18 @@ instance itself.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber449">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber462">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreContainerFromJSON} from &apos;<span><a href="file/src/index.js.html#lineNumber449">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreContainerFromJSON} from &apos;<span><a href="file/src/index.js.html#lineNumber462">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Create or restore a Container instance
-from a JSON object.</p>
+from a JSON object with an optional state
+object a reducers.</p>
+<p>Containers are created if they do not already
+exist internally.</p>
 </div>
 
   
@@ -1439,8 +1453,9 @@ from a JSON object.</p>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">initialState</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= null]</p>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>nullable: true</li></ul></td>
+      <td data-ice="description"><p>Initial state object</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="3">
@@ -1490,15 +1505,19 @@ from a JSON object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber585">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber602">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreOrphanedTree} from &apos;<span><a href="file/src/index.js.html#lineNumber585">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreOrphanedTree} from &apos;<span><a href="file/src/index.js.html#lineNumber602">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Restores orphaned children containers
-still attached to a container.</p>
+still attached to a container. An orphan
+container is a container who belongs to
+a set of containers and it&apos;s DOM element
+is not attched to a DOM tree. (The parent
+container&apos;s DOM element.)</p>
 </div>
 
   
@@ -1521,8 +1540,7 @@ still attached to a container.</p>
       <td data-ice="name" data-depth="0">recursive</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= false]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
@@ -1551,19 +1569,20 @@ still attached to a container.</p>
     
     
     
-    <span data-ice="name">saveContainer</span><span data-ice="signature">(container: <span><a href="class/src/index.js~Container.html">Container</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+    <span data-ice="name">saveContainer</span><span data-ice="signature">(container: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber666">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber688">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {saveContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber666">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {saveContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber688">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Save a container to the known
-containers map.</p>
+  <div data-ice="description"><p>Save a container to the known containers map. A
+DOM element may be passed if it has been claimed by
+a Container instance.</p>
 </div>
 
   
@@ -1578,7 +1597,7 @@ containers map.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">container</td>
-      <td data-ice="type"><span><a href="class/src/index.js~Container.html">Container</a></span></td>
+      <td data-ice="type"><span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -1623,14 +1642,14 @@ containers map.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber740">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber762">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {traverseContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber740">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {traverseContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber762">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Traverse container tree.</p>
+  <div data-ice="description"><p>Traverse a container&apos;s tree recursively.</p>
 </div>
 
   
@@ -1659,8 +1678,7 @@ containers map.</p>
       <td data-ice="name" data-depth="0">scope</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= this]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>

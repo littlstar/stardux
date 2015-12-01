@@ -75,14 +75,7 @@ function once (fn) {
  * Test cleanup
  */
 
-afterEach(() => {
-  // remove existing container tree
-  clearContainers();
-});
-
-/**
- * Tests Container class.
- */
+afterEach(() => clearContainers() );
 
 describe('class Container { ... }', () => {
   describe('#constructor([domElement = null, ...reducers]])', () => {

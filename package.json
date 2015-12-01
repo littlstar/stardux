@@ -37,5 +37,17 @@
     "mutation-observer": "^1.0.2",
     "redux": "^3.0.4",
     "starplate": "0.0.22"
-  }
+  },
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/littlstar/stardux.git"
+  },
+  "bugs": {
+    "url": "https://github.com/littlstar/stardux/issues"
+  },
+  "homepage": "https://github.com/littlstar/stardux#readme"
 }

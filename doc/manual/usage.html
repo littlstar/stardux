@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../">
+  <title data-ice="title">Usage</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container manual-root" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/littlstar/stardux.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div class="manual-toc-root">
+  
+<div data-ice="manual" data-toc-name="overview">
+    <h1 class="manual-toc-title"><a href="manual/overview.html" data-ice="title">Overview</a></h1>
+    <ul class="manual-toc">
+      
+    </ul>
+  </div>
+<div data-ice="manual" data-toc-name="installation">
+    <h1 class="manual-toc-title"><a href="manual/installation.html" data-ice="title">Installation</a></h1>
+    <ul class="manual-toc">
+      
+    </ul>
+  </div>
+<div data-ice="manual" data-toc-name="usage">
+    <h1 class="manual-toc-title"><a href="manual/usage.html" data-ice="title">Usage</a></h1>
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#getting-started" data-ice="link">Getting Started</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#intro" data-ice="link">Intro</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#containers" data-ice="link">Containers</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#templating" data-ice="link">Templating</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#pipes" data-ice="link">Pipes</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#middleware" data-ice="link">Middleware</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#reducers" data-ice="link">Reducers</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#composition" data-ice="link">Composition</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#manipulation" data-ice="link">Manipulation</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#nesting" data-ice="link">Nesting</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#json" data-ice="link">JSON</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#advanced" data-ice="link">Advanced</a></li>
+</ul>
+  </div>
+<div data-ice="manual" data-toc-name="reference">
+    <h1 class="manual-toc-title"><a href="identifiers.html" data-ice="title">Reference</a></h1>
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="identifiers.html#class" data-ice="link">Class</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="identifiers.html#function" data-ice="link">Function</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="identifiers.html#variable" data-ice="link">Variable</a></li>
+</ul>
+  </div>
+<div data-ice="manual" data-toc-name="faq">
+    <h1 class="manual-toc-title"><a href="manual/faq.html" data-ice="title">FAQ</a></h1>
+    <ul class="manual-toc">
+      
+    </ul>
+  </div>
+<div data-ice="manual" data-toc-name="changelog">
+    <h1 class="manual-toc-title"><a href="manual/changelog.html" data-ice="title">Changelog</a></h1>
+    <ul class="manual-toc">
+      
+    </ul>
+  </div>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="github-markdown">
+  <div class="manual-breadcrumb-list">
+    <a href="./manual/./index.html">Manual</a>
+    <span>&#xBB;</span>
+    <span data-ice="title">Usage</span>
+  </div>
+  <div data-ice="content"><h1 id="getting-started">Getting Started</h1>
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#containers">Containers</a></li>
+<li><a href="#templating">Templating</a></li>
+<li><a href="#pipes">Pipes</a></li>
+<li><a href="#middleware">Middleware</a></li>
+<li><a href="#reducers">Reducers</a></li>
+<li><a href="#composition">Composition</a></li>
+<li><a href="#nesting">Nesting</a></li>
+<li><a href="#manipulation">Manipulation</a></li>
+<li><a href="#json">JSON</a></li>
+<li><a href="#advanced">Advanced</a></li>
+</ul>
+<h2 id="intro">Intro</h2>
+<p><em>stardux</em> builds upon the container concept introduced in
+<a href="https://github.com/rackt/redux">redux</a>. Containers provide
+a predictable interface around DOM elements. State is represented
+in objects and expressed in the DOM with ES6 template notation.</p>
+<p>Containers use reducers and middleware to transform input
+into state. If you are familiar with
+<a href="https://github.com/rackt/redux">redux</a> and reducers then this should be
+easy for you. DOM updates are made possible with
+<a href="https://github.com/littlstar/starplate">starplate</a> and it&apos;s internal
+patching algorithm built on
+<a href="https://github.com/google/incremental-dom">IncrementalDOM</a>.</p>
+<h2 id="containers">Containers</h2>
+<p>Containers are created with the
+[<code>createContainer(domElement[,initialState = null, ...reducers])</code>]
+(api.md#createContainer) function.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer } from &apos;stardux&apos;;
+const domElement = document.querySelector(&apos;#dom-element&apos;);
+const container = createContainer(domElement);</code>
+</code></pre>
+<p>Once created, containers provide mechanisms for
+<a href="./manual/api.md#compose">composition</a>, <a href="./manual/api.md#appendChild">manipulation</a>,
+<a href="./manual/api.md#pipe">state pipes</a>, and more.</p>
+<h2 id="templating">Templating</h2>
+<p>Containers provide a way to express state to the DOM. A containers DOM
+can be expressed with ES6 template notation and thefore make it easy to
+create resuable dynamic views.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer } from &apos;stardux&apos;;
+const hello = document.createElement(&apos;div&apos;);
+const container = createContainer(hello);
+
+// Define the innerHTML as a template
+hello.innerHTML = &apos;Hello ${ name }&apos;;
+container.update({ name: &apos;kinkajou&apos; });
+
+// realize DOM change
+console.log(hello.innerHTML); // &quot;Hello kinkajou&quot;</code>
+</code></pre>
+<p>Functions can even be used in templates. However, functions will lose
+scope when they are referenced in template strings as they are executed
+in a sandboxed environment. Consider the following example of a function
+named <code>now()</code> that simple returns a string representation of a <code>Date</code>
+object. We&apos;ll define the function for the container at initialization.
+You can define the initial state of a container by passing an object to
+the second argument of the <code>createContainer()</code> function.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const date = document.createElement(&apos;div&apos;);
+const container = createContainer(date, { now: _ =&gt; Date() });
+date.innerHTML = &apos;${ now() }&apos;;
+container.update();
+console.log(date.innerHTML); // &quot;Tue Nov 24 2015 08:41:00 GMT-0500 (EST)&quot;</code>
+</code></pre>
+<h2 id="pipes">Pipes</h2>
+<p>Container pipes, much like node streams provide a mechanism for data
+propagation. Containers consume updates, transform data with middleware,
+and reduce into state. This processes is repeated for each container in
+a pipeline.</p>
+<p>Here 3 containers are constructed into a pipeline <code>A -&gt; B -&gt; C</code>.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">containerA.pipe(containerB).pipe(containerC);</code>
+</code></pre>
+<p>When an update occurs on <code>containerA</code>, is propagated to <code>containerB</code> and
+then to <code>containerC</code>. This is effectively the samething as
+<a href="#composition">composition</a>.</p>
+<h2 id="middleware">Middleware</h2>
+<p>Middleware provides a way of tapping into the root reducer of a
+container and allows consumers to transform the current state and action
+objects in the reducer chain.</p>
+<p>They are installed with the <code>.use(fn)</code> method.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.use((state, action) =&gt; {
+  // middleware here ...
+});</code>
+</code></pre>
+<h2 id="reducers">Reducers</h2>
+<p>Reducers are constructed and passed to the <code>createContainer()</code> function
+or to the <code>Container</code> constructor.
+<a href="http://rackt.org/redux/docs/basics/Reducers.html">Reducers</a> are passed
+directly to the internal <a href="https://github.com/rackt/redux">redux</a> store.</p>
+<p>Middleware is always invoked before reducers.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const container = new Container(domElement, (state, action) =&gt; {
+  // reducer here ...
+});</code>
+</code></pre>
+<h2 id="composition">Composition</h2>
+<p>Containers can be composed together for update propagation and data
+filtering. Container composition allows for powerful, flexible, and reusable
+container pipelines.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer, compose } from &apos;stardux&apos;;
+const input = document.createElement(&apos;input&apos;);
+const output = document.createElement(&apos;div&apos;);
+const container = createContainer(input);
+
+// DOM template
+output.innerHTML = &apos;${ value }&apos;;
+
+// compose containers
+compose(container, output);
+
+// update container when user input changes
+input.onchange = _ =&gt; container.update({ value: input.value });
+
+// render to DOM
+document.appendChild(input);</code>
+</code></pre>
+<p>When user input changes the <code>innerHTML</code> of the <code>output</code> DOM element is
+updated as well.</p>
+<p>The <code>compose()</code> function accepts <code>n</code> DOM elements or <code>Container</code>
+instances and composes an update pipe line in the order they were
+given.</p>
+<p><strong>NOTE-</strong> A <code>.decompose()</code> method is attched to the returned composite
+container object. Once called it is deleted with <code>delete
+composed.decompose</code>.</p>
+<h2 id="manipulation">Manipulation</h2>
+<p>Container manipulation is made possible by a similar API to that of the
+DOM. Methods like <code>appendChild()</code>, <code>removeChild()</code>, and <code>contains()</code> are
+available on call containers. They accept instances of a <code>Container</code> or
+a DOM element. When an insert or removal occurs the container and its
+children are realigned. DOM patches also occur to align DOM tree with
+container tree.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const container = new Container();
+const childA = new Container();
+const childB = new Container();
+const childAa = new Container();
+const childAb = new Container();
+const childBa = new Container();
+const childBb = new Container();
+
+container.appendChild(childA);
+container.appendChild(childB);
+
+childA.appendChild(childAa);
+childA.appendChild(childAb);
+
+childB.appendChild(childBa);
+childB.appendChild(childBb);</code>
+</code></pre>
+<p>We can check if a container is a descendant of another container with
+the <code>contains()</code> method.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.contains(childBb); // true</code>
+</code></pre>
+<p>Passing <code>false</code> as a second argument forces the method to check only
+direct descendants of the container.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.contains(childBb, false); // false</code>
+</code></pre>
+<p>Containers can be removed with the <code>removeChild()</code> method. Child DOM
+nodes are also removed.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.removeChild(childB);
+container.contains(childB); // false</code>
+</code></pre>
+<h2 id="nesting">Nesting</h2>
+<p>Containers can be nested and still act independent of each other.
+Containers can propagate updates to their child containers. This makes
+updating multiple contains who share similar data easy.</p>
+<p>The following DOM structure yields a container with two child
+containers.</p>
+<pre><code class="lang-html"><code class="source-code prettyprint">&lt;div class=&quot;parent&quot;&gt;
+  &lt;div class=&quot;a&quot;&gt;${ value }&lt;/div&gt;
+  &lt;div class=&quot;b&quot;&gt;${ value }&lt;/div&gt;
+&lt;/div&gt;</code>
+</code></pre>
+<p>The containers can be implemented with the following Javascript.
+<code>childA</code> and <code>childB</code> are implicit children of <code>parent</code> and therefore do
+not need to explicitly added with <code>appendChild()</code>.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const parent = createContainer(document.querySelector(&apos;.parent&apos;));
+const childA = createContainer(document.querySelector(&apos;.a&apos;));
+const childB = createContainer(document.querySelector(&apos;.b&apos;));</code>
+</code></pre>
+<p>Both <code>childA</code> and <code>childB</code> share the variable <code>value</code>. Updates to
+<code>parent</code> will propagate to <code>childA</code> and <code>childB</code>.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">parent.update({value: &apos;hello&apos;});</code>
+</code></pre>
+<p>This makes updates to many containers easy. However, <code>childA</code> and <code>childB</code>
+are still independent containers. Updates to <code>childA</code> are made possible
+by a simple call to <code>childA.update({value: &apos;world&apos;})</code>. <code>childB</code> remains
+unchanged while <code>childA</code> has.</p>
+<h2 id="json">JSON</h2>
+<p>Containers can be serialized </p>
+<h2 id="advanced">Advanced</h2>
+</div>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -15,11 +15,11 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
-  
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/littlstar/stardux.git" class="repo-url-github">Repository</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -56,13 +56,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Container} from &apos;<span><a href="file/src/index.js.html#lineNumber898">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Container} from &apos;<span><a href="file/src/index.js.html#lineNumber934">stardux/src/index.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber898">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber934">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -230,59 +230,7 @@ calls replaceDOMElement(domElement).</p>
       <div>
         
         
-        <div data-ice="description"><p>Getter to retrieve container id.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">set</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-set-id">id</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Dummy setter for the id property.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">set</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-set-innerContents">innerContents</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Sets inner contents of DOM content.</p>
+        <div data-ice="description"><p>Container id.</p>
 </div>
       </div>
     </td>
@@ -328,13 +276,13 @@ calls replaceDOMElement(domElement).</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-set-parent">parent</a></span></span><span data-ice="signature">: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-set-innerContents">innerContents</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Dummy setter for the parent property.</p>
+        <div data-ice="description"><p>Sets inner contents of DOM content.</p>
 </div>
       </div>
     </td>
@@ -381,13 +329,13 @@ available.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-set-state">state</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-set-parent">parent</a></span></span><span data-ice="signature">: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Dummy setter for the state property.</p>
+        <div data-ice="description"><p>Dummy setter for the parent property.</p>
 </div>
       </div>
     </td>
@@ -413,8 +361,7 @@ available.</p>
       <div>
         
         
-        <div data-ice="description"><p>Getter to retrieve a copy of the
-internal state object.</p>
+        <div data-ice="description"><p>Copy of the internal state object.</p>
 </div>
       </div>
     </td>
@@ -526,8 +473,8 @@ DOM element is a child of the container.</p>
       <div>
         
         
-        <div data-ice="description"><p>Dispatch an event with type and data
-and optional arguments.</p>
+        <div data-ice="description"><p>Dispatch an event with type, optional data
+and optional arguments to the internal redux store.</p>
 </div>
       </div>
     </td>
@@ -737,7 +684,7 @@ this container.</p>
       <div>
         
         
-        <div data-ice="description"><p>Updates container</p>
+        <div data-ice="description"><p>Updates container and all child containers.</p>
 </div>
       </div>
     </td>
@@ -820,7 +767,7 @@ container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber909">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber945">source</a></span></span>
     </span>
   </h3>
 
@@ -886,7 +833,7 @@ container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1181">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1216">source</a></span></span>
     </span>
   </h3>
 
@@ -938,7 +885,7 @@ of child containers</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1106">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1141">source</a></span></span>
     </span>
   </h3>
 
@@ -979,7 +926,7 @@ of child containers</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1118">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1153">source</a></span></span>
     </span>
   </h3>
 
@@ -1021,14 +968,14 @@ calls replaceDOMElement(domElement).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1053">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1088">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Getter to retrieve container id.</p>
+  <div data-ice="description"><p>Container id.</p>
 </div>
 
   
@@ -1052,24 +999,24 @@ calls replaceDOMElement(domElement).</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-set-id">
+  <h3 data-ice="anchor" id="instance-get-innerContents">
     <span class="access" data-ice="access">public</span>
     
-    <span class="kind" data-ice="kind">set</span>
+    <span class="kind" data-ice="kind">get</span>
     
     
-    <span data-ice="name">id</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
+    <span data-ice="name">innerContents</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1064">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1168">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Dummy setter for the id property.</p>
+  <div data-ice="description"><p>Returns inner contents of the container.</p>
 </div>
 
   
@@ -1103,7 +1050,7 @@ calls replaceDOMElement(domElement).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1151">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1186">source</a></span></span>
     </span>
   </h3>
 
@@ -1141,88 +1088,6 @@ in the string &apos;undefined&apos;.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-get-innerContents">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">get</span>
-    
-    
-    <span data-ice="name">innerContents</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1133">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Returns inner contents of the container.</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-set-parent">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">set</span>
-    
-    
-    <span data-ice="name">parent</span><span data-ice="signature">: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1097">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Dummy setter for the parent property.</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-get-parent">
     <span class="access" data-ice="access">public</span>
     
@@ -1233,7 +1098,7 @@ in the string &apos;undefined&apos;.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1077">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1112">source</a></span></span>
     </span>
   </h3>
 
@@ -1268,24 +1133,24 @@ parent DOM element.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-set-state">
+  <h3 data-ice="anchor" id="instance-set-parent">
     <span class="access" data-ice="access">public</span>
     
     <span class="kind" data-ice="kind">set</span>
     
     
-    <span data-ice="name">state</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></span>
+    <span data-ice="name">parent</span><span data-ice="signature">: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1044">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1132">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Dummy setter for the state property.</p>
+  <div data-ice="description"><p>Dummy setter for the parent property.</p>
 </div>
 
   
@@ -1319,15 +1184,14 @@ parent DOM element.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1033">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1068">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Getter to retrieve a copy of the
-internal state object.</p>
+  <div data-ice="description"><p>Copy of the internal state object.</p>
 </div>
 
   
@@ -1364,7 +1228,7 @@ internal state object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1399">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1431">source</a></span></span>
     </span>
   </h3>
 
@@ -1397,15 +1261,13 @@ and will cause a DOM tree to be restructured.</p>
       <td data-ice="name" data-depth="0">update</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= true]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">realign</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= true]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
@@ -1448,7 +1310,7 @@ and will cause a DOM tree to be restructured.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1479">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1511">source</a></span></span>
     </span>
   </h3>
 
@@ -1479,8 +1341,7 @@ DOM element is a child of the container.</p>
       <td data-ice="name" data-depth="0">recursive</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= true]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
@@ -1523,7 +1384,7 @@ DOM element is a child of the container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1167">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1202">source</a></span></span>
     </span>
   </h3>
 
@@ -1590,15 +1451,15 @@ DOM element is a child of the container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1266">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1299">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Dispatch an event with type and data
-and optional arguments.</p>
+  <div data-ice="description"><p>Dispatch an event with type, optional data
+and optional arguments to the internal redux store.</p>
 </div>
 
   
@@ -1621,15 +1482,13 @@ and optional arguments.</p>
       <td data-ice="name" data-depth="0">data</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= {}]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">args</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= {}]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
@@ -1672,7 +1531,7 @@ and optional arguments.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1349">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1382">source</a></span></span>
     </span>
   </h3>
 
@@ -1740,7 +1599,7 @@ and optional arguments.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1446">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1478">source</a></span></span>
     </span>
   </h3>
 
@@ -1773,15 +1632,13 @@ DOM tree to be restructured.</p>
       <td data-ice="name" data-depth="0">update</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= true]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">realign</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= true]</p>
-</td>
+      <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
@@ -1824,7 +1681,7 @@ DOM tree to be restructured.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1248">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1281">source</a></span></span>
     </span>
   </h3>
 
@@ -1891,7 +1748,7 @@ DOM tree to be restructured.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1284">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1317">source</a></span></span>
     </span>
   </h3>
 
@@ -1958,7 +1815,7 @@ DOM tree to be restructured.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1325">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1358">source</a></span></span>
     </span>
   </h3>
 
@@ -2010,7 +1867,7 @@ serializable object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1313">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1346">source</a></span></span>
     </span>
   </h3>
 
@@ -2062,7 +1919,7 @@ this container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1376">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1408">source</a></span></span>
     </span>
   </h3>
 
@@ -2130,14 +1987,14 @@ this container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1211">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1244">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Updates container</p>
+  <div data-ice="description"><p>Updates container and all child containers.</p>
 </div>
 
   
@@ -2154,14 +2011,14 @@ this container.</p>
       <td data-ice="name" data-depth="0">data</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= {}]</p>
+      <td data-ice="description"><p>New state data</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">propagate</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>= true]</p>
+      <td data-ice="description"><p>Propagate updates to child containers.</p>
 </td>
     </tr>
 </tbody>
@@ -2205,7 +2062,7 @@ this container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1195">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1228">source</a></span></span>
     </span>
   </h3>
 
@@ -2272,7 +2129,7 @@ this container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1301">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1334">source</a></span></span>
     </span>
   </h3>
 
