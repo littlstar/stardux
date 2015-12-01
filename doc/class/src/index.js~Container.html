@@ -57,13 +57,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Container} from &apos;<span><a href="file/src/index.js.html#lineNumber934">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Container} from &apos;<span><a href="file/src/index.js.html#lineNumber1060">stardux/src/index.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber934">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber1060">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -145,7 +145,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-get-children">children</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-get-children">children</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="class/src/index.js~Container.html">Container</a></span>&gt;: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -311,32 +311,6 @@ calls replaceDOMElement(domElement).</p>
         
         <div data-ice="description"><p>Getter to return parent container if
 available.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">set</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-set-parent">parent</a></span></span><span data-ice="signature">: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Dummy setter for the parent property.</p>
 </div>
       </div>
     </td>
@@ -573,7 +547,7 @@ and optional arguments to the internal redux store.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-method-replaceChildren">replaceChildren</a></span></span><span data-ice="signature">(children: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-method-replaceChildren">replaceChildren</a></span></span><span data-ice="signature">(children: <span>Array&lt;Container</span> | <span>Element&gt;</span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
         </p>
       </div>
       <div>
@@ -705,7 +679,7 @@ this container.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-method-use">use</a></span></span><span data-ice="signature">(): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Container.html#instance-method-use">use</a></span></span><span data-ice="signature">(plugins: ...<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
         </p>
       </div>
       <div>
@@ -768,7 +742,7 @@ container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber945">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1071">source</a></span></span>
     </span>
   </h3>
 
@@ -830,11 +804,11 @@ container.</p>
     <span class="kind" data-ice="kind">get</span>
     
     
-    <span data-ice="name">children</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>: <span>*</span></span>
+    <span data-ice="name">children</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="class/src/index.js~Container.html">Container</a></span>&gt;: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1216">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1301">source</a></span></span>
     </span>
   </h3>
 
@@ -854,7 +828,7 @@ of child containers</p>
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="class/src/index.js~Container.html">Container</a></span>&gt;</td>
         
       </tr>
     </table>
@@ -886,7 +860,7 @@ of child containers</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1141">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1240">source</a></span></span>
     </span>
   </h3>
 
@@ -927,7 +901,7 @@ of child containers</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1153">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1252">source</a></span></span>
     </span>
   </h3>
 
@@ -969,7 +943,7 @@ calls replaceDOMElement(domElement).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1088">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1205">source</a></span></span>
     </span>
   </h3>
 
@@ -1010,7 +984,7 @@ calls replaceDOMElement(domElement).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1168">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1267">source</a></span></span>
     </span>
   </h3>
 
@@ -1051,7 +1025,7 @@ calls replaceDOMElement(domElement).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1186">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1285">source</a></span></span>
     </span>
   </h3>
 
@@ -1099,7 +1073,7 @@ in the string &apos;undefined&apos;.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1112">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1220">source</a></span></span>
     </span>
   </h3>
 
@@ -1134,47 +1108,6 @@ parent DOM element.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-set-parent">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">set</span>
-    
-    
-    <span data-ice="name">parent</span><span data-ice="signature">: <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null">null</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1132">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Dummy setter for the parent property.</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-get-state">
     <span class="access" data-ice="access">public</span>
     
@@ -1185,7 +1118,7 @@ parent DOM element.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1068">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1194">source</a></span></span>
     </span>
   </h3>
 
@@ -1229,7 +1162,7 @@ parent DOM element.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1431">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1567">source</a></span></span>
     </span>
   </h3>
 
@@ -1293,7 +1226,14 @@ and will cause a DOM tree to be restructured.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.appendChild(child);</code></pre>
+    </div>
+</div>
 
   
 
@@ -1311,7 +1251,7 @@ and will cause a DOM tree to be restructured.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1511">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1655">source</a></span></span>
     </span>
   </h3>
 
@@ -1367,7 +1307,16 @@ DOM element is a child of the container.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  if (container.contains(child)) {
+    ...
+  }</code></pre>
+    </div>
+</div>
 
   
 
@@ -1385,7 +1334,7 @@ DOM element is a child of the container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1202">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1316">source</a></span></span>
     </span>
   </h3>
 
@@ -1434,7 +1383,14 @@ DOM element is a child of the container.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      <div class="example-caption" data-ice="exampleCaption">Extend current state model.</div>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.define({value: 0});</code></pre>
+    </div>
+</div>
 
   
 
@@ -1452,7 +1408,7 @@ DOM element is a child of the container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1299">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1423">source</a></span></span>
     </span>
   </h3>
 
@@ -1514,7 +1470,18 @@ and optional arguments to the internal redux store.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      <div class="example-caption" data-ice="exampleCaption">Dispatch an action with type and optional data and action argument.</div>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.dispatch({
+    type: &apos;MY_ACTION&apos;,
+    data: {value: 123},
+    propagate: false
+  });</code></pre>
+    </div>
+</div>
 
   
 
@@ -1532,7 +1499,7 @@ and optional arguments to the internal redux store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1382">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1512">source</a></span></span>
     </span>
   </h3>
 
@@ -1582,7 +1549,14 @@ and optional arguments to the internal redux store.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode"> containerA.pipe(containerB);</code></pre>
+    </div>
+</div>
 
   
 
@@ -1600,7 +1574,7 @@ and optional arguments to the internal redux store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1478">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1617">source</a></span></span>
     </span>
   </h3>
 
@@ -1664,7 +1638,14 @@ DOM tree to be restructured.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.removeChild(child);</code></pre>
+    </div>
+</div>
 
   
 
@@ -1682,7 +1663,7 @@ DOM tree to be restructured.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1281">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1396">source</a></span></span>
     </span>
   </h3>
 
@@ -1731,7 +1712,14 @@ DOM tree to be restructured.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      <div class="example-caption" data-ice="exampleCaption">Render container to a given domElement.</div>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.render(document.body);</code></pre>
+    </div>
+</div>
 
   
 
@@ -1745,11 +1733,11 @@ DOM tree to be restructured.</p>
     
     
     
-    <span data-ice="name">replaceChildren</span><span data-ice="signature">(children: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
+    <span data-ice="name">replaceChildren</span><span data-ice="signature">(children: <span>Array&lt;Container</span> | <span>Element&gt;</span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1317">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1444">source</a></span></span>
     </span>
   </h3>
 
@@ -1771,7 +1759,7 @@ DOM tree to be restructured.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">children</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
+      <td data-ice="type"><span>Array&lt;Container</span> | <span>Element&gt;</span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -1798,7 +1786,14 @@ DOM tree to be restructured.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode"> container.replaceChildren([childA, childB, createContainer()]);</code></pre>
+    </div>
+</div>
 
   
 
@@ -1816,7 +1811,7 @@ DOM tree to be restructured.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1358">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1485">source</a></span></span>
     </span>
   </h3>
 
@@ -1868,7 +1863,7 @@ serializable object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1346">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1473">source</a></span></span>
     </span>
   </h3>
 
@@ -1920,7 +1915,7 @@ this container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1408">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1541">source</a></span></span>
     </span>
   </h3>
 
@@ -1970,7 +1965,14 @@ this container.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode"> containerA.unpipe(containerB);</code></pre>
+    </div>
+</div>
 
   
 
@@ -1988,7 +1990,7 @@ this container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1244">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1356">source</a></span></span>
     </span>
   </h3>
 
@@ -2045,7 +2047,18 @@ this container.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      <div class="example-caption" data-ice="exampleCaption">Update container and its children</div>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.update({value: 0});</code></pre>
+    </div>
+<div class="example-doc" data-ice="exampleDoc">
+      <div class="example-caption" data-ice="exampleCaption">Update only container and not its children</div>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.update({value: 0}, false);</code></pre>
+    </div>
+</div>
 
   
 
@@ -2059,11 +2072,11 @@ this container.</p>
     
     
     
-    <span data-ice="name">use</span><span data-ice="signature">(): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
+    <span data-ice="name">use</span><span data-ice="signature">(plugins: ...<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1228">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1334">source</a></span></span>
     </span>
   </h3>
 
@@ -2083,9 +2096,9 @@ this container.</p>
     </thead>
     <tbody>
     
-    <tr data-ice="property" data-depth="3">
-      <td data-ice="name" data-depth="3">...plugins</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">plugins</td>
+      <td data-ice="type">...<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -2112,7 +2125,14 @@ this container.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      <div class="example-caption" data-ice="exampleCaption">Install reducer middleware plugin.</div>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  container.use((state = {}, action) =&gt; { ... });</code></pre>
+    </div>
+</div>
 
   
 
@@ -2130,7 +2150,7 @@ this container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1334">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1461">source</a></span></span>
     </span>
   </h3>
 

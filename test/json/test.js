@@ -9,7 +9,7 @@ function text (domElement) {
 }
 const json = {
   "id": ".9855624e",
-  "src": "${ a }\n        <div class=\"b\"> ${ b } </div>",
+  "src": "${ a }\n",
   "children":[
     {"id":".de0278b8",
      "src":" ${ b } ",

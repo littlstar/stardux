@@ -341,6 +341,14 @@ function createRootReducer (container) {
 
     action.data = action.data || {}
 
+    /**
+     * Loops over each middleware function
+     * providing state and action values
+     * given to use from redux.
+     *
+     * @private
+     */
+
     void function next () {
       const step = middleware.next()
       const done = step.done
@@ -383,6 +391,15 @@ function createPipeReducer (container) {
     const pipes = container[$pipes].entries()
     reduce()
     return container.state
+
+    /**
+     * Loops over each pipe function
+     * providing state and action values
+     * given to use from redux.
+     *
+     * @private
+     */
+
     function reduce () {
       const step = pipes.next()
       const done = step.done
@@ -395,8 +412,18 @@ function createPipeReducer (container) {
 }
 
 /**
- * UPDATE event type called with dispatch
- * by the update() method.
+ * The action type dispatched by the update() method.
+ *
+ * @example <caption>Handle update actions in middleware and reducers.</caption>
+ *
+ *   // Use this value to determine what type of
+ *   // action was dispatched in a reducer or
+ *   // middleware function
+ *   (state, action) => {
+ *     if (UPDATE == action.type) {
+ *        // reducer/middleware logic here
+ *     }
+ *   }
  *
  * @public
  * @const
@@ -409,14 +436,31 @@ export const UPDATE = $UPDATE_ACTION
  * Create a new Container instance with optional
  * initial state and n reducers.
  *
+ * @example <caption>Create an anonymouse container.</caption>
+ *   const container = createContainer();
+ *
+ * @example <caption>Create a container for a DOM Element.</caption>
+ *   const container = createContainer(domElement);
+ *
+ * @example <caption>Create a container for a DOM Element with initial state.</caption>
+ *   const container = createContainer(domElement, {value: 0});
+ *
+ * @example <caption>Create a container for a DOM Element with initial state and reducers.</caption>
+ *   const container = createContainer(domElement, {value: 0}, (state = {}, action) => {
+ *     if (UPATE == action.type) {
+ *        return {
+ *          value: state.action + action.data.value
+ *        }
+ *     }
+ *   });
+ *
  * @public
  * @param {Element} domElement
  * @param {?(Object)} [initialState] - Initial state object
- * @param {Function} [...reducers] reducers
+ * @param {...Function} [reducers]
  * @return {Container}
  */
 
-export default createContainer
 export function createContainer (domElement, initialState = null, ...reducers) {
   const container = ( fetchContainer(domElement)
                    || new Container(domElement, ...reducers) )
@@ -430,6 +474,9 @@ export function createContainer (domElement, initialState = null, ...reducers) {
  * If a DOM element is already associated with
  * a container then the container is just
  * returned, otherwise a new one is created.
+ *
+ * @example <caption>Make a container for a DOM Element.</caption>
+ *   const container = makeContainer(document.body);
  *
  * @public
  * @param {Element} domElement
@@ -452,10 +499,19 @@ export function makeContainer (domElement) {
  * Containers are created if they do not already
  * exist internally.
  *
+ * @example <caption>Restore or create a container from JSON.</caption>
+ *   const container = restoreContainerFromJSON(json);
+ *
+ * @example <caption>Restore or create a container from JSON with initial state.</caption>
+ *   const container = restoreContainerFromJSON(json, {value: 0});
+ *
+ * @example <caption>Restore or create a container from JSON with initial state and reducers.</caption>
+ *   const container = restoreContainerFromJSON(json, {value: 0}, ...reducers);
+ *
  * @public
  * @param {Object} json
  * @param {?(Object)} [initialState] - Initial state object
- * @param {Function} [...reducers]
+ * @param {...Function} [reducers]
  * @return {Container}
  */
 
@@ -507,9 +563,20 @@ export function restoreContainerFromJSON (json, initialState = null, ...reducers
  * the newly created root container. The root container, newly
  * created or restored is returned.
  *
+ * @example <caption>Compose containers together with new root.</caption>
+ *   const a = createContainer();
+ *   const b = createContainer();
+ *   const composed = composeContainers([a, b]);
+ *
+ * @example <caption>Compose containers together with given root.</caption>
+ *   const a = createContainer();
+ *   const b = createContainer();
+ *   const c = createContainer();
+ *   const composed = composeContainers(a, [b, c]);
+ *
  * @public
  * @param {?(Element|Container)} root
- * @param {?(Element|Container|String)} ...containers
+ * @param {?(...Element|Container|String)} containers
  * @return {Container}
  */
 
@@ -533,8 +600,10 @@ export function composeContainers (root, ...containers) {
 
   // create composite
   let composite = composed
-  for (let child of containers)
-    composite = composite.pipe(child)
+  for (let child of containers) {
+    if (false == composite.contains(child))
+      composite = composite.pipe(child)
+  }
 
   // realign root tree
   realignContainerTree(composed, true)
@@ -558,6 +627,15 @@ export function composeContainers (root, ...containers) {
  * or a string representing a container ID. If data is
  * not found then null is returned.
  *
+ * @example <caption>Get container data for a container.</caption>
+ *   const data = getContainerData(container);
+ *
+ * @example <caption>Get container data for a container from a given DOM element.</caption>
+ *   const data = getContainerData(container);
+ *
+ * @example <caption>Get container data for a container from a given id.</caption>
+ *   const data = getContainerData(id);
+ *
  * @public
  * @param {Container|Element|String} arg
  * @return {Object}
@@ -565,17 +643,10 @@ export function composeContainers (root, ...containers) {
 
 export function getContainerData (arg) {
   let data = null
-  let container = null
   let domElement = null
+  const container = fetchContainer(arg);
 
-  if (arg instanceof Container) {
-    domElement = arg.domElement
-  } else if (arg instanceof Element) {
-    domElement = arg
-  } else if ('string' == typeof arg) {
-    container = fetchContainer(arg)
-    domElement = container.domElement
-  } else {
+  if (null == container) {
     throw new TypeError( "Unexpected input for getContainerData. "
                        + "Expecting an instance of a Container or Element, "
                        + "or a string." )
@@ -591,8 +662,8 @@ export function getContainerData (arg) {
  * still attached to a container. An orphan
  * container is a container who belongs to
  * a set of containers and it's DOM element
- * is not attched to a DOM tree. (The parent
- * container's DOM element.)
+ * is not attched to a DOM tree (The parent
+ * container's DOM element).
  *
  * @public
  * @param {Container|Element} container
@@ -680,6 +751,12 @@ export function realignContainerTree (container,
  * DOM element may be passed if it has been claimed by
  * a Container instance.
  *
+ * @example <caption>Save a container</caption>
+ *   saveContainer(container);
+ *
+ * @example <caption>Save a container by DOM element</caption>
+ *   saveContainer(domElement);
+ *
  * @public
  * @param {(Container|Element)} container
  * @return {Boolean}
@@ -698,8 +775,17 @@ export function saveContainer (container) {
  * Fetch a saved container by container ID,
  * DOM element, or by a container instance.
  *
+ * @example <caption>Fetch container by id.</caption>
+ *   const container = fetchContainer(id);
+ *
+ * @example <caption>Fetch container by DOM element.</caption>
+ *   const container = fetchContainer(domElement);
+ *
+ * @example <caption>Fetch container by object with id.</caption>
+ *   const container = fetchContainer({id: id});
+ *
  * @public
- * @param {(String|Element|Object|Container)} arg
+ * @param {(String|Element|Object)} arg
  * @param {String} [arg.id] - Container ID
  * @return {class Container}
  */
@@ -716,6 +802,9 @@ export function fetchContainer (arg) {
 /**
  * Generates a unique hex ID for Container instances.
  *
+ * @example <caption>Create a unique container ID</caption>
+ *   const id = createContainerUid();
+ *
  * @public
  * @return {String}
  */
@@ -727,8 +816,13 @@ export function createContainerUid () {
 /**
  * Returns an interator for all containers.
  *
+ * @example <caption>Get an iterator for all containers.</caption>
+ *   const it = getAllContainers();
+ *   for (let pair of [ ...it ])
+ *     console.log(pair);
+ *
  * @public
- * @return {Array}
+ * @return {Array<MapIterator>}
  */
 
 export function getAllContainers () {
@@ -737,6 +831,11 @@ export function getAllContainers () {
 
 /**
  * Execute a function for each container.
+ *
+ * @example
+ *   forEachContainer(container => {
+ *     console.log(container);
+ *   });
  *
  * @public
  * @param {Function} fn
@@ -752,6 +851,11 @@ export function forEachContainer (fn, scope = null) {
 
 /**
  * Traverse a container's tree recursively.
+ *
+ * @example
+ *   traverseContainer(container, child => {
+ *     console.log(child);
+ *   });
  *
  * @public
  * @param {Container} container
@@ -772,6 +876,15 @@ export function traverseContainer (container, fn, scope) {
  * The container is also removed from its parent
  * if it is attched to one. A string ID, DOM element,
  * or Container may be used as an argument.
+ *
+ * @example <caption>Remove container by id.</caption>
+ *   removeContainer(id);
+ *
+ * @example <caption>Remove container by DOM element.</caption>
+ *   removeContainer(domElement);
+ *
+ * @example <caption>Remove container by object with id.</caption>
+ *   removeContainer({id: id});
  *
  * @public
  * @param {(String|Container|Element)} arg
@@ -804,10 +917,23 @@ export function removeContainer  (arg) {
  * already exist. The function will throw an Error if the
  * existing input container does not exist or is not a Container.
  *
+ * @example <caption>Replace container by container.</caption>
+ *   replaceContainer(existingContainer, replaceContainer);
+ *
+ * @example <caption>Replace container by ids.</caption>
+ *   replaceContainer(existingId, replacementId);
+ *
+ * @example <caption>Replace container by DOM elements.</caption>
+ *   replaceContainer(existingDomElement, replacementDomElement);
+ *
+ * @example <caption>Replace container by object with id.</caption>
+ *   replaceContainer({id: existingId}, {id: replacementId});
+ *
  * @public
  * @param {(String|Container|Element)} existing
  * @param {(String|Container|Element)} replacement
  * @param {Boolen} [create]
+ * @return {Container}
  */
 
 export function replaceContainer (existing, replacement, create = false) {
@@ -1070,15 +1196,6 @@ export class Container {
   }
 
   /**
-   * Dummy setter for the state property.
-   *
-   * @private
-   * @type {Object}
-   */
-
-  set state (_) { }
-
-  /**
    * Container id.
    *
    * @public
@@ -1088,15 +1205,6 @@ export class Container {
   get id () {
     return this[$uid]
   }
-
-  /**
-   * Dummy setter for the id property.
-   *
-   * @private
-   * @type {String}
-   */
-
-  set id (_) { }
 
   /**
    * Getter to return parent container if
@@ -1121,15 +1229,6 @@ export class Container {
     } while (!(parentElementContainer = fetchContainer(parentContainerData.id)))
     return parentElementContainer
   }
-
-  /**
-   * Dummy setter for the parent property.
-   *
-   * @public
-   * @type {Container|null}
-   */
-
-  set parent (_) { }
 
   /**
    * Getter to return container DOm element.
@@ -1192,7 +1291,22 @@ export class Container {
   }
 
   /**
+   * Getter to return an array
+   * of child containers
+   *
+   * @public
+   * @return {Array<Container>}
+   */
+
+  get children () {
+    return [ ...this[$children].entries() ].map(kv => kv[0])
+  }
+
+  /**
    * Extend view model.
+   *
+   * @example <caption>Extend current state model.</caption>
+   *   container.define({value: 0});
    *
    * @public
    * @param {Object} model
@@ -1205,23 +1319,15 @@ export class Container {
     return this
   }
 
-  /**
-   * Getter to return an array
-   * of child containers
-   *
-   * @public
-   * @return {Array}
-   */
-
-  get children () {
-    return [ ...this[$children].entries() ].map(kv => kv[0])
-  }
 
   /**
    * Consume reducer middleware.
    *
+   * @example <caption>Install reducer middleware plugin.</caption>
+   *   container.use((state = {}, action) => { ... });
+   *
    * @public
-   * @param {Function} ...plugins
+   * @param {...Function} plugins
    * @return {Container}
    */
 
@@ -1234,6 +1340,12 @@ export class Container {
 
   /**
    * Updates container and all child containers.
+   *
+   * @example <caption>Update container and its children</caption>
+   *   container.update({value: 0});
+   *
+   * @example <caption>Update only container and not its children</caption>
+   *   container.update({value: 0}, false);
    *
    * @public
    * @param {Object} [data] - New state data
@@ -1273,6 +1385,9 @@ export class Container {
   /**
    * Render container to a DOM element.
    *
+   * @example <caption>Render container to a given domElement.</caption>
+   *   container.render(document.body);
+   *
    * @public
    * @param {Element} domElement
    * @return {Container}
@@ -1280,14 +1395,23 @@ export class Container {
 
   render (domElement) {
     if (!domElement) return this
-    if (false == domElement.contains(this[$domElement]))
+    if (false == domElement.contains(this[$domElement])) {
       domElement.appendChild(this[$domElement])
+      realignContainerTree(this)
+    }
     return this
   }
 
   /**
    * Dispatch an event with type, optional data
    * and optional arguments to the internal redux store.
+   *
+   * @example <caption>Dispatch an action with type and optional data and action argument.</caption>
+   *   container.dispatch({
+   *     type: 'MY_ACTION',
+   *     data: {value: 123},
+   *     propagate: false
+   *   });
    *
    * @public
    * @param {Mixed} type
@@ -1310,7 +1434,10 @@ export class Container {
    * Replace child tree with new children.
    * @public
    *
-   * @param {Array} children
+   * @example
+   *  container.replaceChildren([childA, childB, createContainer()]);
+   *
+   * @param {Array<Container|Element>} children
    * @return {Container}
    */
 
@@ -1374,6 +1501,9 @@ export class Container {
   /**
    * Pipe container updates to a given container.
    *
+   * @example
+   *  containerA.pipe(containerB);
+   *
    * @public
    * @param {Container} container
    * @return {Container} container
@@ -1400,6 +1530,9 @@ export class Container {
   /**
    * Unpipe container updates for a given container.
    *
+   * @example
+   *  containerA.unpipe(containerB);
+   *
    * @public
    * @param {Container} container
    * @return {Container} container
@@ -1420,6 +1553,9 @@ export class Container {
    * instance of a Container, Element, Text, or
    * a string. Containers are derived from their input
    * and will cause a DOM tree to be restructured.
+   *
+   * @example
+   *   container.appendChild(child);
    *
    * @public
    * @param {Container|Element|Text|String} child
@@ -1468,6 +1604,9 @@ export class Container {
    * are derived from their input and will cause a
    * DOM tree to be restructured.
    *
+   * @example
+   *   container.removeChild(child);
+   *
    * @public
    * @param {Container|Element} child
    * @param {Boolean} [update]
@@ -1501,6 +1640,11 @@ export class Container {
   /**
    * Predicate to determine if a container or its
    * DOM element is a child of the container.
+   *
+   * @example
+   *   if (container.contains(child)) {
+   *     ...
+   *   }
    *
    * @public
    * @param {Container|Element} container

@@ -252,8 +252,41 @@ unchanged while `childA` has.
 
 ## JSON
 
-Containers can be serialized 
+Containers can be serialized into a JSON string and restored later. This
+make it possible to create container structures on the server and
+restored on the client.
 
-## Advanced
+Consider the following JSON structure.
 
+```json
+{
+  "id": ".9855624e",
+  "src": "${ valueA }\n",
+  "children":[
+    {
+      "id":".de0278b8",
+      "src":" ${ valueB } ",
+      "children":[]
+    }
+  ]
+}
+```
 
+When restored with the `restoreContainerFromJSON()` function a container and
+its children are restored or created. The `.id` properties are used and
+their values are set for each container. The `.src` represents the DOM
+element source for the container.
+
+The following becomes true after restoration.
+
+```js
+const container = restoreContainerFromJSON(json);
+assert(container.id == json.id);
+assert(container.children[0].id == json.children[0].id);
+```
+
+Updates are now possible and will propagate to child containers.
+
+```js
+container.update({valueA: 'hello', valueB: 'goodbye'});
+```

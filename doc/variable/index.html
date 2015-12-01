@@ -78,8 +78,7 @@
       <div>
         
         
-        <div data-ice="description"><p>UPDATE event type called with dispatch
-by the update() method.</p>
+        <div data-ice="description"><p>The action type dispatched by the update() method.</p>
 </div>
       </div>
     </td>
@@ -104,15 +103,14 @@ by the update() method.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber406">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber433">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {UPDATE} from &apos;<span><a href="file/src/index.js.html#lineNumber406">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {UPDATE} from &apos;<span><a href="file/src/index.js.html#lineNumber433">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>UPDATE event type called with dispatch
-by the update() method.</p>
+  <div data-ice="description"><p>The action type dispatched by the update() method.</p>
 </div>
 
   
@@ -128,7 +126,22 @@ by the update() method.</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      <div class="example-caption" data-ice="exampleCaption">Handle update actions in middleware and reducers.</div>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">
+  // Use this value to determine what type of
+  // action was dispatched in a reducer or
+  // middleware function
+  (state, action) =&gt; {
+    if (UPDATE == action.type) {
+       // reducer/middleware logic here
+    }
+  }</code></pre>
+    </div>
+</div>
 
   
 

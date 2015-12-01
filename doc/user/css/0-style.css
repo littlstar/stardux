@@ -5,10 +5,10 @@
   border: none;
   font-family: helvetica neue;
   font-size: 100;
-  -ms-user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+}
+
+a {
+  color: #f96b6b;
 }
 
 .layout-container header {

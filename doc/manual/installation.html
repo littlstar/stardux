@@ -48,7 +48,13 @@
     <h1 class="manual-toc-title"><a href="manual/installation.html" data-ice="title">Installation</a></h1>
     <ul class="manual-toc">
       
-    </ul>
+    <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/installation.html#npm" data-ice="link">NPM</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/installation.html#duo" data-ice="link">Duo</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/installation.html#manifest-component-json-" data-ice="link">Manifest (component.json)</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/installation.html#inline-require-import-" data-ice="link">Inline (require/import)</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/installation.html#distribution-build" data-ice="link">Distribution Build</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/installation.html#from-source" data-ice="link">From Source</a></li>
+</ul>
   </div>
 <div data-ice="manual" data-toc-name="usage">
     <h1 class="manual-toc-title"><a href="manual/usage.html" data-ice="title">Usage</a></h1>
@@ -65,7 +71,6 @@
 <li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#manipulation" data-ice="link">Manipulation</a></li>
 <li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#nesting" data-ice="link">Nesting</a></li>
 <li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#json" data-ice="link">JSON</a></li>
-<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#advanced" data-ice="link">Advanced</a></li>
 </ul>
   </div>
 <div data-ice="manual" data-toc-name="reference">
@@ -98,7 +103,48 @@
     <span>&#xBB;</span>
     <span data-ice="title">Installation</span>
   </div>
-  
+  <div data-ice="content"><h2 id="npm">NPM</h2>
+<p>Installation with <a href="https://www.npmjs.com">npm</a> is simple. Invoke the
+following command from the root of your project to install and save
+Stardux as a dependency.</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">$ npm install stardux --save</code>
+</code></pre>
+<h2 id="duo">Duo</h2>
+<p>Installation with <a href="https://github.com/duojs/duo">duo</a> can be achieved in
+two ways. With a manifest file (<code>component.json</code>) or directly in your
+<code>require()</code> or <code>import</code> statements.</p>
+<h3 id="manifest-component-json-">Manifest (component.json)</h3>
+<p>Add the following to your <code>.dependencies</code> object in your manifest file.</p>
+<pre><code class="lang-json"><code class="source-code prettyprint">{
+  ...
+  &quot;dependencies&quot;: {
+    &quot;littlstar/stardux&quot;: &quot;*&quot;
+  }
+}</code>
+</code></pre>
+<h3 id="inline-require-import-">Inline (require/import)</h3>
+<p>Add the following to your <code>require</code> or <code>import</code> statements.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const stardux = require(&apos;littlstar/stardux&apos;);</code>
+</code></pre>
+<pre><code class="lang-js"><code class="source-code prettyprint">import stardux from &apos;littlstar/stardux&apos;;</code>
+</code></pre>
+<h2 id="distribution-build">Distribution Build</h2>
+<p>You can grab a copy of the distribution build found in the
+<a href="https://github.com/littlstar/stardux/tree/master/dist">dist/</a>
+directory.</p>
+<h2 id="from-source">From Source</h2>
+<p>You can build stardux yourself by following these steps:</p>
+<ul>
+<li><code>$ git clone https://github.com/littlstar/stardux.git</code></li>
+<li><code>$ cd stardux</code></li>
+<li><code>$ make</code></li>
+</ul>
+<p>You can build a distribution version by invoking:</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">$ make dist</code>
+</code></pre>
+<p>You can then find a built version in the <code>build/</code> directory in your
+path.</p>
+</div>
 </div>
 </div>
 

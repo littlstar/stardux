@@ -505,20 +505,14 @@ window.esdocSearchIndex = [
   ],
   [
     "src/index.js~container#innercontents",
-    "class/src/index.js~Container.html#instance-get-innerContents",
-    "src/index.js~Container#innerContents",
-    "member"
-  ],
-  [
-    "src/index.js~container#innercontents",
     "class/src/index.js~Container.html#instance-set-innerContents",
     "src/index.js~Container#innerContents",
     "member"
   ],
   [
-    "src/index.js~container#parent",
-    "class/src/index.js~Container.html#instance-set-parent",
-    "src/index.js~Container#parent",
+    "src/index.js~container#innercontents",
+    "class/src/index.js~Container.html#instance-get-innerContents",
+    "src/index.js~Container#innerContents",
     "member"
   ],
   [
