@@ -24,6 +24,8 @@ UGLIFY := $(NODE_MODULES)/.bin/uglifyjs
 # npm bin path
 NPM := $(shell which npm)
 
+all: build dist
+
 build: $(NODE_MODULES)
 	mkdir -p $(@)
 	$(NPM) run compile
