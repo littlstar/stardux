@@ -134,7 +134,7 @@ patching algorithm built on
 <h2 id="containers">Containers</h2>
 <p>Containers are created with the
 [<code>createContainer(domElement[,initialState = null, ...reducers])</code>]
-(api.md#createContainer) function.</p>
+(api.md#createcontainer) function.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer } from &apos;stardux&apos;
 const domElement = document.querySelector(&apos;#dom-element&apos;)
 const container = createContainer(domElement)</code>
@@ -178,7 +178,7 @@ a pipeline.</p>
 <p>Here 3 containers are constructed into a pipeline <code>A -&gt; B -&gt; C</code>.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">containerA.pipe(containerB).pipe(containerC)</code>
 </code></pre>
-<p>When an update occurs on <code>containerA</code>, is propagated to <code>containerB</code> and
+<p>When an update occurs on <code>containerA</code>, it is propagated to <code>containerB</code> and
 then to <code>containerC</code>. This is effectively the samething as
 <a href="#composition">composition</a>.</p>
 <h2 id="middleware">Middleware</h2>
@@ -269,7 +269,7 @@ container.contains(childB) // false</code>
 <h2 id="nesting">Nesting</h2>
 <p>Containers can be nested and still act independent of each other.
 Containers can propagate updates to their child containers. This makes
-updating multiple contains who share similar data easy.</p>
+updating multiple containers who share similar data easy.</p>
 <p>The following DOM structure yields a container with two child
 containers.</p>
 <pre><code class="lang-html"><code class="source-code prettyprint">&lt;div class=&quot;parent&quot;&gt;
@@ -295,7 +295,8 @@ unchanged while <code>childA</code> has.</p>
 <h2 id="json">JSON</h2>
 <p>Containers can be serialized into a JSON string and restored later. This
 make it possible to create container structures on the server and
-restored on the client.</p>
+restored on the client where knowing the IDs of containers ahead of time
+is important.</p>
 <p>Consider the following JSON structure.</p>
 <pre><code class="lang-json"><code class="source-code prettyprint">{
   &quot;id&quot;: &quot;.9855624e&quot;,
