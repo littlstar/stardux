@@ -419,28 +419,20 @@ function createPipeReducer (container) {
  * @param {Boolean} [rouge]
  */
 
-function orphanContainer (container, rouge = false) {
+function orphanContainerChildren (container, rouge = false) {
   container = fetchContainer(container)
 
-  const parent = container.parent
   const children = container.children
 
   if (null == container)
-    throw new TypeError( "orphanContainer() Expecting a container " )
+    throw new TypeError( "orphanContainerChildren() Expecting a container " )
 
-
-  if (parent) {
-    if (parent.contains(container))
-      parent.removeChild(container)
-    else if (parent.domElement.contains(container.domElement))
-      parent.domElement.removeChild(container.domElement)
-  }
-
-  if (true == rouge) {
-    CONTAINERS.delete(container.id)
-    if (children.length)
-      for (let child of children)
-        orphanContainer(container, true)
+  for (let child of children) {
+    container.removeChild(child)
+    if (true === rouge) {
+      orphanContainerChildren(child, true)
+      CONTAINERS.delete(child.id)
+    }
   }
 }
 
@@ -926,13 +918,19 @@ export function traverseContainer (container, fn, scope) {
  *
  * @public
  * @param {(String|Container|Element)} arg
+ * @param {Boolean} [recursive]
  * @return {Boolean}
  */
 
-export function removeContainer  (arg) {
+export function removeContainer (arg, recursive = false) {
   const container = fetchContainer(arg)
   const id = container ? container.id : null
   if (id && CONTAINERS.has(id)) {
+    if (recursive) {
+      for (let child of container.children)
+        removeContainer(child, true)
+    }
+
     // remove from parent
     if (container.parent)
       container.parent.removeChild(container, false, true)
@@ -993,19 +991,23 @@ export function replaceDOMElement (container, domElement) {
                          + "DOM Element." )
     }
 
+    orphanContainerChildren(id, 0 == children.length)
+
+    // free DOM element of dux data
+    rmdux(previousDomElement)
     container[$domElement] = domElement
     container[$children].clear()
 
     for (let childElement of childElements)
       storeChildSource(childElement)
 
-    orphanContainer(id, 0 == children.length)
-
     container.update(null, false)
 
     const stack = sources.slice()
     for (let childElement of [ ...domElement.children ])
       restoreChildElementSource(childElement, stack)
+
+    container[$domElement].innerContents = domElement.innerHTML
 
     realignContainerTree(container, true, true)
 

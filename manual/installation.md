@@ -32,11 +32,11 @@ Add the following to your `.dependencies` object in your manifest file.
 Add the following to your `require` or `import` statements.
 
 ```js
-const stardux = require('littlstar/stardux');
+const stardux = require('littlstar/stardux')
 ```
 
 ```js
-import stardux from 'littlstar/stardux';
+import stardux from 'littlstar/stardux'
 ```
 
 ## Distribution Build

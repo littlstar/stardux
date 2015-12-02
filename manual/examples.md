@@ -5,8 +5,6 @@ All examples are fully implemented in the [examples/](../examples)
 directory.
 
 * [Counter](#counter)
-* [Clock](#clock)
-* [Mouse Reporter](#mouse-reporter)
 
 ## Counter
 
@@ -52,7 +50,7 @@ can update the value of `total` by passing an object to the `.update()`
 method.
 
 ```js
-container.update({total: 1});
+container.update({total: 1})
 ```
 
 The DOM of the container should match the following:
@@ -65,7 +63,7 @@ We can retrieve the value of `total` by inspecting the [.state](.state)
 object of a container.
 
 ```js
-const total = container.state.total;
+const total = container.state.total
 ```
 
 The state object returned when accessing the [.state](.state) property
@@ -77,13 +75,13 @@ functions for incrementing and decrementing the `total` value.
 
 ```js
 function increment () {
-  const total = container.state.total;
-  container.update({total: total + 1});
+  const total = container.state.total
+  container.update({total: total + 1})
 }
 
 function decrement () {
-  const total = container.state.total;
-  container.update({total: total - 1});
+  const total = container.state.total
+  container.update({total: total - 1})
 }
 ```
 
@@ -111,7 +109,7 @@ Our import statement needs to change to the following:
 import {
   UPDATE,
   createContainer
-} from 'stardux';
+} from 'stardux'
 ```
 
 Our middleware for imposing a minimum counter value could be
@@ -119,13 +117,13 @@ defined as such:
 
 ```js
 function minimum (value) {
-  const max = Math.max;
+  const max = Math.max
   return (state, action) => {
-    const total = action.data.total;
+    const total = action.data.total
     if (UPDATE == action.type) {
-      action.data.total = max(value, max(value, total));
+      action.data.total = max(value, max(value, total))
     }
-  };
+  }
 }
 ```
 
@@ -138,7 +136,7 @@ We can install the `minimum()` middleware with a minimum value set to
 `0`.
 
 ```js
-container.use(minimum(0));
+container.use(minimum(0))
 ```
 
 All calls to `decrement()` should decrement the total but never let the
@@ -159,12 +157,6 @@ updated.
 
 See [examples/counter](../examples/counter) for the complete working
 example.
-
-## Clock
-
-
-## Mouse Reporter
-
 
 [createContainer()]: api.md#createcontainer
 [Container()]: api.md#container

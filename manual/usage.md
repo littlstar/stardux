@@ -35,9 +35,9 @@ Containers are created with the
 (api.md#createContainer) function.
 
 ```js
-import { createContainer } from 'stardux';
-const domElement = document.querySelector('#dom-element');
-const container = createContainer(domElement);
+import { createContainer } from 'stardux'
+const domElement = document.querySelector('#dom-element')
+const container = createContainer(domElement)
 ```
 
 Once created, containers provide mechanisms for
@@ -51,16 +51,16 @@ can be expressed with ES6 template notation and thefore make it easy to
 create resuable dynamic views.
 
 ```js
-import { createContainer } from 'stardux';
-const hello = document.createElement('div');
-const container = createContainer(hello);
+import { createContainer } from 'stardux'
+const hello = document.createElement('div')
+const container = createContainer(hello)
 
 // Define the innerHTML as a template
-hello.innerHTML = 'Hello ${ name }';
-container.update({ name: 'kinkajou' });
+hello.innerHTML = 'Hello ${ name }'
+container.update({ name: 'kinkajou' })
 
 // realize DOM change
-console.log(hello.innerHTML); // "Hello kinkajou"
+console.log(hello.innerHTML) // "Hello kinkajou"
 ```
 
 Functions can even be used in templates. However, functions will lose
@@ -72,11 +72,11 @@ You can define the initial state of a container by passing an object to
 the second argument of the `createContainer()` function.
 
 ```js
-const date = document.createElement('div');
-const container = createContainer(date, { now: _ => Date() });
-date.innerHTML = '${ now() }';
-container.update();
-console.log(date.innerHTML); // "Tue Nov 24 2015 08:41:00 GMT-0500 (EST)"
+const date = document.createElement('div')
+const container = createContainer(date, { now: _ => Date() })
+date.innerHTML = '${ now() }'
+container.update()
+console.log(date.innerHTML) // "Tue Nov 24 2015 08:41:00 GMT-0500 (EST)"
 ```
 
 ## Pipes
@@ -89,7 +89,7 @@ a pipeline.
 Here 3 containers are constructed into a pipeline `A -> B -> C`.
 
 ```js
-containerA.pipe(containerB).pipe(containerC);
+containerA.pipe(containerB).pipe(containerC)
 ```
 
 When an update occurs on `containerA`, is propagated to `containerB` and
@@ -107,7 +107,7 @@ They are installed with the `.use(fn)` method.
 ```js
 container.use((state, action) => {
   // middleware here ...
-});
+})
 ```
 
 ## Reducers
@@ -122,7 +122,7 @@ Middleware is always invoked before reducers.
 ```js
 const container = new Container(domElement, (state, action) => {
   // reducer here ...
-});
+})
 ```
 
 ## Composition
@@ -133,22 +133,22 @@ container pipelines.
 
 
 ```js
-import { createContainer, compose } from 'stardux';
-const input = document.createElement('input');
-const output = document.createElement('div');
-const container = createContainer(input);
+import { createContainer, compose } from 'stardux'
+const input = document.createElement('input')
+const output = document.createElement('div')
+const container = createContainer(input)
 
 // DOM template
-output.innerHTML = '${ value }';
+output.innerHTML = '${ value }'
 
 // compose containers
-compose(container, output);
+compose(container, output)
 
 // update container when user input changes
-input.onchange = _ => container.update({ value: input.value });
+input.onchange = _ => container.update({ value: input.value })
 
 // render to DOM
-document.appendChild(input);
+document.appendChild(input)
 ```
 
 When user input changes the `innerHTML` of the `output` DOM element is
@@ -172,44 +172,44 @@ children are realigned. DOM patches also occur to align DOM tree with
 container tree.
 
 ```js
-const container = new Container();
-const childA = new Container();
-const childB = new Container();
-const childAa = new Container();
-const childAb = new Container();
-const childBa = new Container();
-const childBb = new Container();
+const container = new Container()
+const childA = new Container()
+const childB = new Container()
+const childAa = new Container()
+const childAb = new Container()
+const childBa = new Container()
+const childBb = new Container()
 
-container.appendChild(childA);
-container.appendChild(childB);
+container.appendChild(childA)
+container.appendChild(childB)
 
-childA.appendChild(childAa);
-childA.appendChild(childAb);
+childA.appendChild(childAa)
+childA.appendChild(childAb)
 
-childB.appendChild(childBa);
-childB.appendChild(childBb);
+childB.appendChild(childBa)
+childB.appendChild(childBb)
 ```
 
 We can check if a container is a descendant of another container with
 the `contains()` method.
 
 ```js
-container.contains(childBb); // true
+container.contains(childBb) // true
 ```
 
 Passing `false` as a second argument forces the method to check only
 direct descendants of the container.
 
 ```js
-container.contains(childBb, false); // false
+container.contains(childBb, false) // false
 ```
 
 Containers can be removed with the `removeChild()` method. Child DOM
 nodes are also removed.
 
 ```js
-container.removeChild(childB);
-container.contains(childB); // false
+container.removeChild(childB)
+container.contains(childB) // false
 ```
 
 ## Nesting
@@ -233,16 +233,16 @@ The containers can be implemented with the following Javascript.
 not need to explicitly added with `appendChild()`.
 
 ```js
-const parent = createContainer(document.querySelector('.parent'));
-const childA = createContainer(document.querySelector('.a'));
-const childB = createContainer(document.querySelector('.b'));
+const parent = createContainer(document.querySelector('.parent'))
+const childA = createContainer(document.querySelector('.a'))
+const childB = createContainer(document.querySelector('.b'))
 ```
 
 Both `childA` and `childB` share the variable `value`. Updates to
 `parent` will propagate to `childA` and `childB`.
 
 ```js
-parent.update({value: 'hello'});
+parent.update({value: 'hello'})
 ```
 
 This makes updates to many containers easy. However, `childA` and `childB`
@@ -280,13 +280,13 @@ element source for the container.
 The following becomes true after restoration.
 
 ```js
-const container = restoreContainerFromJSON(json);
-assert(container.id == json.id);
-assert(container.children[0].id == json.children[0].id);
+const container = restoreContainerFromJSON(json)
+assert(container.id == json.id)
+assert(container.children[0].id == json.children[0].id)
 ```
 
 Updates are now possible and will propagate to child containers.
 
 ```js
-container.update({valueA: 'hello', valueB: 'goodbye'});
+container.update({valueA: 'hello', valueB: 'goodbye'})
 ```

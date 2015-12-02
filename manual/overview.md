@@ -15,13 +15,35 @@ easy for you. DOM updates are made possible with
 patching algorithm built on
 [IncrementalDOM](https://github.com/google/incremental-dom).
 
+## Hello World
+
+Define DOM and template source body.
+
+```html
+<div><span> ${ value } </span></div>
+```
+
+Create container from DOM element and update state.
+
+```js
+import { createcontainer } from 'stardux'
+const container = createContainer(document.querySelector('div'))
+container.update({ value: 'hello, world' })
+```
+
+Realize patches made to wrapped DOM element.
+
+```html
+<div><span> hello, world </span></div>
+```
+
 ## Containers
 
 Containers are created with the `createContainer()` function.
 
 ```js
-import { createContainer } from 'stardux';
-const container = createContainer(domElement);
+import { createContainer } from 'stardux'
+const container = createContainer(domElement)
 ```
 
 ## Reducers
@@ -36,14 +58,14 @@ provided by `redux`. User reducers given to `createContainer()` or the
 ## Templating
 
 Containers provide a way to express state to the DOM. A containers DOM
-can be expressed with ES6 template notation and thefore make it easy to
+can be expressed with ES6 template notation making it easy to
 create resuable dynamic views.
 
 ```js
-const container = createContainer(domElement);
-domElement.innerHTML = 'Hello ${name}';
-container.update({ name: 'kinkajou' });
-console.log(domElement.innerHTML); // "Hello kinkajou"
+const container = createContainer(domElement)
+domElement.innerHTML = 'Hello ${name}'
+container.update({ name: 'kinkajou' })
+console.log(domElement.innerHTML) // "Hello kinkajou"
 ```
 
 ## Pipes and Composition
@@ -58,7 +80,7 @@ a pipe are transformed by any middleware given to a container with the
 Here 3 containers are constructed into a pipeline `A -> B -> C`.
 
 ```js
-containerA.pipe(containerB).pipe(containerC);
+containerA.pipe(containerB).pipe(containerC)
 ```
 
 When an update occurs on `containerA`, is propagated to `containerB` and
@@ -70,10 +92,10 @@ Middleware has the following usage.
 ```js
 container.use((state, action) => {
   // middleware here ...
-});
+})
 ```
 
-## Subset Containers
+## Child containers
 
 Containers can have child containers which are added and removed with
 familiar methods like `.appendChild()` and `.removeChild()`.
@@ -81,11 +103,11 @@ familiar methods like `.appendChild()` and `.removeChild()`.
 *Adding a child to a container.*
 
 ```js
-container.appendChild(child);
+container.appendChild(child)
 ```
 
 *Removing a child to a container.*
 
 ```js
-container.appendChild(child);
+container.appendChild(child)
 ```

@@ -477,27 +477,20 @@ function createPipeReducer (container) {
  * @param {Boolean} [rouge]
  */
 
-function orphanContainer (container, rouge = false) {
-  const parent = container.parent
-  const children = container.children
+function orphanContainerChildren (container, rouge = false) {
   container = fetchContainer(container)
 
+  const children = container.children
+
   if (null == container)
-    throw new TypeError( &quot;orphanContainer() Expecting a container &quot; )
+    throw new TypeError( &quot;orphanContainerChildren() Expecting a container &quot; )
 
-
-  if (parent) {
-    if (parent.contains(container))
-      parent.removeChild(container)
-    else if (parent.domElement.contains(container.domElement))
-      parent.domElement.removeChild(container.domElement)
-  }
-
-  if (true == rouge) {
-    CONTAINERS.delete(container.id)
-    if (children.length)
-      for (let child of children)
-        orphanContainer(container, true)
+  for (let child of children) {
+    container.removeChild(child)
+    if (true === rouge) {
+      orphanContainerChildren(child, true)
+      CONTAINERS.delete(child.id)
+    }
   }
 }
 
@@ -983,13 +976,19 @@ export function traverseContainer (container, fn, scope) {
  *
  * @public
  * @param {(String|Container|Element)} arg
+ * @param {Boolean} [recursive]
  * @return {Boolean}
  */
 
-export function removeContainer  (arg) {
+export function removeContainer (arg, recursive = false) {
   const container = fetchContainer(arg)
   const id = container ? container.id : null
   if (id &amp;&amp; CONTAINERS.has(id)) {
+    if (recursive) {
+      for (let child of container.children)
+        removeContainer(child, true)
+    }
+
     // remove from parent
     if (container.parent)
       container.parent.removeChild(container, false, true)
@@ -1050,6 +1049,10 @@ export function replaceDOMElement (container, domElement) {
                          + &quot;DOM Element.&quot; )
     }
 
+    orphanContainerChildren(id, 0 == children.length)
+
+    // free DOM element of dux data
+    rmdux(previousDomElement)
     container[$domElement] = domElement
     container[$children].clear()
 
@@ -1058,12 +1061,11 @@ export function replaceDOMElement (container, domElement) {
 
     container.update(null, false)
 
-    if (id != container[$uid])
-      orphanContainer(id)
-
     const stack = sources.slice()
     for (let childElement of [ ...domElement.children ])
       restoreChildElementSource(childElement, stack)
+
+    container[$domElement].innerContents = domElement.innerHTML
 
     realignContainerTree(container, true, true)
 

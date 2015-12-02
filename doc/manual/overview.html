@@ -37,11 +37,12 @@
     <ul class="manual-toc">
       
     <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#introduction" data-ice="link">Introduction</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#hello-world" data-ice="link">Hello World</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#containers" data-ice="link">Containers</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#reducers" data-ice="link">Reducers</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#templating" data-ice="link">Templating</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#pipes-and-composition" data-ice="link">Pipes and Composition</a></li>
-<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#subset-containers" data-ice="link">Subset Containers</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#child-containers" data-ice="link">Child containers</a></li>
 </ul>
   </div>
 <div data-ice="manual" data-toc-name="installation">
@@ -118,10 +119,22 @@ easy for you. DOM updates are made possible with
 <a href="https://github.com/littlstar/starplate">starplate</a> and it&apos;s internal
 patching algorithm built on
 <a href="https://github.com/google/incremental-dom">IncrementalDOM</a>.</p>
+<h2 id="hello-world">Hello World</h2>
+<p>Define DOM and template source body.</p>
+<pre><code class="lang-html"><code class="source-code prettyprint">&lt;div&gt;&lt;span&gt; ${ value } &lt;/span&gt;&lt;/div&gt;</code>
+</code></pre>
+<p>Create container from DOM element and update state.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { createcontainer } from &apos;stardux&apos;
+const container = createContainer(document.querySelector(&apos;div&apos;))
+container.update({ value: &apos;hello, world&apos; })</code>
+</code></pre>
+<p>Realize patches made to wrapped DOM element.</p>
+<pre><code class="lang-html"><code class="source-code prettyprint">&lt;div&gt;&lt;span&gt; hello, world &lt;/span&gt;&lt;/div&gt;</code>
+</code></pre>
 <h2 id="containers">Containers</h2>
 <p>Containers are created with the <code>createContainer()</code> function.</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer } from &apos;stardux&apos;;
-const container = createContainer(domElement);</code>
+<pre><code class="lang-js"><code class="source-code prettyprint">import { createContainer } from &apos;stardux&apos;
+const container = createContainer(domElement)</code>
 </code></pre>
 <h2 id="reducers">Reducers</h2>
 <p>Containers apply reducers when an action is dispatched. When a container
@@ -132,12 +145,12 @@ provided by <code>redux</code>. User reducers given to <code>createContainer()</
 <code>Container</code> constructor are applied after.</p>
 <h2 id="templating">Templating</h2>
 <p>Containers provide a way to express state to the DOM. A containers DOM
-can be expressed with ES6 template notation and thefore make it easy to
+can be expressed with ES6 template notation making it easy to
 create resuable dynamic views.</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">const container = createContainer(domElement);
-domElement.innerHTML = &apos;Hello ${name}&apos;;
-container.update({ name: &apos;kinkajou&apos; });
-console.log(domElement.innerHTML); // &quot;Hello kinkajou&quot;</code>
+<pre><code class="lang-js"><code class="source-code prettyprint">const container = createContainer(domElement)
+domElement.innerHTML = &apos;Hello ${name}&apos;
+container.update({ name: &apos;kinkajou&apos; })
+console.log(domElement.innerHTML) // &quot;Hello kinkajou&quot;</code>
 </code></pre>
 <h2 id="pipes-and-composition">Pipes and Composition</h2>
 <p>Containers can be composed into a container chain and even allow for
@@ -147,7 +160,7 @@ respectively. The <code>state</code> and <code>action</code> values given to a c
 a pipe are transformed by any middleware given to a container with the
 <code>.use()</code> method.</p>
 <p>Here 3 containers are constructed into a pipeline <code>A -&gt; B -&gt; C</code>.</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">containerA.pipe(containerB).pipe(containerC);</code>
+<pre><code class="lang-js"><code class="source-code prettyprint">containerA.pipe(containerB).pipe(containerC)</code>
 </code></pre>
 <p>When an update occurs on <code>containerA</code>, is propagated to <code>containerB</code> and
 then to <code>containerC</code>. This is effectively the samething as container
@@ -155,16 +168,16 @@ composition.</p>
 <p>Middleware has the following usage.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">container.use((state, action) =&gt; {
   // middleware here ...
-});</code>
+})</code>
 </code></pre>
-<h2 id="subset-containers">Subset Containers</h2>
+<h2 id="child-containers">Child containers</h2>
 <p>Containers can have child containers which are added and removed with
 familiar methods like <code>.appendChild()</code> and <code>.removeChild()</code>.</p>
 <p><em>Adding a child to a container.</em></p>
-<pre><code class="lang-js"><code class="source-code prettyprint">container.appendChild(child);</code>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.appendChild(child)</code>
 </code></pre>
 <p><em>Removing a child to a container.</em></p>
-<pre><code class="lang-js"><code class="source-code prettyprint">container.appendChild(child);</code>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.appendChild(child)</code>
 </code></pre>
 </div>
 </div>

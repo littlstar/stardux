@@ -18,34 +18,40 @@ as an argument.
 Consider the following example:
 
 ```js
-import { createContainer } from 'stardux';
-const domElement = document.createElement('div');
-const containerA = createContainer(); // default DOM element created
+import { createContainer } from 'stardux'
+const domElement = document.createElement('div')
+const containerA = createContainer() // default DOM element created
 
 // `containerA` claims `domElement`
-containerA.domElement = domElement;
+containerA.domElement = domElement
 ```
 
 ### Sharing DOM Elements
 
-Claiming a DOM element is trivial. However, if a DOM element belongs
-to an existing container, the container attempting to claim the DOM element
-inherits the properties of the existing container. This can be
-problematic and cause containers to become
-[orphaned](#orphaned-containers).
-
-Consider the following conflict:
+Containers cannot share DOM elements as they are share a 1:1
+relationshi. Attempting to replace a container's DOM element with another
+that is claimed [claimed](#claiming-dom-elements) will result in a
+`TypeError`.
 
 ```js
-import { createContainer } from 'stardux';
-// create containers with default DOM elements
-const containerA = createContainer();
-const containerB = createContainer();
-containerA.domElement = containerB.domElement;
+const a = createContainer()
+const b = createContainer()
+a.domElement = b.domElement // TypeError("...")
 ```
-
-`containerA` has claimed the DOM element that belongs `containerB`.
 
 ## Orphaned Containers
 
-An orphaned container 
+An orphaned container occurs when the parent of the container loses
+reference to it's DOM element due to [DOM replacement](api.md#replacedomelement).
+
+Consider the following example where child becomes orphaned:
+
+```js
+const container = createContainer()
+const child = createContainer()
+container.appendChild(child)
+container.domElement = document.createElement('div')
+```
+
+The child container is orphaned when the container's DOM element changes
+causing it lose reference to it's child containers.
