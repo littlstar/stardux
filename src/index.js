@@ -852,7 +852,7 @@ export function createContainerUid () {
  *     console.log(pair)
  *
  * @public
- * @return {Array<MapIterator>}
+ * @return {MapIterator<String, Container>}
  */
 
 export function getAllContainers () {
