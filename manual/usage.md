@@ -32,7 +32,7 @@ patching algorithm built on
 
 Containers are created with the
 [`createContainer(domElement[,initialState = null, ...reducers])`]
-(api.md#createContainer) function.
+(api.md#createcontainer) function.
 
 ```js
 import { createContainer } from 'stardux'
