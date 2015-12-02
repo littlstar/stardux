@@ -92,7 +92,7 @@ Here 3 containers are constructed into a pipeline `A -> B -> C`.
 containerA.pipe(containerB).pipe(containerC)
 ```
 
-When an update occurs on `containerA`, is propagated to `containerB` and
+When an update occurs on `containerA`, it is propagated to `containerB` and
 then to `containerC`. This is effectively the samething as
 [composition](#composition).
 
@@ -216,7 +216,7 @@ container.contains(childB) // false
 
 Containers can be nested and still act independent of each other.
 Containers can propagate updates to their child containers. This makes
-updating multiple contains who share similar data easy.
+updating multiple containers who share similar data easy.
 
 The following DOM structure yields a container with two child
 containers.
@@ -254,7 +254,8 @@ unchanged while `childA` has.
 
 Containers can be serialized into a JSON string and restored later. This
 make it possible to create container structures on the server and
-restored on the client.
+restored on the client where knowing the IDs of containers ahead of time
+is important.
 
 Consider the following JSON structure.
 
