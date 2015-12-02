@@ -1,8 +1,11 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.stardux = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (global){
 'use strict'
 
 /**
  * Module dependencies.
+ *
+ * @ignore
  */
 
 ;
@@ -24,11 +27,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Container = exports.UPDATE = undefined;
 exports.createContainer = createContainer;
+exports.makeContainer = makeContainer;
 exports.restoreContainerFromJSON = restoreContainerFromJSON;
-exports.compose = compose;
+exports.composeContainers = composeContainers;
 exports.getContainerData = getContainerData;
 exports.restoreOrphanedTree = restoreOrphanedTree;
 exports.realignContainerTree = realignContainerTree;
+exports.saveContainer = saveContainer;
+exports.fetchContainer = fetchContainer;
+exports.createContainerUid = createContainerUid;
+exports.getAllContainers = getAllContainers;
+exports.forEachContainer = forEachContainer;
+exports.traverseContainer = traverseContainer;
+exports.removeContainer = removeContainer;
+exports.clearContainers = clearContainers;
+exports.replaceDOMElement = replaceDOMElement;
 
 var _redux = require('redux');
 
@@ -77,9 +90,8 @@ function _typeof(obj) {
  */
 
 var $domElement = Symbol('Element');
-var $reducers = Symbol('reducers');
+var $middleware = Symbol('middleware');
 var $children = Symbol('children');
-var $UPDATE = Symbol('UPDATE');
 var $pipes = Symbol('pipes');
 var $model = Symbol('model');
 var $store = Symbol('store');
@@ -97,10 +109,19 @@ var $uid = Symbol('uid');
 var STARDUX_PRIVATE_ATTR = '__starduxData';
 
 /**
- * Known container map by ID
+ * Reducer action type symbols.
  *
  * @private
  * @const
+ * @type {Symbol)
+ */
+
+var $UPDATE_ACTION = Symbol('UPDATE');
+
+/**
+ * Known container map by ID
+ *
+ * @private
  * @type {Map}
  */
 
@@ -110,130 +131,367 @@ var CONTAINERS = new Map();
  * Clones an object.
  *
  * @private
- * @function
- * @name clone
- * @param {Object}
+ * @param {Object} object
  * @return {Object}
  */
 
-var clone = function clone(object) {
+function clone(object) {
   return (0, _extend2.default)(true, {}, object);
-};
+}
 
 /**
  * Detects if input is "like" an array.
  *
  * @private
- * @function
- * @name isArrayLike
  * @param {Mixed} a
  * @return {Boolean}
  */
 
-var isArrayLike = function isArrayLike(a) {
+function isArrayLike(a) {
   if ('object' != (typeof a === 'undefined' ? 'undefined' : _typeof(a))) return false;else if (null == a) return false;else return Boolean(Array.isArray(a) || null != a.length || a[0]);
-};
+}
 
 /**
  * Make stardux data object on a
  * node if not already there.
  *
  * @private
- * @function
- * @name mkdux
  * @param {Object} node
  * @param {Object} [data = {}]
  * @return {Object}
  */
 
-var mkdux = function mkdux(node) {
+function mkdux(node) {
   var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  return node[STARDUX_PRIVATE_ATTR] = node[STARDUX_PRIVATE_ATTR] || data;
-};
-
-/**
- * UPDATE event type.
- *
- * @public
- * @const
- * @type {Symbol}
- */
-
-var UPDATE = exports.UPDATE = $UPDATE;
-
-/**
- * Create a new Container instance.
- *
- * @public
- * @function
- * @name createContainer
- * @param {Element} domElement
- * @param {Object} [initialState = null]
- * @param {Function} [...reducers]
- * @return {Container}
- */
-
-exports.default = createContainer;
-function createContainer(domElement) {
-  var initialState = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-  for (var _len = arguments.length, reducers = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    reducers[_key - 2] = arguments[_key];
-  }
-
-  var container = Container.get(domElement) || new (Function.prototype.bind.apply(Container, [null].concat([domElement], reducers)))();
-  return container.update(initialState);
+  if (node instanceof Container) node = node.domElement;
+  node[STARDUX_PRIVATE_ATTR] = node[STARDUX_PRIVATE_ATTR] || data;
+  return node[STARDUX_PRIVATE_ATTR];
 }
 
 /**
- * Create or restore a Container instance
- * from a JSON object.
+ * Remove stardux data object.
  *
- * @public
- * @function
- * @name restoreContainerFromJSON
- * @param {Object} json
- * @param {Object} [initialState = null]
- * @param {Function} [...reducers]
- * @return {Container}
+ * @private
+ * @param {Object} node
  */
 
-function restoreContainerFromJSON(json) {
-  var initialState = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+function rmdux(node) {
+  if (null == node) return;
+  if (node instanceof Container) node = node.domElement;
+  delete node[STARDUX_PRIVATE_ATTR];
+}
 
-  var id = json.id;
-  var src = json.src;
-  var data = null;
-  var children = [];
-  var container = Container.get(id);
-  var domElement = null;
+/**
+ * Returns an array of known tokens
+ * in a javascript string.
+ *
+ * @private
+ * @param {String} string
+ * @return {Array}
+ */
 
-  for (var _len2 = arguments.length, reducers = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-    reducers[_key2 - 2] = arguments[_key2];
+function getTokens(string) {
+  var tokens = null;
+  try {
+    tokens = _esprima2.default.tokenize('`' + string + '`');
+  } catch (e) {
+    tokens = [];
   }
+  return tokens;
+}
 
-  if (null == container) container = new (Function.prototype.bind.apply(Container, [null].concat([null], reducers)))();
+/**
+ * Returns an object of identifiers with
+ * empty string or NO-OP function
+ * values.
+ *
+ * @private
+ * @param {Array} tokens
+ * @return {Object}
+ */
 
-  container[$uid] = id;
-  domElement = container.domElement;
-  data = mkdux(domElement);
+function getIdentifiersFromTokens(tokens) {
+  var identifiers = {};
 
-  Container.save(container);
+  /**
+   * Predicate to determine if token is an identifier.
+   *
+   * @private
+   * @param {Object} token
+   * @return {Boolean}
+   */
 
-  if (src != data.src) data.src = src;
+  var isIdentifier = function isIdentifier(token) {
+    return 'Identifier' == token.type;
+  };
 
-  if (initialState) container.update(initialState);
+  /**
+   * Mark token as a function identifier.
+   *
+   * @private
+   * @param {Object} token
+   * @param {Number} index
+   * @return {Object} token
+   */
+
+  var markFunction = function markFunction(token, index) {
+    var next = tokens[index + 1] || null;
+    token.isFunction = 'Identifier' == token.type && 'object' == (typeof next === 'undefined' ? 'undefined' : _typeof(next)) && next && 'Punctuator' == next.type && '(' == next.value ? true : false;
+    return token;
+  };
+
+  /**
+   * Mark token as a object identifier.
+   *
+   * @private
+   * @param {Object} token
+   * @param {Number} index
+   * @return {Object} token
+   */
+
+  var markObject = function markObject(token, index) {
+    var next = tokens[index + 1] || null;
+    token.isObject = 'Identifier' == token.type && 'object' == (typeof next === 'undefined' ? 'undefined' : _typeof(next)) && next && 'Punctuator' == next.type && '.' == next.value ? true : false;
+    return token;
+  };
+
+  /**
+   * Assign token value to identifierss map.
+   *
+   * @private
+   * @param {Object} map
+   * @param {Object} token
+   * @return {Object} map
+   */
+
+  var assign = function assign(map, token) {
+    var value = token.value;
+    if (token.isFunction) map[value] = function (_) {
+      return '';
+    };else if (token.isObject) map[value] = {};else map[value] = '';
+    return map;
+  };
+
+  // resolve identifierss and return map
+  return tokens.map(function (t, i) {
+    return markFunction(t, i);
+  }).map(function (t, i) {
+    return markObject(t, i);
+  }).filter(function (t) {
+    return isIdentifier(t);
+  }).reduce(function (map, t) {
+    return assign(map, t);
+  }, identifiers);
+}
+
+/**
+ * Ensures a DOM string from a given input.
+ *
+ * @private
+ * @param {String} html
+ * @return {String}
+ */
+
+function ensureDOMString() {
+  var html = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+
+  html = 'string' == typeof html ? html : String(html || '');
+  return html.trim();
+}
+
+/**
+ * Ensure DOM element.
+ *
+ * @private
+ * @param {Mixed} input
+ * @return {Element}
+ */
+
+function ensureDOMElement(input) {
+  var domElement = null;
+  var tmp = null;
+  if (input instanceof Element) {
+    return input;
+  } else if ('string' == typeof input) {
+    tmp = document.createElement('div');
+    tmp.innerHTML = input;
+    domElement = tmp.innerHTML.length ? tmp.children[0] : new _starplate.Template(input);
+  } else {
+    domElement = document.createElement('div');
+  }
+  return domElement;
+}
+
+/**
+ * Returns a template tring from a given
+ * DOM Element. If the DOM Element given is a
+ * string then it is simply returned.
+ *
+ * @public
+ * @param {Element|String} domElement
+ * @return {String}
+ */
+
+function getTemplateFromDomElement(domElement) {
+  var data = {};
+  var src = null;
+
+  if (domElement && domElement[STARDUX_PRIVATE_ATTR]) data = mkdux(domElement);
+
+  if ('string' == typeof domElement) src = domElement;else if (data.src) src = data.src;else if (domElement.children && 0 == domElement.children.length) src = ensureDOMString(domElement.textContent);else if (domElement.firstChild instanceof Text) src = ensureDOMString(domElement.innerHTML);else if (domElement instanceof Text) src = ensureDOMString(domElement.textContent);else if (domElement) src = domElement.innerHTML || domElement.textContent;
+
+  return src;
+}
+
+/**
+ * Ensures container state identifiers (tokens) derived from
+ * the DOM element source are defined on the state if not
+ * already. This is useful to prevent reference errors from
+ * being thrown when ES6 templates are evaulated in starplate's
+ * VM.
+ *
+ * @private
+ * @param {Container} container
+ * @return {Object} identifiers
+ */
+
+function ensureContainerStateIdentifiers(container) {
+  var domElement = container[$domElement];
+  var template = getTemplateFromDomElement(domElement);
+  var tokens = getTokens(template);
+  var identifiers = getIdentifiersFromTokens(tokens);
+  var update = {};
+  var state = container.state;
+  if (identifiers) {
+    for (var key in identifiers) {
+      if (undefined === state[key]) update[key] = identifiers[key];
+    }
+
+    container.define(update);
+  }
+  return identifiers || null;
+}
+
+/**
+ * Creates a root reducer for a Container
+ * instance.
+ *
+ * @private
+ * @param {Container} container
+ * @return {Function}
+ */
+
+function createRootReducer(container) {
+  return function () {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+    var action = arguments.length <= 1 || arguments[1] === undefined ? { data: {} } : arguments[1];
+
+    var identifiers = ensureContainerStateIdentifiers(container);
+    var domElement = container[$domElement];
+    var template = getTemplateFromDomElement(domElement);
+    var middleware = container[$middleware].entries();
+    var isBody = domElement == document.body;
+
+    action.data = action.data || {};
+
+    /**
+     * Loops over each middleware function
+     * providing state and action values
+     * given to use from redux.
+     *
+     * @private
+     */
+
+    void (function next() {
+      var step = middleware.next();
+      var done = step.done;
+      var reducer = step.value ? step.value[0] : null;
+      if (done) return;else if (null == reducer) next();else if (false === reducer(state, action)) return;else next();
+    })();
+
+    switch (action.type) {
+      case $UPDATE_ACTION:
+        container.define(action.data);
+        if (!isBody && identifiers) {
+          var parser = new _starplate.Parser();
+          var partial = new _starplate.Template(template);
+          var src = partial.render(container.state, container);
+          var patch = parser.createPatch(src);
+          patch(domElement);
+        }
+        break;
+    }
+
+    return (0, _extend2.default)(true, container.state, state, action.data);
+  };
+}
+
+/**
+ * Creates a pipe reducer for a Container
+ * instance.
+ *
+ * @private
+ * @param {Container} container
+ * @return {Function}
+ */
+
+function createPipeReducer(container) {
+  return function (_) {
+    var action = arguments.length <= 1 || arguments[1] === undefined ? { data: {} } : arguments[1];
+
+    var state = container.state;
+    var pipes = container[$pipes].entries();
+    reduce();
+    return container.state;
+
+    /**
+     * Loops over each pipe function
+     * providing state and action values
+     * given to use from redux.
+     *
+     * @private
+     */
+
+    function reduce() {
+      var step = pipes.next();
+      var done = step.done;
+      var pipe = step.value ? step.value[1] : null;
+      if (done) return;else if (false === pipe(state, action)) return;else return reduce();
+    }
+  };
+}
+
+/**
+ * Orphan container.
+ *
+ * @private
+ * @param {Container} container
+ * @param {Boolean} [rouge]
+ */
+
+function orphanContainerChildren(container) {
+  var rouge = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+  container = fetchContainer(container);
+
+  var children = container.children;
+
+  if (null == container) throw new TypeError("orphanContainerChildren() Expecting a container ");
 
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
 
   try {
-    for (var _iterator = json.children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    for (var _iterator = children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var child = _step.value;
 
-      children.push(restoreContainerFromJSON(child, initialState));
+      container.removeChild(child);
+      if (true === rouge) {
+        orphanContainerChildren(child, true);
+        CONTAINERS.delete(child.id);
+      }
     }
   } catch (err) {
     _didIteratorError = true;
@@ -249,18 +507,151 @@ function restoreContainerFromJSON(json) {
       }
     }
   }
+}
 
-  realignContainerTree(container);
+/**
+ * The action type dispatched by the update() method.
+ *
+ * @example <caption>Handle update actions in middleware and reducers.</caption>
+ *
+ *   // Use this value to determine what type of
+ *   // action was dispatched in a reducer or
+ *   // middleware function
+ *   (state, action) => {
+ *     if (UPDATE == action.type) {
+ *        // reducer/middleware logic here
+ *     }
+ *   }
+ *
+ * @public
+ * @const
+ * @type {Symbol}
+ */
+
+var UPDATE = exports.UPDATE = $UPDATE_ACTION;
+
+/**
+ * Create a new Container instance with optional
+ * initial state and n reducers.
+ *
+ * @example <caption>Create an anonymouse container.</caption>
+ *   const container = createContainer()
+ *
+ * @example <caption>Create a container for a DOM Element.</caption>
+ *   const container = createContainer(domElement)
+ *
+ * @example <caption>Create a container for a DOM Element with initial state.</caption>
+ *   const container = createContainer(domElement, {value: 0})
+ *
+ * @example <caption>Create a container for a DOM Element with initial state and reducers.</caption>
+ *   const container = createContainer(domElement, {value: 0}, (state = {}, action) => {
+ *     if (UPATE == action.type) {
+ *        return {
+ *          value: state.action + action.data.value
+ *        }
+ *     }
+ *   })
+ *
+ * @public
+ * @param {Element} domElement
+ * @param {?(Object)} [initialState] - Initial state object
+ * @param {...Function} [reducers]
+ * @return {Container}
+ */
+
+function createContainer(domElement) {
+  var initialState = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+  for (var _len = arguments.length, reducers = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    reducers[_key - 2] = arguments[_key];
+  }
+
+  var container = fetchContainer(domElement) || new (Function.prototype.bind.apply(Container, [null].concat([domElement], reducers)))();
+  return container.update(initialState);
+}
+
+/**
+ * Creates a or returns a new Container instance
+ * from a given DOM element.
+ *
+ * If a DOM element is already associated with
+ * a container then the container is just
+ * returned, otherwise a new one is created.
+ *
+ * @example <caption>Make a container for a DOM Element.</caption>
+ *   const container = makeContainer(document.body)
+ *
+ * @public
+ * @param {Element} domElement
+ * @return {Container}
+ */
+
+function makeContainer(domElement) {
+  var container = null;
+  if (false == domElement instanceof Element) throw new TypeError("makeContainer() expects a DOM element.");
+  container = fetchContainer(domElement) || new Container(domElement);
+  return container;
+}
+
+/**
+ * Create or restore a Container instance
+ * from a JSON object with an optional state
+ * object a reducers.
+ *
+ * Containers are created if they do not already
+ * exist internally.
+ *
+ * @example <caption>Restore or create a container from JSON.</caption>
+ *   const container = restoreContainerFromJSON(json)
+ *
+ * @example <caption>Restore or create a container from JSON with initial state.</caption>
+ *   const container = restoreContainerFromJSON(json, {value: 0})
+ *
+ * @example <caption>Restore or create a container from JSON with initial state and reducers.</caption>
+ *   const container = restoreContainerFromJSON(json, {value: 0}, ...reducers)
+ *
+ * @public
+ * @param {Object} json
+ * @param {?(Object)} [initialState] - Initial state object
+ * @param {...Function} [reducers]
+ * @return {Container}
+ */
+
+function restoreContainerFromJSON(json) {
+  var initialState = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+  var id = json.id;
+  var src = json.src;
+  var data = null;
+  var children = [];
+  var container = fetchContainer(id);
+  var domElement = null;
+
+  for (var _len2 = arguments.length, reducers = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+    reducers[_key2 - 2] = arguments[_key2];
+  }
+
+  if (null == container) container = new (Function.prototype.bind.apply(Container, [null].concat([null], reducers)))();
+
+  container[$uid] = id;
+  domElement = container.domElement;
+  data = mkdux(domElement);
+
+  saveContainer(container);
+
+  if (src != data.src) data.src = src;
+
+  if (initialState) container.update(initialState);
 
   var _iteratorNormalCompletion2 = true;
   var _didIteratorError2 = false;
   var _iteratorError2 = undefined;
 
   try {
-    for (var _iterator2 = children[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+    for (var _iterator2 = json.children[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
       var child = _step2.value;
 
-      if (false == container.contains(child)) container.appendChild(child, false);
+      children.push(restoreContainerFromJSON(child, initialState));
     }
   } catch (err) {
     _didIteratorError2 = true;
@@ -273,6 +664,33 @@ function restoreContainerFromJSON(json) {
     } finally {
       if (_didIteratorError2) {
         throw _iteratorError2;
+      }
+    }
+  }
+
+  realignContainerTree(container, true, true);
+
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
+
+  try {
+    for (var _iterator3 = children[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var child = _step3.value;
+
+      if (false == container.contains(child)) container.appendChild(child, false);
+    }
+  } catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion3 && _iterator3.return) {
+        _iterator3.return();
+      }
+    } finally {
+      if (_didIteratorError3) {
+        throw _iteratorError3;
       }
     }
   }
@@ -293,15 +711,24 @@ function restoreContainerFromJSON(json) {
  * the newly created root container. The root container, newly
  * created or restored is returned.
  *
+ * @example <caption>Compose containers together with new root.</caption>
+ *   const a = createContainer()
+ *   const b = createContainer()
+ *   const composed = composeContainers([a, b])
+ *
+ * @example <caption>Compose containers together with given root.</caption>
+ *   const a = createContainer()
+ *   const b = createContainer()
+ *   const c = createContainer()
+ *   const composed = composeContainers(a, [b, c])
+ *
  * @public
- * @function
- * @name compose
- * @param {Element|Container} root
- * @param {Element|Container|String} ...containers
+ * @param {?(Element|Container)} root
+ * @param {?(...Element|Container|String)} containers
  * @return {Container}
  */
 
-function compose(root) {
+function composeContainers(root) {
   for (var _len3 = arguments.length, containers = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
     containers[_key3 - 1] = arguments[_key3];
   }
@@ -314,37 +741,39 @@ function compose(root) {
   if (isArrayLike(root)) {
     containers = [].concat(_toConsumableArray(root)).map(createContainer);
     root = null;
+  } else {
+    // derive containers from arguments
+    if (isArrayLike(containers[0])) containers = [].concat(_toConsumableArray(containers[0]));
+    containers = [].concat(_toConsumableArray(containers)).map(createContainer);
   }
 
-  containers = [].concat(_toConsumableArray(containers)).map(createContainer);
-  composed = createContainer(root || document.createElement('div'));
-
-  // derive containers from arguments
-  if (isArrayLike(containers[0])) containers = [].concat(_toConsumableArray(containers[0]));
+  composed = createContainer(root || undefined);
 
   // create composite
   var composite = composed;
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
+  var _iteratorNormalCompletion4 = true;
+  var _didIteratorError4 = false;
+  var _iteratorError4 = undefined;
 
   try {
-    for (var _iterator3 = containers[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-      var child = _step3.value;
+    for (var _iterator4 = containers[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var child = _step4.value;
 
-      composite = composite.pipe(child);
-    } // realign root tree
+      if (false == composite.contains(child)) composite = composite.pipe(child);
+    }
+
+    // realign root tree
   } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
+    _didIteratorError4 = true;
+    _iteratorError4 = err;
   } finally {
     try {
-      if (!_iteratorNormalCompletion3 && _iterator3.return) {
-        _iterator3.return();
+      if (!_iteratorNormalCompletion4 && _iterator4.return) {
+        _iterator4.return();
       }
     } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
+      if (_didIteratorError4) {
+        throw _iteratorError4;
       }
     }
   }
@@ -354,27 +783,27 @@ function compose(root) {
   // allow consumer to unwind composition
   composed.decompose = function (_) {
     var composite = composed;
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
 
     try {
-      for (var _iterator4 = containers[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-        var child = _step4.value;
+      for (var _iterator5 = containers[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        var child = _step5.value;
 
         composite = composite.unpipe(child);
       } // remove this function
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _didIteratorError5 = true;
+      _iteratorError5 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-          _iterator4.return();
+        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+          _iterator5.return();
         }
       } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
+        if (_didIteratorError5) {
+          throw _iteratorError5;
         }
       }
     }
@@ -392,48 +821,52 @@ function compose(root) {
  * or a string representing a container ID. If data is
  * not found then null is returned.
  *
+ * @example <caption>Get container data for a container.</caption>
+ *   const data = getContainerData(container)
+ *
+ * @example <caption>Get container data for a container from a given DOM element.</caption>
+ *   const data = getContainerData(container)
+ *
+ * @example <caption>Get container data for a container from a given id.</caption>
+ *   const data = getContainerData(id)
+ *
  * @public
- * @function
- * @name getContainerData
  * @param {Container|Element|String} arg
  * @return {Object}
  */
 
 function getContainerData(arg) {
   var data = null;
-  var container = null;
   var domElement = null;
+  var container = fetchContainer(arg);
 
-  if (arg instanceof Container) {
-    domElement = arg.domElement;
-  } else if (arg instanceof Element) {
-    data = domElement[STARDUX_PRIVATE_ATTR];
-  } else if ('string' == typeof arg) {
-    container = Container.get(arg);
-    domElement = container.domElement;
-    data = domElement[STARDUX_PRIVATE_ATTR];
-  } else {
+  if (!(arg instanceof Container || arg instanceof Element || 'string' == typeof arg)) {
     throw new TypeError("Unexpected input for getContainerData. " + "Expecting an instance of a Container or Element, " + "or a string.");
   }
 
+  if (container) domElement = container.domElement;
+
+  if (domElement) data = domElement[STARDUX_PRIVATE_ATTR];
   return data ? Object.freeze(data) : null;
 }
 
 /**
  * Restores orphaned children containers
- * still attached to a container.
+ * still attached to a container. An orphan
+ * container is a container who belongs to
+ * a set of containers and it's DOM element
+ * is not attched to a DOM tree (The parent
+ * container's DOM element).
  *
  * @public
- * @function
- * @name restoreOrphanedTree
  * @param {Container|Element} container
- * @param {Boolean} [recursive = false]
+ * @param {Boolean} [recursive]
  */
 
 function restoreOrphanedTree(container) {
   var recursive = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-  if (container instanceof Element) container = Container.get(container);
+  if (container instanceof Element) container = fetchContainer(container);
 
   if (null == container) return;
 
@@ -445,25 +878,24 @@ function restoreOrphanedTree(container) {
   for (var _i = 0; _i < _arr.length; _i++) {
     var child = _arr[_i];
     var childDomElement = child.domElement;
-    var parentElement = childDomElement.parentElement;
+
+    if (false == domElement.contains(childDomElement)) domElement.appendChild(childDomElement);
 
     if (recursive) restoreOrphanedTree(child, true);
-
-    if (null == parentElement) continue;
-
-    if (domElement.contains(childDomElement)) domElement.appendChild(childDomElement);
   }
 }
 
 /**
- * Realign container DOM tree.
+ * Realign container DOM tree by removing containers
+ * not found in container DOM tree. If recursive is set to
+ * true then realignment is applied to all subsequent child
+ * containers. If forceOrphanRestoration is set to true then
+ * orphan containers are restored.
  *
  * @public
- * @function
- * @name realignContainerTree
- * @param {Container}
- * @param {Boolean} [recursive = false]
- * @param {Boolean} [forceOrphanRestoration = false]
+ * @param {Container} container
+ * @param {Boolean} [recursive]
+ * @param {Boolean} [forceOrphanRestoration]
  */
 
 function realignContainerTree(container) {
@@ -475,23 +907,382 @@ function realignContainerTree(container) {
 
   if (null == domElement.children) return;
 
-  if (true === forceOrphanRestoration) restoreOrphanedTree(container, recursive);
+  var delta = [].concat(_toConsumableArray(children)).length - domElement.children.length;
 
-  // clear existing
-  children.clear();
+  if (delta > 0 || true === forceOrphanRestoration) restoreOrphanedTree(container, recursive);
+
+  // purge child containers existing in tree where
+  // the DOM element is not a child of the container
+  // DOM element.
+
+  var _arr2 = [].concat(_toConsumableArray(children));
+
+  for (var _i2 = 0; _i2 < _arr2.length; _i2++) {
+    var child = _arr2[_i2];
+    var childElement = child.domElement;
+    if (false == domElement.contains(childElement)) children.delete(child);
+  }
 
   // traverse children
 
-  var _arr2 = [].concat(_toConsumableArray(domElement.children));
+  var _arr3 = [].concat(_toConsumableArray(domElement.children));
 
-  for (var _i2 = 0; _i2 < _arr2.length; _i2++) {
-    var childElement = _arr2[_i2];
+  for (var _i3 = 0; _i3 < _arr3.length; _i3++) {
+    var childElement = _arr3[_i3];
     var data = childElement[STARDUX_PRIVATE_ATTR];
-    var child = 'object' == (typeof data === 'undefined' ? 'undefined' : _typeof(data)) ? Container.get(data.id) : null;
+    var child = 'object' == (typeof data === 'undefined' ? 'undefined' : _typeof(data)) ? fetchContainer(data.id) : null;
+
+    // skip DOM elements which are not claimed
+    // by any existing containers
     if (null == child) continue;
-    if (false == children.has(child)) children.add(child);
+
+    children.add(child);
+
+    // recurse child containers
     if (true === recursive) realignContainerTree(child, true, forceOrphanRestoration);
   }
+}
+
+/**
+ * Save a container to the known containers map. A
+ * DOM element may be passed if it has been claimed by
+ * a Container instance.
+ *
+ * @example <caption>Save a container</caption>
+ *   saveContainer(container)
+ *
+ * @example <caption>Save a container by DOM element</caption>
+ *   saveContainer(domElement)
+ *
+ * @public
+ * @param {(Container|Element)} container
+ * @return {Boolean}
+ */
+
+function saveContainer(container) {
+  container = fetchContainer(container) || container;
+  if (container && container.id && !CONTAINERS.has(container.id)) {
+    CONTAINERS.set(container.id, container);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Fetch a saved container by container ID,
+ * DOM element, or by a container instance.
+ *
+ * @example <caption>Fetch container by id.</caption>
+ *   const container = fetchContainer(id)
+ *
+ * @example <caption>Fetch container by DOM element.</caption>
+ *   const container = fetchContainer(domElement)
+ *
+ * @example <caption>Fetch container by object with id.</caption>
+ *   const container = fetchContainer({id: id})
+ *
+ * @public
+ * @param {(String|Element|Object)} arg
+ * @param {String} [arg.id] - Container ID
+ * @return {class Container}
+ */
+
+function fetchContainer(arg) {
+  var id = arg && arg.id ? arg.id : arg && arg[STARDUX_PRIVATE_ATTR] ? arg[STARDUX_PRIVATE_ATTR].id : arg;
+  return id ? CONTAINERS.get(id) : null;
+}
+
+/**
+ * Generates a unique hex ID for Container instances.
+ *
+ * @example <caption>Create a unique container ID</caption>
+ *   const id = createContainerUid()
+ *
+ * @public
+ * @return {String}
+ */
+
+function createContainerUid() {
+  return Math.random().toString('16').slice(1);
+}
+
+/**
+ * Returns an interator for all containers.
+ *
+ * @example <caption>Get an iterator for all containers.</caption>
+ *   const it = getAllContainers()
+ *   for (let pair of [ ...it ])
+ *     console.log(pair)
+ *
+ * @public
+ * @return {Array<MapIterator>}
+ */
+
+function getAllContainers() {
+  return CONTAINERS.entries();
+}
+
+/**
+ * Execute a function for each container.
+ *
+ * @example
+ *   forEachContainer(container => {
+ *     console.log(container)
+ *   })
+ *
+ * @public
+ * @param {Function} fn
+ * @param {Object} [scope]
+ */
+
+function forEachContainer(fn) {
+  var scope = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+  var containers = getAllContainers();
+  fn = 'function' == typeof fn ? fn : function (_) {
+    return void 0;
+  };
+  var _iteratorNormalCompletion6 = true;
+  var _didIteratorError6 = false;
+  var _iteratorError6 = undefined;
+
+  try {
+    for (var _iterator6 = containers[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      var kv = _step6.value;
+
+      fn.call(scope || global, kv[1], containers);
+    }
+  } catch (err) {
+    _didIteratorError6 = true;
+    _iteratorError6 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion6 && _iterator6.return) {
+        _iterator6.return();
+      }
+    } finally {
+      if (_didIteratorError6) {
+        throw _iteratorError6;
+      }
+    }
+  }
+}
+
+/**
+ * Traverse a container's tree recursively.
+ *
+ * @example
+ *   traverseContainer(container, child => {
+ *     console.log(child)
+ *   })
+ *
+ * @public
+ * @param {Container} container
+ * @param {Function} fn
+ * @param {Object} [scope]
+ */
+
+function traverseContainer(container, fn, scope) {
+  var children = container.children;
+
+  var _arr4 = [].concat(_toConsumableArray(children));
+
+  for (var _i4 = 0; _i4 < _arr4.length; _i4++) {
+    var child = _arr4[_i4];
+    fn.call(scope || global, child, children);
+    traverseContainer(child, fn, scope);
+  }
+}
+
+/**
+ * Removes a container from the internal tree.
+ * The container is also removed from its parent
+ * if it is attched to one. A string ID, DOM element,
+ * or Container may be used as an argument.
+ *
+ * @example <caption>Remove container by id.</caption>
+ *   removeContainer(id)
+ *
+ * @example <caption>Remove container by DOM element.</caption>
+ *   removeContainer(domElement)
+ *
+ * @example <caption>Remove container by object with id.</caption>
+ *   removeContainer({id: id})
+ *
+ * @public
+ * @param {(String|Container|Element)} arg
+ * @param {Boolean} [recursive]
+ * @return {Boolean}
+ */
+
+function removeContainer(arg) {
+  var recursive = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+  var container = fetchContainer(arg);
+  var id = container ? container.id : null;
+  if (id && CONTAINERS.has(id)) {
+    if (recursive) {
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
+
+      try {
+        for (var _iterator7 = container.children[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var child = _step7.value;
+
+          removeContainer(child, true);
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
+    }
+
+    // remove from parent
+    if (container.parent) container.parent.removeChild(container, false, true);
+
+    // remove stardux data
+    rmdux(container.domElement);
+
+    // remove from tree
+    CONTAINERS.delete(id);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Clears all saved containers. This will call
+ * removeContainer for every saved container.
+ *
+ * @public
+ * @return {undefined}
+ */
+
+function clearContainers() {
+  // remove stardux data for each container
+  forEachContainer(function (container) {
+    return removeContainer(container);
+  });
+
+  // sanity clear containers
+  CONTAINERS.clear();
+}
+
+/**
+ * Replace container element with another. This will remove all
+ * children containers and realign the container tree.
+ *
+ * @public
+ * @param {Container} container
+ * @param {Element} domElement
+ * @return {Container}
+ */
+
+function replaceDOMElement(container, domElement) {
+  var existingData = mkdux(domElement);
+  var data = mkdux(container.domElement);
+  if (domElement && domElement != container.domElement) {
+    (function () {
+      var storeChildSource = function storeChildSource(node) {
+        var data = mkdux(node);
+        sources.push(data.src || node.innerHTML);
+
+        var _arr6 = [].concat(_toConsumableArray(node.children));
+
+        for (var _i6 = 0; _i6 < _arr6.length; _i6++) {
+          var child = _arr6[_i6];
+          storeChildSource(child);
+        }
+      };
+
+      var restoreChildElementSource = function restoreChildElementSource(node, stack) {
+        var parser = new _starplate.Parser();
+        var source = stack.shift();
+        var data = (0, _extend2.default)(mkdux(node), { src: source });
+        var patch = source ? parser.createPatch(source) : null;
+        if (patch) patch(node);
+
+        var _arr7 = [].concat(_toConsumableArray(node.children));
+
+        for (var _i7 = 0; _i7 < _arr7.length; _i7++) {
+          var child = _arr7[_i7];
+          restoreChildElementSource(child, stack);
+        }
+      };
+
+      mkdux(domElement, data);
+
+      var id = container.id;
+      var sources = [];
+      var childElements = [].concat(_toConsumableArray(domElement.children));
+      var parent = container.parent;
+      var children = container.children;
+      var parentElement = parent ? parent.domElement : null;
+      var previousDomElement = container.domElement;
+      var existingContainer = fetchContainer(existingData.id);
+
+      if (existingContainer) {
+        throw new TypeError("replaceDOMElement() expects an unclaimed " + "DOM Element.");
+      }
+
+      orphanContainerChildren(id, 0 == children.length);
+
+      // free DOM element of dux data
+      rmdux(previousDomElement);
+      container[$domElement] = domElement;
+      container[$children].clear();
+
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
+
+      try {
+        for (var _iterator8 = childElements[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var childElement = _step8.value;
+
+          storeChildSource(childElement);
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
+      }
+
+      container.update(null, false);
+
+      var stack = sources.slice();
+
+      var _arr5 = [].concat(_toConsumableArray(domElement.children));
+
+      for (var _i5 = 0; _i5 < _arr5.length; _i5++) {
+        var childElement = _arr5[_i5];
+        restoreChildElementSource(childElement, stack);
+      }container[$domElement].innerContents = domElement.innerHTML;
+
+      realignContainerTree(container, true, true);
+    })();
+  }
+  return container;
 }
 
 /**
@@ -502,512 +1293,23 @@ function realignContainerTree(container) {
  */
 
 var Container = exports.Container = (function () {
-  _createClass(Container, null, [{
-    key: 'createDOM',
 
-    /**
-     * Creates a DOM tree from a string.
-     *
-     * @public
-     * @static
-     * @method
-     * @name createDOM
-     * @param {String} html
-     * @return {Element}
-     */
-
-    value: function createDOM() {
-      return _domify2.default.apply(undefined, arguments);
-    }
-
-    /**
-     * Generates a unique hex ID.
-     *
-     * @public
-     * @static
-     * @method
-     * @name uid
-     * @return {String}
-     */
-
-  }, {
-    key: 'uid',
-    value: function uid() {
-      return Math.random().toString('16').slice(1);
-    }
-
-    /**
-     * Save a container to the known
-     * containers map.
-     *
-     * @public
-     * @static
-     * @method
-     * @name save
-     * @param {Container} container
-     * @return {class Container}
-     */
-
-  }, {
-    key: 'save',
-    value: function save(container) {
-      CONTAINERS.set(container.id, container);
-      return container;
-    }
-
-    /**
-     * Fetch a saved container by id.
-     *
-     * @public
-     * @static
-     * @method
-     * @name load
-     * @param {Mixed} arg
-     * @return {class Container}
-     */
-
-  }, {
-    key: 'get',
-    value: function get(arg) {
-      var id = arg && arg.id ? arg.id : arg && arg[STARDUX_PRIVATE_ATTR] ? arg[STARDUX_PRIVATE_ATTR].id : arg;
-      return id ? CONTAINERS.get(id) : null;
-    }
-
-    /**
-     * Returns an interator of all containers.
-     *
-     * @public
-     * @static
-     * @method
-     * @name all
-     * @return {Array}
-     */
-
-  }, {
-    key: 'all',
-    value: function all() {
-      return CONTAINERS.entries();
-    }
-
-    /**
-     * Run fn on each container.
-     *
-     * @public
-     * @static
-     * @method
-     * @name each
-     * @param {Function} fn
-     * @return {class Container}
-     */
-
-  }, {
-    key: 'each',
-    value: function each(fn) {
-      fn = 'function' == typeof fn ? fn : function (_) {
-        return void 0;
-      };
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
-
-      try {
-        for (var _iterator5 = Container.all()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var kv = _step5.value;
-
-          fn(kv[0], kv[1]);
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
-      }
-
-      return Container;
-    }
-
-    /**
-     * Traverse container tree.
-     *
-     * @public
-     * @static
-     * @method
-     * @name traverse
-     * @param {Function} fn
-     * @param {Array|Iterator} [set = Container.all()]
-     */
-
-  }, {
-    key: 'traverse',
-    value: (function (_traverse) {
-      function traverse(_x7) {
-        return _traverse.apply(this, arguments);
-      }
-
-      traverse.toString = function () {
-        return _traverse.toString();
-      };
-
-      return traverse;
-    })(function (fn) {
-      var set = arguments.length <= 1 || arguments[1] === undefined ? Container.all() : arguments[1];
-      var parent = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-
-      if (set) {
-        var _arr3 = [].concat(_toConsumableArray(set));
-
-        for (var _i3 = 0; _i3 < _arr3.length; _i3++) {
-          var kv = _arr3[_i3];
-          var container = kv[1];
-          var children = container.children;
-          var scope = parent || container.parent || null;
-          var id = kv[0];
-
-          fn(id, container, parent);
-
-          if (children) {
-            var _arr4 = [].concat(_toConsumableArray(children));
-
-            for (var _i4 = 0; _i4 < _arr4.length; _i4++) {
-              var child = _arr4[_i4];
-              traverse(fn, child.chiildren, child);
-            }
-          }
-        }
-      }
-    })
-
-    /**
-     * Remove a container by id or the
-     * instance itself.
-     *
-     * @public
-     * @static
-     * @method
-     * @name remove
-     * @param {String|Container} arg
-     * @return {undefined}
-     */
-
-  }, {
-    key: 'remove',
-    value: function remove(arg) {
-      var id = arg instanceof Container ? arg.id : arg;
-      CONTAINERS.delete(id);
-    }
-
-    /**
-     * Replace container with another
-     *
-     * @public
-     * @static
-     * @method
-     * @name replace
-     * @param {String|Container} existing
-     * @param {String|Container} replacement
-     */
-
-  }, {
-    key: 'replace',
-    value: function replace(existing, replacement) {
-      var deriveID = function deriveID(c) {
-        return 'string' == typeof c ? c : c.id || '';
-      };
-      var existingID = deriveID(existing);
-      var replacementID = deriveID(replacement);
-      replacement = replacement instanceof Container ? replacement : Container.get(replacement);
-      if (replacement) {
-        CONTAINERS.set(existingID, replacement);
-        return replacement;
-      }
-      return null;
-    }
-
-    /**
-     * Clears all saved containers.
-     *
-     * @public
-     * @static
-     * @method
-     * @name clear
-     * @return {undefined}
-     */
-
-  }, {
-    key: 'clear',
-    value: function clear() {
-      CONTAINERS.clear();
-    }
-
-    /**
-     * Returns an array of known tokens
-     * in a javascript string.
-     *
-     * @public
-     * @static
-     * @method
-     * @name getTokens
-     * @param {String} string
-     * @return {Array}
-     */
-
-  }, {
-    key: 'getTokens',
-    value: function getTokens(string) {
-      var tokens = null;
-      try {
-        tokens = _esprima2.default.tokenize('`' + string + '`');
-      } catch (e) {
-        tokens = [];
-      }
-      return tokens;
-    }
-
-    /**
-     * Returns an object of identifiers with
-     * empty string or NO-OP function
-     * values.
-     *
-     * @public
-     * @static
-     * @method
-     * @name getIdentifiersFromTokens
-     * @param {Array} tokens
-     * @return {Object}
-     */
-
-  }, {
-    key: 'getIdentifiersFromTokens',
-    value: function getIdentifiersFromTokens(tokens) {
-      var identifiers = {};
-
-      /**
-       * Predicate to determine if token is an identifier.
-       *
-       * @private
-       * @function
-       * @name isIdentifier
-       * @param {Object} token
-       * @return {Boolean}
-       */
-
-      var isIdentifier = function isIdentifier(token) {
-        return 'Identifier' == token.type;
-      };
-
-      /**
-       * Mark token as a function identifier.
-       *
-       * @private
-       * @function
-       * @name markFunction
-       * @param {Object} token
-       * @param {Number} index
-       * @return {Object} token
-       */
-
-      var markFunction = function markFunction(token, index) {
-        var next = tokens[index + 1] || null;
-        token.isFunction = 'Identifier' == token.type && 'object' == (typeof next === 'undefined' ? 'undefined' : _typeof(next)) && next && 'Punctuator' == next.type && '(' == next.value ? true : false;
-        return token;
-      };
-
-      /**
-       * Mark token as a object identifier.
-       *
-       * @private
-       * @function
-       * @name markObject
-       * @param {Object} token
-       * @param {Number} index
-       * @return {Object} token
-       */
-
-      var markObject = function markObject(token, index) {
-        var next = tokens[index + 1] || null;
-        token.isObject = 'Identifier' == token.type && 'object' == (typeof next === 'undefined' ? 'undefined' : _typeof(next)) && next && 'Punctuator' == next.type && '.' == next.value ? true : false;
-        return token;
-      };
-
-      /**
-       * Assign token value to identifierss map.
-       *
-       * @private
-       * @function
-       * @name assign
-       * @param {Object} map
-       * @param {Object} token
-       * @return {Object} map
-       */
-
-      var assign = function assign(map, token) {
-        var value = token.value;
-        if (token.isFunction) map[value] = function (_) {
-          return '';
-        };else if (token.isObject) map[value] = {};else map[value] = '';
-        return map;
-      };
-
-      // resolve identifierss and return map
-      return tokens.map(function (t, i) {
-        return markFunction(t, i);
-      }).map(function (t, i) {
-        return markObject(t, i);
-      }).filter(function (t) {
-        return isIdentifier(t);
-      }).reduce(function (map, t) {
-        return assign(map, t);
-      }, identifiers);
-    }
-
-    /**
-     * Ensures a DOM string from a given input.
-     *
-     * @public
-     * @static
-     * @method
-     * @name ensureDOMString
-     * @param {String} html
-     * @return {String}
-     */
-
-  }, {
-    key: 'ensureDOMString',
-    value: function ensureDOMString() {
-      var html = arguments.length <= 0 || arguments[0] === undefined ? String() : arguments[0];
-
-      html = 'string' == typeof html ? html : String(html || '');
-      return html.trim();
-    }
-
-    /**
-     * Returns a template tring from a given
-     * DOM Element. If the DOM Element given is a
-     * string then it is simply returned.
-     *
-     * @public
-     * @static
-     * @method
-     * @name getTemplateFromDomElement
-     * @param {Element|String}
-     * @return {String}
-     */
-
-  }, {
-    key: 'getTemplateFromDomElement',
-    value: function getTemplateFromDomElement(domElement) {
-      var data = {};
-      var src = null;
-
-      if (domElement && domElement[STARDUX_PRIVATE_ATTR]) data = mkdux(domElement);
-
-      if ('string' == typeof domElement) src = domElement;else if (data.src) src = data.src;else if (domElement.children && 0 == domElement.children.length) src = Container.ensureDOMString(domElement.textContent);else if (domElement.firstChild instanceof Text) src = Container.ensureDOMString(domElement.innerHTML);else if (domElement instanceof Text) src = Container.ensureDOMString(domElement.textContent);else src = domElement.innerHTML || domElement.textContent;
-
-      return src || '';
-    }
-
-    /**
-     * Container constructor.
-     *
-     * @public
-     * @constructor
-     * @param {Element|String} domElement
-     * @param {Function} ...reducers
-     */
-
-  }]);
+  /**
+   * Container constructor.
+   *
+   * @public
+   * @constructor
+   * @param {Element|String} domElement
+   * @param {Function} ...reducers
+   */
 
   function Container() {
-    var _this = this;
-
-    for (var _len4 = arguments.length, reducers = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-      reducers[_key4 - 1] = arguments[_key4];
-    }
-
     var domElement = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
     _classCallCheck(this, Container);
 
     // ensure DOM element instance
-    if ('string' == typeof domElement) {
-      domElement = (0, _domify2.default)(domElement) || new Text(domElement);
-    } else if (null == domElement) {
-      domElement = (0, _domify2.default)('<div></div>');
-    }
-
-    var self = this;
-
-    var ensureContainerStateIdentifiers = function ensureContainerStateIdentifiers(_) {
-      var domElement = _this[$domElement];
-      var template = Container.getTemplateFromDomElement(domElement);
-      var tokens = Container.getTokens(template);
-      var identifiers = Container.getIdentifiersFromTokens(tokens);
-      var update = {};
-      var state = _this.state;
-      if (identifiers) {
-        for (var key in identifiers) {
-          if (undefined === state[key]) update[key] = identifiers[key];
-        }_this.define(update);
-      }
-      return identifiers || null;
-    };
-
-    var rootReducer = function rootReducer() {
-      var state = arguments.length <= 0 || arguments[0] === undefined ? Object.create(null) : arguments[0];
-      var action = arguments.length <= 1 || arguments[1] === undefined ? { data: {} } : arguments[1];
-
-      var identifiers = ensureContainerStateIdentifiers();
-      var domElement = _this[$domElement];
-      var template = Container.getTemplateFromDomElement(domElement);
-      var reducers = _this[$reducers].entries();
-      var isBody = domElement == document.body;
-
-      action.data = action.data || {};
-
-      void (function next() {
-        var step = reducers.next();
-        var done = step.done;
-        var reducer = step.value ? step.value[0] : null;
-        if (done) return;else if (null == reducer) next();else if (false === reducer(state, action)) return;else next();
-      })();
-
-      switch (action.type) {
-        case $UPDATE:
-          _this.define(action.data || state);
-          if (!isBody && identifiers) {
-            var parser = new _starplate.Parser();
-            var partial = new _starplate.Template(template);
-            var src = partial.render(_this.state, _this);
-            var patch = parser.createPatch(src);
-            patch(domElement);
-          }
-          break;
-      }
-
-      return (0, _extend2.default)(true, clone(state || {}), _this.state);
-    };
-
-    var pipedReducer = function pipedReducer(_) {
-      var action = arguments.length <= 1 || arguments[1] === undefined ? { data: {} } : arguments[1];
-
-      var state = _this.state;
-      var pipes = _this[$pipes].entries();
-      void (function next() {
-        var step = pipes.next();
-        var done = step.done;
-        var pipe = step.value ? step.value[1] : null;
-        if (done) return;else if (null == pipe) next();else if (false === pipe(state, action)) return;else next();
-      })();
-      return state;
-    };
+    domElement = ensureDOMElement(domElement);
 
     /**
      * Container UID
@@ -1016,7 +1318,7 @@ var Container = exports.Container = (function () {
      * @type {String}
      */
 
-    this[$uid] = Container.uid();
+    this[$uid] = createContainerUid();
 
     /**
      * Instance root DOM Element.
@@ -1028,13 +1330,13 @@ var Container = exports.Container = (function () {
     this[$domElement] = domElement;
 
     /**
-     * Reducers set.
+     * Middleware set.
      *
      * @private
      * @type {Set}
      */
 
-    this[$reducers] = new Set();
+    this[$middleware] = new Set();
 
     /**
      * Known container pipes.
@@ -1052,7 +1354,7 @@ var Container = exports.Container = (function () {
      * @type {Object}
      */
 
-    this[$model] = Object.create(null);
+    this[$model] = {};
 
     /**
      * Child containers.
@@ -1070,21 +1372,57 @@ var Container = exports.Container = (function () {
      * @type {Object}
      */
 
-    this[$store] = (0, _redux.createStore)((0, _redux.combineReducers)([rootReducer].concat(reducers, [pipedReducer])));
+    for (var _len4 = arguments.length, reducers = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+      reducers[_key4 - 1] = arguments[_key4];
+    }
 
-    this.replaceDOMElement(domElement);
-    ensureContainerStateIdentifiers();
-    Container.save(this);
+    this[$store] = (0, _redux.createStore)((0, _redux.combineReducers)([
+    // The root reducer handles container state updates
+    // and propagates them to the internal DOM element
+    // via starplate templates. The DOM tree is patched,
+    // not redrawn. Middleware consumption is also applied
+    // here. The state and action objects provided by redux
+    // may be modified.
+    createRootReducer(this)].concat(reducers, [
+
+    // Piped reducers are applied when composition occurs between
+    // two containers. They are achievd with the pipe() method. All
+    // dispatched actions are propagated to the piped container via
+    // this reducer. They actually don't reduce state, but simply pass
+    // it on. When an update action occurs via an update() on a container
+    // all containers it has been piped to will effectively have their
+    // update() methods called with the provided data arguments. Please
+    // note that any middleware applied to parent of a pipe chain will
+    // affect the input of the child of a pipe chain.
+    createPipeReducer(this)])));
+
+    // Replace DOM element with itself effectively
+    // restoring orphaned or lost stardux data.
+    replaceDOMElement(this, domElement);
+
+    // ensure container state identifers found in
+    // DOM element source is predefined on the internal
+    // state object.
+    ensureContainerStateIdentifiers(this);
+
+    // Save this container to the internal container map
+    saveContainer(this);
+
+    // Realign parent tree recursively if it exists and restore
+    // orphaned child containers. This will cause all
+    // child containers to realign themselves recursively.
+    if (this.parent) realignContainerTree(this.parent, true, true);
+    // Realign container and all orphaned child containers if
+    // found in the tree. This will cause child containers to
+    // realign themselves.
+    else realignContainerTree(this, true, true);
   }
 
   /**
-   * Getter to retrieve state from internal
-   * redux store.
+   * Copy of the internal state object.
    *
    * @public
-   * @getter
-   * @name state
-   * @return {Object}
+   * @type {Object}
    */
 
   _createClass(Container, [{
@@ -1093,9 +1431,10 @@ var Container = exports.Container = (function () {
     /**
      * Extend view model.
      *
+     * @example <caption>Extend current state model.</caption>
+     *   container.define({value: 0})
+     *
      * @public
-     * @method
-     * @name define
      * @param {Object} model
      * @return {Container}
      */
@@ -1106,289 +1445,23 @@ var Container = exports.Container = (function () {
     }
 
     /**
-     * Getter to return an array
-     * of child containers
+     * Consume reducer middleware.
+     *
+     * @example <caption>Install reducer middleware plugin.</caption>
+     *   container.use((state = {}, action) => { ... })
      *
      * @public
-     * @methdo
-     * @name children
-     * @return {Array}
-     */
-
-  }, {
-    key: 'children',
-    value: function children() {
-      return [].concat(_toConsumableArray(this[$children].entries())).map(function (kv) {
-        return kv[0];
-      }).filter(function (child) {
-        return child instanceof Container;
-      });
-    }
-
-    /**
-     * Consume a reducer.
-     *
-     * @public
-     * @method
-     * @name use
-     * @param {Function} ...reducers
+     * @param {...Function} plugins
      * @return {Container}
      */
 
   }, {
     key: 'use',
     value: function use() {
-      var reducers = this[$reducers];
+      var middleware = this[$middleware];
 
-      for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
-      }
-
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
-
-      try {
-        for (var _iterator6 = args[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var reducer = _step6.value;
-
-          reducers.add(reducer);
-        }
-      } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
-          }
-        } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
-          }
-        }
-      }
-
-      return this;
-    }
-
-    /**
-     * Updates container
-     *
-     * @public
-     * @method
-     * @name update
-     * @param {Object} [data = {}]
-     * @param {Boolean} [propagate = true]
-     * @return {Container}
-     */
-
-  }, {
-    key: 'update',
-    value: function update(data) {
-      var propagate = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
-
-      var domElement = this.domElement;
-      var template = Container.getTemplateFromDomElement(domElement);
-
-      // init/update DOM data
-      (0, _extend2.default)(mkdux(domElement), { id: this[$uid] });
-      if (template) {
-        (0, _extend2.default)(mkdux(domElement), {
-          src: Container.getTemplateFromDomElement(domElement)
-        });
-      }
-
-      // pre alignment
-      realignContainerTree(this);
-
-      // update
-      this.dispatch($UPDATE, data, { propagate: propagate });
-
-      if (propagate) {
-        var _arr5 = [].concat(_toConsumableArray(this.children()));
-
-        for (var _i5 = 0; _i5 < _arr5.length; _i5++) {
-          var child = _arr5[_i5];
-          child.update(data);
-        }
-      } // post alignment
-      realignContainerTree(this);
-      return this;
-    }
-
-    /**
-     * Render container to a DOM element.
-     *
-     * @public
-     * @method
-     * @name render
-     * @param {Element} domElement
-     * @return {Container}
-     */
-
-  }, {
-    key: 'render',
-    value: function render(domElement) {
-      if (!domElement) return this;
-      if (false == domElement.contains(this[$domElement])) domElement.appendChild(this[$domElement]);
-      return this;
-    }
-
-    /**
-     * Dispatch an event with type and data
-     * and optional arguments.
-     *
-     * @public
-     * @method
-     * @name dispatch
-     * @param {Mixed} type
-     * @param {Object} [data = {}]
-     * @param {Object} [args = {}]
-     * @return {Container}
-     */
-
-  }, {
-    key: 'dispatch',
-    value: function dispatch(type) {
-      var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-      var args = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-      if (!type) throw new TypeError("Failed to dispatch event without type.");
-      var store = this[$store];
-      var payload = { type: type, data: data };
-      for (var key in args) {
-        payload[key] = args[key];
-      }store.dispatch(payload);
-      return this;
-    }
-
-    /**
-     * Replace container element with another
-     *
-     * @public
-     * @method
-     * @name replaceDOMElement
-     * @param {Element} domElement
-     * @return {Container}
-     */
-
-  }, {
-    key: 'replaceDOMElement',
-    value: function replaceDOMElement(domElement) {
-      var _this2 = this;
-
-      var data = mkdux(this.domElement);
-      if (domElement) {
-        (function () {
-          var storeChildSource = function storeChildSource(node) {
-            var data = mkdux(node);
-            sources.push(data.src || node.innerHTML);
-
-            var _arr7 = [].concat(_toConsumableArray(node.children));
-
-            for (var _i7 = 0; _i7 < _arr7.length; _i7++) {
-              var child = _arr7[_i7];
-              storeChildSource(child);
-            }
-          };
-
-          var restoreChildElementSource = function restoreChildElementSource(node, stack) {
-            var parser = new _starplate.Parser();
-            var source = stack.shift();
-            var data = (0, _extend2.default)(mkdux(node), { src: source });
-            var patch = source ? parser.createPatch(source) : null;
-            if (patch) patch(node);
-
-            var _arr8 = [].concat(_toConsumableArray(node.children));
-
-            for (var _i8 = 0; _i8 < _arr8.length; _i8++) {
-              var child = _arr8[_i8];
-              restoreChildElementSource(child, stack);
-            }
-          };
-
-          mkdux(domElement[STARDUX_PRIVATE_ATTR], data);
-          _this2[$domElement] = domElement;
-          var sources = [];
-          var childElements = [].concat(_toConsumableArray(domElement.children));
-
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
-
-          try {
-            for (var _iterator7 = childElements[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-              var childElement = _step7.value;
-
-              storeChildSource(childElement);
-            }
-          } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
-              }
-            } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
-              }
-            }
-          }
-
-          _this2.update(null, false);
-
-          var stack = sources.slice();
-
-          var _arr6 = [].concat(_toConsumableArray(domElement.children));
-
-          for (var _i6 = 0; _i6 < _arr6.length; _i6++) {
-            var childElement = _arr6[_i6];
-            restoreChildElementSource(childElement, stack);
-          }
-        })();
-      }
-      return this;
-    }
-
-    /**
-     * Replace child tree with new children.
-     *
-     * @public
-     * @method
-     * @name replaceChildren
-     * @param {Array} children
-     * @return {Container}
-     */
-
-  }, {
-    key: 'replaceChildren',
-    value: function replaceChildren(children) {
-      var _iteratorNormalCompletion8 = true;
-      var _didIteratorError8 = false;
-      var _iteratorError8 = undefined;
-
-      try {
-        for (var _iterator8 = this.children()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var child = _step8.value;
-
-          this.removeChild(child);
-        }
-      } catch (err) {
-        _didIteratorError8 = true;
-        _iteratorError8 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
-          }
-        } finally {
-          if (_didIteratorError8) {
-            throw _iteratorError8;
-          }
-        }
+      for (var _len5 = arguments.length, plugins = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        plugins[_key5] = arguments[_key5];
       }
 
       var _iteratorNormalCompletion9 = true;
@@ -1396,10 +1469,10 @@ var Container = exports.Container = (function () {
       var _iteratorError9 = undefined;
 
       try {
-        for (var _iterator9 = children[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-          var child = _step9.value;
+        for (var _iterator9 = plugins[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var plugin = _step9.value;
 
-          this.appendChild(child);
+          middleware.add(plugin);
         }
       } catch (err) {
         _didIteratorError9 = true;
@@ -1420,12 +1493,183 @@ var Container = exports.Container = (function () {
     }
 
     /**
+     * Updates container and all child containers.
+     *
+     * @example <caption>Update container and its children</caption>
+     *   container.update({value: 0})
+     *
+     * @example <caption>Update only container and not its children</caption>
+     *   container.update({value: 0}, false)
+     *
+     * @public
+     * @param {Object} [data] - New state data
+     * @param {Boolean} [propagate] - Propagate updates to child containers.
+     * @return {Container}
+     */
+
+  }, {
+    key: 'update',
+    value: function update(data) {
+      var propagate = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+      var domElement = this.domElement;
+      var template = getTemplateFromDomElement(domElement);
+
+      // init/update DOM data
+      (0, _extend2.default)(mkdux(domElement), { id: this[$uid] });
+      if (template) {
+        (0, _extend2.default)(mkdux(domElement), {
+          src: getTemplateFromDomElement(domElement)
+        });
+      }
+
+      // pre alignment
+      realignContainerTree(this, true, true);
+
+      // update
+      this.dispatch($UPDATE_ACTION, data, { propagate: propagate });
+
+      if (propagate) {
+        var _arr8 = [].concat(_toConsumableArray(this.children));
+
+        for (var _i8 = 0; _i8 < _arr8.length; _i8++) {
+          var child = _arr8[_i8];
+          child.update(data || this.state);
+        }
+      }
+
+      // post alignment
+      realignContainerTree(this);
+      return this;
+    }
+
+    /**
+     * Render container to a DOM element.
+     *
+     * @example <caption>Render container to a given domElement.</caption>
+     *   container.render(document.body)
+     *
+     * @public
+     * @param {Element} domElement
+     * @return {Container}
+     */
+
+  }, {
+    key: 'render',
+    value: function render(domElement) {
+      if (!domElement) return this;
+      if (false == domElement.contains(this[$domElement])) {
+        domElement.appendChild(this[$domElement]);
+        realignContainerTree(this);
+      }
+      return this;
+    }
+
+    /**
+     * Dispatch an event with type, optional data
+     * and optional arguments to the internal redux store.
+     *
+     * @example <caption>Dispatch an action with type and optional data and action argument.</caption>
+     *   container.dispatch({
+     *     type: 'MY_ACTION',
+     *     data: {value: 123},
+     *     propagate: false
+     *   })
+     *
+     * @public
+     * @param {Mixed} type
+     * @param {Object} [data]
+     * @param {Object} [args]
+     * @return {Container}
+     */
+
+  }, {
+    key: 'dispatch',
+    value: function dispatch(type) {
+      var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      var args = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+      if (!type) throw new TypeError("Failed to dispatch event without type.");
+      var store = this[$store];
+      var payload = { type: type, data: data };
+      for (var key in args) {
+        payload[key] = args[key];
+      }store.dispatch(payload);
+      return this;
+    }
+
+    /**
+     * Replace child tree with new children.
+     * @public
+     *
+     * @example
+     *  container.replaceChildren([childA, childB, createContainer()])
+     *
+     * @param {Array<Container|Element>} children
+     * @return {Container}
+     */
+
+  }, {
+    key: 'replaceChildren',
+    value: function replaceChildren(children) {
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
+
+      try {
+        for (var _iterator10 = this.children[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var child = _step10.value;
+
+          this.removeChild(child, false);
+        }
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
+
+      try {
+        for (var _iterator11 = children[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var child = _step11.value;
+
+          this.appendChild(child, false);
+        }
+      } catch (err) {
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
+          }
+        } finally {
+          if (_didIteratorError11) {
+            throw _iteratorError11;
+          }
+        }
+      }
+
+      return this.update();
+    }
+
+    /**
      * Returns the associated value of the
      * container.
      *
      * @public
-     * @method
-     * @name valueOf
      * @return {Element}
      */
 
@@ -1440,8 +1684,6 @@ var Container = exports.Container = (function () {
      * this container.
      *
      * @public
-     * @method
-     * @name toString
      * @return {String}
      */
 
@@ -1450,38 +1692,47 @@ var Container = exports.Container = (function () {
     value: function toString() {
       return this.domElement.textContent;
     }
+
+    /**
+     * Converts container to a JSON
+     * serializable object.
+     *
+     * @public
+     * @return {Object}
+     */
+
   }, {
     key: 'toJSON',
     value: function toJSON() {
       var root = {};
       void (function traverse(container, node) {
         node.id = container.id;
-        node.src = Container.getTemplateFromDomElement(container.domElement);
-        node.state = JSON.stringify(node.state);
+        node.src = getTemplateFromDomElement(container.domElement);
+        node.state = container.state || {};
         node.children = [];
-        var _iteratorNormalCompletion10 = true;
-        var _didIteratorError10 = false;
-        var _iteratorError10 = undefined;
+        var _iteratorNormalCompletion12 = true;
+        var _didIteratorError12 = false;
+        var _iteratorError12 = undefined;
 
         try {
-          for (var _iterator10 = container.children()[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-            var child = _step10.value;
+          for (var _iterator12 = container.children[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var child = _step12.value;
 
             var next = {};
             node.children.push(next);
             traverse(child, next);
           }
         } catch (err) {
-          _didIteratorError10 = true;
-          _iteratorError10 = err;
+          _didIteratorError12 = true;
+          _iteratorError12 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion10 && _iterator10.return) {
-              _iterator10.return();
+            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+              _iterator12.return();
             }
           } finally {
-            if (_didIteratorError10) {
-              throw _iteratorError10;
+            if (_didIteratorError12) {
+              throw _iteratorError12;
             }
           }
         }
@@ -1492,9 +1743,10 @@ var Container = exports.Container = (function () {
     /**
      * Pipe container updates to a given container.
      *
+     * @example
+     *  containerA.pipe(containerB)
+     *
      * @public
-     * @method
-     * @name pipe
      * @param {Container} container
      * @return {Container} container
      */
@@ -1505,15 +1757,15 @@ var Container = exports.Container = (function () {
       var pipes = this[$pipes];
       var middleware = function middleware(state, action) {
         switch (action.type) {
-          case $UPDATE:
+          case $UPDATE_ACTION:
             if (action.data) container.update(clone(action.data));
             break;
+          default:
+            container.dispatch(action.type, action.data, action);
         }
       };
 
-      if (false == pipes.has(container)) {
-        pipes.set(container, middleware);
-      }
+      if (false == pipes.has(container)) pipes.set(container, middleware);
 
       return container;
     }
@@ -1521,9 +1773,10 @@ var Container = exports.Container = (function () {
     /**
      * Unpipe container updates for a given container.
      *
+     * @example
+     *  containerA.unpipe(containerB)
+     *
      * @public
-     * @method
-     * @name unpipe
      * @param {Container} container
      * @return {Container} container
      */
@@ -1532,7 +1785,7 @@ var Container = exports.Container = (function () {
     key: 'unpipe',
     value: function unpipe(container) {
       var pipes = this[$pipes];
-      var reducers = this[$reducers];
+      var reducers = this[$middleware];
       var middleware = pipes.get(container);
       if (middleware) {
         pipes.delete(container);
@@ -1546,11 +1799,13 @@ var Container = exports.Container = (function () {
      * a string. Containers are derived from their input
      * and will cause a DOM tree to be restructured.
      *
+     * @example
+     *   container.appendChild(child)
+     *
      * @public
-     * @method
-     * @name appendChild
      * @param {Container|Element|Text|String} child
-     * @param {Boolean} [update = true]
+     * @param {Boolean} [update]
+     * @param {Boolean} [realign]
      * @return {Container}
      */
 
@@ -1558,6 +1813,7 @@ var Container = exports.Container = (function () {
     key: 'appendChild',
     value: function appendChild(child) {
       var update = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+      var realign = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
       var domElement = this.domElement;
       var childDomElement = null;
@@ -1587,7 +1843,7 @@ var Container = exports.Container = (function () {
         console.warn(e);
       }
 
-      realignContainerTree(this);
+      if (realign) realignContainerTree(this);
 
       return container;
     }
@@ -1598,11 +1854,13 @@ var Container = exports.Container = (function () {
      * are derived from their input and will cause a
      * DOM tree to be restructured.
      *
+     * @example
+     *   container.removeChild(child)
+     *
      * @public
-     * @method
-     * @name removeChild
      * @param {Container|Element} child
-     * @param {Boolean} [update = true]
+     * @param {Boolean} [update]
+     * @param {Boolean} [realign]
      * @return {Container}
      */
 
@@ -1610,24 +1868,25 @@ var Container = exports.Container = (function () {
     key: 'removeChild',
     value: function removeChild(child) {
       var update = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+      var realign = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
       var domElement = this.domElement;
       var childDomElement = null;
-      var container = null;
+      var container = fetchContainer(child);
 
-      if (child instanceof Container) {
-        container = child;
-      } else if (child instanceof Element) {
-        container = createContainer(child);
-      } else {
-        throw new TypeError("Unexpected input for removeChild. " + "Expeceting an instance of Container or Element.");
-      }
+      // bail if there is nothing to do
+      if (null == container) return this;
 
-      if (update) this.update();
+      childDomElement = container.domElement;
 
+      // remove child if it is in tree
       if (domElement.contains(childDomElement)) domElement.removeChild(childDomElement);
 
-      realignContainerTree(this);
+      // remove from container children tree
+      this[$children].delete(container);
+
+      // realign tree
+      if (realign) realignContainerTree(this);
 
       return this;
     }
@@ -1636,22 +1895,52 @@ var Container = exports.Container = (function () {
      * Predicate to determine if a container or its
      * DOM element is a child of the container.
      *
+     * @example
+     *   if (container.contains(child)) {
+     *     ...
+     *   }
+     *
      * @public
-     * @method
-     * @name contains
      * @param {Container|Element} container
+     * @param {Boolean} [recursive]
      * @return {Boolean}
      */
 
   }, {
     key: 'contains',
     value: function contains(container) {
-      realignContainerTree(this);
-      if (container instanceof Element) {
-        container = Container.get(container);
-        if (null == container) return false;
-      } else if (container instanceof Container) {
-        if (this[$children].has(container)) return true;
+      var recursive = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+      container = fetchContainer(container);
+      if (this[$children].has(container)) {
+        return true;
+      } else if (recursive) {
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
+
+        try {
+          for (var _iterator13 = this.children[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var child = _step13.value;
+
+            if (child.contains(container)) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
+            }
+          } finally {
+            if (_didIteratorError13) {
+              throw _iteratorError13;
+            }
+          }
+        }
       }
       return false;
     }
@@ -1662,12 +1951,10 @@ var Container = exports.Container = (function () {
     }
 
     /**
-     * Getter to retrieve container id.
+     * Container id.
      *
      * @public
-     * @getter
-     * @name id
-     * @return {String}
+     * @type {String}
      */
 
   }, {
@@ -1678,12 +1965,13 @@ var Container = exports.Container = (function () {
 
     /**
      * Getter to return parent container if
-     * available.
+     * available. Parent is determined with
+     * DOM traversal up the tree. A container can
+     * be considered orphaned if it doesn't have a
+     * parent DOM element.
      *
      * @public
-     * @getter
-     * @name parent
-     * @return {Container}
+     * @type {Container|null}
      */
 
   }, {
@@ -1697,17 +1985,15 @@ var Container = exports.Container = (function () {
         if (null == parentElement) break;
         parentContainerData = parentElement[STARDUX_PRIVATE_ATTR] || {};
         parentElement = parentElement.parentElement;
-      } while (!(parentElementContainer = Container.get(parentContainerData.id)));
+      } while (!(parentElementContainer = fetchContainer(parentContainerData.id)));
       return parentElementContainer;
     }
 
     /**
-     * Getter to return container DOm element.
+     * Container DOM element.
      *
      * @public
-     * @getter
-     * @name domElement
-     * @return {Element}
+     * @type {Element}
      */
 
   }, {
@@ -1715,11 +2001,76 @@ var Container = exports.Container = (function () {
     get: function get() {
       return this[$domElement];
     }
+
+    /**
+     * DOM element setter that basically just
+     * calls replaceDOMElement(domElement).
+     *
+     * @ignore
+     * @public
+     * @type {Element}
+     */
+
+    , set: function set(domElement) {
+      if (domElement instanceof Element) replaceDOMElement(this, domElement);else throw new TypeError("Cannot set property .domElement. Value must " + "be an Element.");
+      return this.domElement;
+    }
+
+    /**
+     * Internal contents of the container
+     *
+     * @public
+     * @type {String}
+     */
+
+  }, {
+    key: 'innerContents',
+    get: function get() {
+      return this.domElement.innerHTML || '';
+    }
+
+    /**
+     * Sets inner contents of DOM content.
+     * This will set the template source
+     * and update the container. If child
+     * containers exist in tree they will
+     * become orphaned. If value is null
+     * then the value becomes an empty
+     * string (''). undefined values result
+     * in the string 'undefined'.
+     *
+     * @ignore
+     * @public
+     * @type {String}
+     */
+
+    , set: function set(value) {
+      if (null === value) value = '';
+      var data = mkdux(this);
+      data.src = String(value);
+      this.update();
+    }
+
+    /**
+     * Child containers
+     *
+     * @public
+     * @return {Array<Container>}
+     */
+
+  }, {
+    key: 'children',
+    get: function get() {
+      return [].concat(_toConsumableArray(this[$children].entries())).map(function (kv) {
+        return kv[0];
+      });
+    }
   }]);
 
   return Container;
 })();
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"domify":2,"esprima":3,"extend":5,"redux":30,"starplate":38}],2:[function(require,module,exports){
 
 /**
