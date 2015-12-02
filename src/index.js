@@ -646,11 +646,16 @@ export function getContainerData (arg) {
   let domElement = null
   const container = fetchContainer(arg);
 
-  if (null == container) {
+  if (!(arg instanceof Container
+     || arg instanceof Element
+     || 'string' == typeof arg)) {
     throw new TypeError( "Unexpected input for getContainerData. "
                        + "Expecting an instance of a Container or Element, "
                        + "or a string." )
   }
+
+  if (container)
+    domElement = container.domElement;
 
   if (domElement)
     data = domElement[STARDUX_PRIVATE_ATTR]
@@ -1006,9 +1011,14 @@ export function replaceDOMElement (container, domElement) {
   if (domElement) {
     mkdux(domElement, data)
 
+    const id = container.id;
     const sources = []
     const childElements = [ ...domElement.children ]
     const existingContainer = fetchContainer(existingData.id)
+    const existingId = existingData.id;
+
+    if (existingId)
+      removeContainer(existingId);
 
     container[$uid] = existingData.id || data.id || container[$uid]
     container[$domElement] = domElement
@@ -1319,7 +1329,6 @@ export class Container {
       extend(true, this[$model], model)
     return this
   }
-
 
   /**
    * Consume reducer middleware.

@@ -18,6 +18,7 @@ Stardux API Reference
 * [restoreOrphanedTree()](#restoreorphanedtree)
 * [saveContainer()](#savecontainer)
 * [traverseContainer()](#traversecontainer)
+* [UPDATE](#update)
 * [Container](#container)
   * [Members](#container-members)
     * [.children](#containerchildren)
@@ -176,6 +177,12 @@ function traverseContainer(container: Container, fn: Function, scope: Object): u
 ```
 
 Traverse a container's tree recursively.
+
+## UPDATE
+
+```js
+UPDATE: Symbol('UPDATE')
+```
 
 ## Container
 

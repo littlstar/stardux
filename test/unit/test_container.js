@@ -123,11 +123,14 @@ describe('class Container { ... }', () => {
       assert(a != b);
     });
 
-    it("Should be immutable.", () => {
+    it("Should be immutable.", done => {
       const container = createContainer();
       const value = {foo: 'bar'};
-      container.state = value;
-      assert(undefined === container.state.foo);
+      try { container.state = value; }
+      catch (e) {
+        assert(undefined === container.state.foo);
+        done();
+      }
     });
   });
 
@@ -137,11 +140,14 @@ describe('class Container { ... }', () => {
       assert('string' == typeof container.id);
     });
 
-    it("Should be immutable.", () => {
+    it("Should be immutable.", done => {
       const container = createContainer();
       const id = container.id;
-      container.id = '123';
-      assert(container.id == id);
+      try {  container.id = '123'; }
+      catch (e) {
+        assert(container.id == id);
+        done();
+      }
     });
   });
 
