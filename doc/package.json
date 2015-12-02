@@ -1,8 +1,8 @@
 {
   "name": "stardux",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Functional DOM containers based on Starplate and Redux",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "compile": "babel -d lib/ src/",
     "prepublish": "npm run compile",
@@ -36,7 +36,7 @@
     "extend": "^3.0.0",
     "mutation-observer": "^1.0.2",
     "redux": "^3.0.4",
-    "starplate": "0.0.22"
+    "starplate": "0.0.24"
   },
   "directories": {
     "doc": "doc",
