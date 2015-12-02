@@ -45,7 +45,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-makeContainer">makeContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-realignContainerTree">realignContainerTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceDOMElement">replaceDOMElement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreContainerFromJSON">restoreContainerFromJSON</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreOrphanedTree">restoreOrphanedTree</a></span></span></li>
@@ -471,6 +470,38 @@ function createPipeReducer (container) {
 }
 
 /**
+ * Orphan container.
+ *
+ * @private
+ * @param {Container} container
+ * @param {Boolean} [rouge]
+ */
+
+function orphanContainer (container, rouge = false) {
+  const parent = container.parent
+  const children = container.children
+  container = fetchContainer(container)
+
+  if (null == container)
+    throw new TypeError( &quot;orphanContainer() Expecting a container &quot; )
+
+
+  if (parent) {
+    if (parent.contains(container))
+      parent.removeChild(container)
+    else if (parent.domElement.contains(container.domElement))
+      parent.domElement.removeChild(container.domElement)
+  }
+
+  if (true == rouge) {
+    CONTAINERS.delete(container.id)
+    if (children.length)
+      for (let child of children)
+        orphanContainer(container, true)
+  }
+}
+
+/**
  * The action type dispatched by the update() method.
  *
  * @example &lt;caption&gt;Handle update actions in middleware and reducers.&lt;/caption&gt;
@@ -496,13 +527,13 @@ export const UPDATE = $UPDATE_ACTION
  * initial state and n reducers.
  *
  * @example &lt;caption&gt;Create an anonymouse container.&lt;/caption&gt;
- *   const container = createContainer();
+ *   const container = createContainer()
  *
  * @example &lt;caption&gt;Create a container for a DOM Element.&lt;/caption&gt;
- *   const container = createContainer(domElement);
+ *   const container = createContainer(domElement)
  *
  * @example &lt;caption&gt;Create a container for a DOM Element with initial state.&lt;/caption&gt;
- *   const container = createContainer(domElement, {value: 0});
+ *   const container = createContainer(domElement, {value: 0})
  *
  * @example &lt;caption&gt;Create a container for a DOM Element with initial state and reducers.&lt;/caption&gt;
  *   const container = createContainer(domElement, {value: 0}, (state = {}, action) =&gt; {
@@ -511,7 +542,7 @@ export const UPDATE = $UPDATE_ACTION
  *          value: state.action + action.data.value
  *        }
  *     }
- *   });
+ *   })
  *
  * @public
  * @param {Element} domElement
@@ -535,7 +566,7 @@ export function createContainer (domElement, initialState = null, ...reducers) {
  * returned, otherwise a new one is created.
  *
  * @example &lt;caption&gt;Make a container for a DOM Element.&lt;/caption&gt;
- *   const container = makeContainer(document.body);
+ *   const container = makeContainer(document.body)
  *
  * @public
  * @param {Element} domElement
@@ -559,13 +590,13 @@ export function makeContainer (domElement) {
  * exist internally.
  *
  * @example &lt;caption&gt;Restore or create a container from JSON.&lt;/caption&gt;
- *   const container = restoreContainerFromJSON(json);
+ *   const container = restoreContainerFromJSON(json)
  *
  * @example &lt;caption&gt;Restore or create a container from JSON with initial state.&lt;/caption&gt;
- *   const container = restoreContainerFromJSON(json, {value: 0});
+ *   const container = restoreContainerFromJSON(json, {value: 0})
  *
  * @example &lt;caption&gt;Restore or create a container from JSON with initial state and reducers.&lt;/caption&gt;
- *   const container = restoreContainerFromJSON(json, {value: 0}, ...reducers);
+ *   const container = restoreContainerFromJSON(json, {value: 0}, ...reducers)
  *
  * @public
  * @param {Object} json
@@ -623,15 +654,15 @@ export function restoreContainerFromJSON (json, initialState = null, ...reducers
  * created or restored is returned.
  *
  * @example &lt;caption&gt;Compose containers together with new root.&lt;/caption&gt;
- *   const a = createContainer();
- *   const b = createContainer();
- *   const composed = composeContainers([a, b]);
+ *   const a = createContainer()
+ *   const b = createContainer()
+ *   const composed = composeContainers([a, b])
  *
  * @example &lt;caption&gt;Compose containers together with given root.&lt;/caption&gt;
- *   const a = createContainer();
- *   const b = createContainer();
- *   const c = createContainer();
- *   const composed = composeContainers(a, [b, c]);
+ *   const a = createContainer()
+ *   const b = createContainer()
+ *   const c = createContainer()
+ *   const composed = composeContainers(a, [b, c])
  *
  * @public
  * @param {?(Element|Container)} root
@@ -687,13 +718,13 @@ export function composeContainers (root, ...containers) {
  * not found then null is returned.
  *
  * @example &lt;caption&gt;Get container data for a container.&lt;/caption&gt;
- *   const data = getContainerData(container);
+ *   const data = getContainerData(container)
  *
  * @example &lt;caption&gt;Get container data for a container from a given DOM element.&lt;/caption&gt;
- *   const data = getContainerData(container);
+ *   const data = getContainerData(container)
  *
  * @example &lt;caption&gt;Get container data for a container from a given id.&lt;/caption&gt;
- *   const data = getContainerData(id);
+ *   const data = getContainerData(id)
  *
  * @public
  * @param {Container|Element|String} arg
@@ -703,7 +734,7 @@ export function composeContainers (root, ...containers) {
 export function getContainerData (arg) {
   let data = null
   let domElement = null
-  const container = fetchContainer(arg);
+  const container = fetchContainer(arg)
 
   if (!(arg instanceof Container
      || arg instanceof Element
@@ -714,7 +745,7 @@ export function getContainerData (arg) {
   }
 
   if (container)
-    domElement = container.domElement;
+    domElement = container.domElement
 
   if (domElement)
     data = domElement[STARDUX_PRIVATE_ATTR]
@@ -816,10 +847,10 @@ export function realignContainerTree (container,
  * a Container instance.
  *
  * @example &lt;caption&gt;Save a container&lt;/caption&gt;
- *   saveContainer(container);
+ *   saveContainer(container)
  *
  * @example &lt;caption&gt;Save a container by DOM element&lt;/caption&gt;
- *   saveContainer(domElement);
+ *   saveContainer(domElement)
  *
  * @public
  * @param {(Container|Element)} container
@@ -840,13 +871,13 @@ export function saveContainer (container) {
  * DOM element, or by a container instance.
  *
  * @example &lt;caption&gt;Fetch container by id.&lt;/caption&gt;
- *   const container = fetchContainer(id);
+ *   const container = fetchContainer(id)
  *
  * @example &lt;caption&gt;Fetch container by DOM element.&lt;/caption&gt;
- *   const container = fetchContainer(domElement);
+ *   const container = fetchContainer(domElement)
  *
  * @example &lt;caption&gt;Fetch container by object with id.&lt;/caption&gt;
- *   const container = fetchContainer({id: id});
+ *   const container = fetchContainer({id: id})
  *
  * @public
  * @param {(String|Element|Object)} arg
@@ -867,7 +898,7 @@ export function fetchContainer (arg) {
  * Generates a unique hex ID for Container instances.
  *
  * @example &lt;caption&gt;Create a unique container ID&lt;/caption&gt;
- *   const id = createContainerUid();
+ *   const id = createContainerUid()
  *
  * @public
  * @return {String}
@@ -881,9 +912,9 @@ export function createContainerUid () {
  * Returns an interator for all containers.
  *
  * @example &lt;caption&gt;Get an iterator for all containers.&lt;/caption&gt;
- *   const it = getAllContainers();
+ *   const it = getAllContainers()
  *   for (let pair of [ ...it ])
- *     console.log(pair);
+ *     console.log(pair)
  *
  * @public
  * @return {Array&lt;MapIterator&gt;}
@@ -898,8 +929,8 @@ export function getAllContainers () {
  *
  * @example
  *   forEachContainer(container =&gt; {
- *     console.log(container);
- *   });
+ *     console.log(container)
+ *   })
  *
  * @public
  * @param {Function} fn
@@ -918,8 +949,8 @@ export function forEachContainer (fn, scope = null) {
  *
  * @example
  *   traverseContainer(container, child =&gt; {
- *     console.log(child);
- *   });
+ *     console.log(child)
+ *   })
  *
  * @public
  * @param {Container} container
@@ -942,13 +973,13 @@ export function traverseContainer (container, fn, scope) {
  * or Container may be used as an argument.
  *
  * @example &lt;caption&gt;Remove container by id.&lt;/caption&gt;
- *   removeContainer(id);
+ *   removeContainer(id)
  *
  * @example &lt;caption&gt;Remove container by DOM element.&lt;/caption&gt;
- *   removeContainer(domElement);
+ *   removeContainer(domElement)
  *
  * @example &lt;caption&gt;Remove container by object with id.&lt;/caption&gt;
- *   removeContainer({id: id});
+ *   removeContainer({id: id})
  *
  * @public
  * @param {(String|Container|Element)} arg
@@ -964,78 +995,13 @@ export function removeContainer  (arg) {
       container.parent.removeChild(container, false, true)
 
     // remove stardux data
-    rmdux(container.domElement);
+    rmdux(container.domElement)
 
     // remove from tree
     CONTAINERS.delete(id)
     return true
   }
   return false
-}
-
-/**
- * Replace a container with another. Arguments may be
- * a container ID, Container instance, or DOM elements
- * claimed by a Container instance. If create is set to true
- * then the replacement container is created if it does not
- * already exist. The function will throw an Error if the
- * existing input container does not exist or is not a Container.
- *
- * @example &lt;caption&gt;Replace container by container.&lt;/caption&gt;
- *   replaceContainer(existingContainer, replaceContainer);
- *
- * @example &lt;caption&gt;Replace container by ids.&lt;/caption&gt;
- *   replaceContainer(existingId, replacementId);
- *
- * @example &lt;caption&gt;Replace container by DOM elements.&lt;/caption&gt;
- *   replaceContainer(existingDomElement, replacementDomElement);
- *
- * @example &lt;caption&gt;Replace container by object with id.&lt;/caption&gt;
- *   replaceContainer({id: existingId}, {id: replacementId});
- *
- * @public
- * @param {(String|Container|Element)} existing
- * @param {(String|Container|Element)} replacement
- * @param {Boolen} [create]
- * @return {Container}
- */
-
-export function replaceContainer (existing, replacement, create = false) {
-  let replacementContainer = null
-  let existingContainer = null
-
-  // get existing container, if the container
-  // does not exist then throw an error
-  existingContainer = fetchContainer(existing)
-  if (null == existingContainer) {
-    throw Error( &quot;replaceContainer() called for an existing  container &quot;
-               + &quot;that does not exist.&quot; )
-  }
-
-  // get replacement container if input is not
-  // a container already like an ID or DOM element.
-  if (false == (replacement instanceof Container))
-    replacementContainer = fetchContainer(replacement)
-  else
-    replacementContainer = replacement
-
-  // if the a replacement didn&apos;t exist and
-  // create was set to true then create the
-  // replacement from the replacement input
-  if (null == replacementContainer &amp;&amp; true === create)
-    replacementContainer = createContainer(replacement)
-
-  // replace existing container with the replacement container
-  // by replacing its internal DOM element and updating the
-  // internal container map
-  if (existingContainer instanceof Container &amp;&amp;
-      replacementContainer instanceof Container) {
-    removeContainer(existingContainer)
-    replaceDOMElement(existingContainer, replacementContainer.domElement)
-    saveContainer(replacementContainer)
-  }
-
-  return replacementContainer || null
 }
 
 /**
@@ -1067,21 +1033,24 @@ export function clearContainers () {
 export function replaceDOMElement (container, domElement) {
   const existingData = mkdux(domElement)
   const data = mkdux(container.domElement)
-  if (domElement) {
+  if (domElement &amp;&amp; domElement != container.domElement) {
     mkdux(domElement, data)
 
-    const id = container.id;
+    const id = container.id
     const sources = []
     const childElements = [ ...domElement.children ]
+    const parent = container.parent
+    const children  = container.children
+    const parentElement = parent ? parent.domElement : null
+    const previousDomElement = container.domElement
     const existingContainer = fetchContainer(existingData.id)
-    const existingId = existingData.id;
 
-    if (existingId)
-      removeContainer(existingId);
+    if (existingContainer) {
+      throw new TypeError( &quot;replaceDOMElement() expects an unclaimed &quot;
+                         + &quot;DOM Element.&quot; )
+    }
 
-    container[$uid] = existingData.id || data.id || container[$uid]
     container[$domElement] = domElement
-
     container[$children].clear()
 
     for (let childElement of childElements)
@@ -1089,14 +1058,14 @@ export function replaceDOMElement (container, domElement) {
 
     container.update(null, false)
 
-    if (existingContainer) {
-      container[$children] = existingContainer[$children]
-      realignContainerTree(container, true, true)
-    }
+    if (id != container[$uid])
+      orphanContainer(id)
 
     const stack = sources.slice()
     for (let childElement of [ ...domElement.children ])
       restoreChildElementSource(childElement, stack)
+
+    realignContainerTree(container, true, true)
 
     function storeChildSource (node) {
       const data = mkdux(node)
@@ -1376,7 +1345,7 @@ export class Container {
    * Extend view model.
    *
    * @example &lt;caption&gt;Extend current state model.&lt;/caption&gt;
-   *   container.define({value: 0});
+   *   container.define({value: 0})
    *
    * @public
    * @param {Object} model
@@ -1393,7 +1362,7 @@ export class Container {
    * Consume reducer middleware.
    *
    * @example &lt;caption&gt;Install reducer middleware plugin.&lt;/caption&gt;
-   *   container.use((state = {}, action) =&gt; { ... });
+   *   container.use((state = {}, action) =&gt; { ... })
    *
    * @public
    * @param {...Function} plugins
@@ -1411,10 +1380,10 @@ export class Container {
    * Updates container and all child containers.
    *
    * @example &lt;caption&gt;Update container and its children&lt;/caption&gt;
-   *   container.update({value: 0});
+   *   container.update({value: 0})
    *
    * @example &lt;caption&gt;Update only container and not its children&lt;/caption&gt;
-   *   container.update({value: 0}, false);
+   *   container.update({value: 0}, false)
    *
    * @public
    * @param {Object} [data] - New state data
@@ -1455,7 +1424,7 @@ export class Container {
    * Render container to a DOM element.
    *
    * @example &lt;caption&gt;Render container to a given domElement.&lt;/caption&gt;
-   *   container.render(document.body);
+   *   container.render(document.body)
    *
    * @public
    * @param {Element} domElement
@@ -1480,7 +1449,7 @@ export class Container {
    *     type: &apos;MY_ACTION&apos;,
    *     data: {value: 123},
    *     propagate: false
-   *   });
+   *   })
    *
    * @public
    * @param {Mixed} type
@@ -1504,7 +1473,7 @@ export class Container {
    * @public
    *
    * @example
-   *  container.replaceChildren([childA, childB, createContainer()]);
+   *  container.replaceChildren([childA, childB, createContainer()])
    *
    * @param {Array&lt;Container|Element&gt;} children
    * @return {Container}
@@ -1571,7 +1540,7 @@ export class Container {
    * Pipe container updates to a given container.
    *
    * @example
-   *  containerA.pipe(containerB);
+   *  containerA.pipe(containerB)
    *
    * @public
    * @param {Container} container
@@ -1600,7 +1569,7 @@ export class Container {
    * Unpipe container updates for a given container.
    *
    * @example
-   *  containerA.unpipe(containerB);
+   *  containerA.unpipe(containerB)
    *
    * @public
    * @param {Container} container
@@ -1624,7 +1593,7 @@ export class Container {
    * and will cause a DOM tree to be restructured.
    *
    * @example
-   *   container.appendChild(child);
+   *   container.appendChild(child)
    *
    * @public
    * @param {Container|Element|Text|String} child
@@ -1674,7 +1643,7 @@ export class Container {
    * DOM tree to be restructured.
    *
    * @example
-   *   container.removeChild(child);
+   *   container.removeChild(child)
    *
    * @public
    * @param {Container|Element} child

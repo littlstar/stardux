@@ -12,7 +12,6 @@ const replaceDOMElement = stardux.replaceDOMElement;
 const composeContainers = stardux.composeContainers;
 const traverseContainer = stardux.traverseContainer;
 const forEachContainer = stardux.forEachContainer;
-const replaceContainer = stardux.replaceContainer;
 const getContainerData = stardux.getContainerData;
 const getAllContainers = stardux.getAllContainers;
 const createContainer = stardux.createContainer;
@@ -711,35 +710,6 @@ describe('replaceDOMElement(container, domElement)', () => {
     replaceDOMElement(container, domElement);
     assert(domElement == container.domElement);
   });
-
-  it("Should restore existing child containers in new DOM tree", () => {
-    const domElement = document.createElement('div');
-    const containerA = createContainer(domElement);
-    const containerB = createContainer();
-    const childA1 = createContainer();
-    const childA2 = createContainer();
-    const childB1 = createContainer();
-    const childB2 = createContainer();
-
-    containerA.appendChild(childA1);
-    containerA.appendChild(childA2);
-
-    assert(2 == containerA.children.length);
-
-    containerB.appendChild(childB1);
-    containerB.appendChild(childB2);
-
-    assert(2 == containerB.children.length);
-
-    replaceDOMElement(containerA, containerB.domElement);
-    assert(containerA.domElement == containerB.domElement);
-
-    assert(2 == containerA.children.length);
-    assert(2 == containerB.children.length);
-
-    assert(childB1 == containerA.children[0]);
-    assert(childB2 == containerA.children[1]);
-  });
 });
 
 
@@ -825,47 +795,6 @@ describe('saveContainer(container)', () => {
     assert(true == removeContainer(container));
     assert(null == fetchContainer(container.id));
     assert(true === saveContainer(container));
-  });
-});
-
-describe('replaceContainer(existing, replacement[, create = false])', () => {
-  it("Should replace an existing container with another existing one.", () => {
-    const a = createContainer();
-    const b = createContainer();
-    assert(replaceContainer(a, b));
-    assert(1 == [ ...getAllContainers() ].length);
-    assert(a.id == b.id);
-    a.innerContents = 'hello';
-    assert(a.innerContents == b.innerContents);
-    assert(a.domElement.innerHTML == b.domElement.innerHTML);
-    assert(a.domElement == b.domElement);
-  });
-
-  it("Should replace an existing container with a an existing container when given a DOM element.", () => {
-    const a = createContainer();
-    const b = createContainer();
-    replaceContainer(a, b.domElement);
-    assert(1 == [ ...getAllContainers() ].length);
-    assert(a.id == b.id);
-    a.innerContents = 'hello';
-    assert(a.innerContents == b.innerContents);
-    assert(a.domElement.innerHTML == b.domElement.innerHTML);
-    assert(a.domElement == b.domElement);
-  });
-
-  it("Should replace an existing container with a new container when given a DOM element when [create = true]. ", () => {
-    const domElement = document.createElement('div');
-    const a = createContainer();
-    const b = replaceContainer(a, domElement, true);
-    assert(b.domElement == domElement);
-    assert(1 == [ ...getAllContainers() ].length);
-    assert(a.id == b.id);
-    a.innerContents = 'hello ${value}';
-    assert(a.innerContents == b.innerContents);
-    assert(a.domElement.innerHTML == b.domElement.innerHTML);
-    assert(a.domElement == b.domElement);
-    a.update({value: 'world'});
-    assert(a.innerContents == b.innerContents);
   });
 });
 

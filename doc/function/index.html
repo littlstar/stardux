@@ -45,7 +45,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-makeContainer">makeContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-realignContainerTree">realignContainerTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-removeContainer">removeContainer</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-replaceDOMElement">replaceDOMElement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreContainerFromJSON">restoreContainerFromJSON</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-restoreOrphanedTree">restoreOrphanedTree</a></span></span></li>
@@ -363,32 +362,6 @@ not found in container DOM tree.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="function/index.html#static-function-replaceContainer">replaceContainer</a></span></span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, create: <span>Boolen</span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Replace a container with another.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
            <span data-ice="name"><span><a href="function/index.html#static-function-replaceDOMElement">replaceDOMElement</a></span></span><span data-ice="signature">(container: <span><a href="class/src/index.js~Container.html">Container</a></span>, domElement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
         </p>
       </div>
@@ -527,11 +500,11 @@ still attached to a container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber990">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber957">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {clearContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber990">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {clearContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber957">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Clears all saved containers. This will call
@@ -579,11 +552,11 @@ removeContainer for every saved container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber583">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber615">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {composeContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber583">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {composeContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber615">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Compose a container from containers or DOM elements.
@@ -649,16 +622,16 @@ created or restored is returned.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Compose containers together with new root.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const a = createContainer();
-  const b = createContainer();
-  const composed = composeContainers([a, b]);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const a = createContainer()
+  const b = createContainer()
+  const composed = composeContainers([a, b])</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Compose containers together with given root.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const a = createContainer();
-  const b = createContainer();
-  const c = createContainer();
-  const composed = composeContainers(a, [b, c]);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const a = createContainer()
+  const b = createContainer()
+  const c = createContainer()
+  const composed = composeContainers(a, [b, c])</code></pre>
     </div>
 </div>
 
@@ -678,11 +651,11 @@ created or restored is returned.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber464">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber496">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber464">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber496">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Create a new Container instance with optional
@@ -747,15 +720,15 @@ initial state and n reducers.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Create an anonymouse container.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = createContainer();</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = createContainer()</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Create a container for a DOM Element.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = createContainer(domElement);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = createContainer(domElement)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Create a container for a DOM Element with initial state.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = createContainer(domElement, {value: 0});</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = createContainer(domElement, {value: 0})</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Create a container for a DOM Element with initial state and reducers.</div>
@@ -765,7 +738,7 @@ initial state and n reducers.</p>
          value: state.action + action.data.value
        }
     }
-  });</code></pre>
+  })</code></pre>
     </div>
 </div>
 
@@ -785,11 +758,11 @@ initial state and n reducers.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber817">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber849">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainerUid} from &apos;<span><a href="file/src/index.js.html#lineNumber817">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createContainerUid} from &apos;<span><a href="file/src/index.js.html#lineNumber849">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Generates a unique hex ID for Container instances.</p>
@@ -823,7 +796,7 @@ initial state and n reducers.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Create a unique container ID</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const id = createContainerUid();</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const id = createContainerUid()</code></pre>
     </div>
 </div>
 
@@ -843,11 +816,11 @@ initial state and n reducers.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber798">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber830">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {fetchContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber798">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {fetchContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber830">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Fetch a saved container by container ID,
@@ -905,15 +878,15 @@ DOM element, or by a container instance.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Fetch container by id.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = fetchContainer(id);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = fetchContainer(id)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Fetch container by DOM element.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = fetchContainer(domElement);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = fetchContainer(domElement)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Fetch container by object with id.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = fetchContainer({id: id});</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = fetchContainer({id: id})</code></pre>
     </div>
 </div>
 
@@ -933,11 +906,11 @@ DOM element, or by a container instance.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber850">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber882">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {forEachContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber850">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {forEachContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber882">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Execute a function for each container.</p>
@@ -984,8 +957,8 @@ DOM element, or by a container instance.</p>
   <div class="example-doc" data-ice="exampleDoc">
       
       <pre class="prettyprint source-code"><code data-ice="exampleCode">  forEachContainer(container =&gt; {
-    console.log(container);
-  });</code></pre>
+    console.log(container)
+  })</code></pre>
     </div>
 </div>
 
@@ -1005,11 +978,11 @@ DOM element, or by a container instance.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber833">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber865">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAllContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber833">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAllContainers} from &apos;<span><a href="file/src/index.js.html#lineNumber865">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns an interator for all containers.</p>
@@ -1043,9 +1016,9 @@ DOM element, or by a container instance.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Get an iterator for all containers.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const it = getAllContainers();
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const it = getAllContainers()
   for (let pair of [ ...it ])
-    console.log(pair);</code></pre>
+    console.log(pair)</code></pre>
     </div>
 </div>
 
@@ -1065,11 +1038,11 @@ DOM element, or by a container instance.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber644">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber676">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getContainerData} from &apos;<span><a href="file/src/index.js.html#lineNumber644">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getContainerData} from &apos;<span><a href="file/src/index.js.html#lineNumber676">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns immutable private stardux data for a given
@@ -1122,15 +1095,15 @@ not found then null is returned.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Get container data for a container.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const data = getContainerData(container);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const data = getContainerData(container)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Get container data for a container from a given DOM element.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const data = getContainerData(container);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const data = getContainerData(container)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Get container data for a container from a given id.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const data = getContainerData(id);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const data = getContainerData(id)</code></pre>
     </div>
 </div>
 
@@ -1150,11 +1123,11 @@ not found then null is returned.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber486">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber518">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {makeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber486">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {makeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber518">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Creates a or returns a new Container instance
@@ -1208,7 +1181,7 @@ returned, otherwise a new one is created.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Make a container for a DOM Element.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = makeContainer(document.body);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = makeContainer(document.body)</code></pre>
     </div>
 </div>
 
@@ -1228,11 +1201,11 @@ returned, otherwise a new one is created.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber712">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber744">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {realignContainerTree} from &apos;<span><a href="file/src/index.js.html#lineNumber712">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {realignContainerTree} from &apos;<span><a href="file/src/index.js.html#lineNumber744">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Realign container DOM tree by removing containers
@@ -1301,11 +1274,11 @@ orphan containers are restored.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber899">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber931">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {removeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber899">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {removeContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber931">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Removes a container from the internal tree.
@@ -1358,118 +1331,15 @@ or Container may be used as an argument.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Remove container by id.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  removeContainer(id);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  removeContainer(id)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Remove container by DOM element.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  removeContainer(domElement);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  removeContainer(domElement)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Remove container by object with id.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  removeContainer({id: id});</code></pre>
-    </div>
-</div>
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-function-replaceContainer">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">replaceContainer</span><span data-ice="signature">(existing: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, replacement: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, create: <span>Boolen</span>): <span><a href="class/src/index.js~Container.html">Container</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber944">source</a></span></span>
-    </span>
-  </h3>
-
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {replaceContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber944">stardux/src/index.js</a></span>&apos;</code></pre></div>
-  
-  
-  <div data-ice="description"><p>Replace a container with another. Arguments may be
-a container ID, Container instance, or DOM elements
-claimed by a Container instance. If create is set to true
-then the replacement container is created if it does not
-already exist. The function will throw an Error if the
-existing input container does not exist or is not a Container.</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">existing</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">replacement</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="class/src/index.js~Container.html">Container</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">create</td>
-      <td data-ice="type"><span>Boolen</span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span><a href="class/src/index.js~Container.html">Container</a></span></td>
-        
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  <div data-ice="example">
-    <h4>Example:</h4>
-    
-  <div class="example-doc" data-ice="exampleDoc">
-      <div class="example-caption" data-ice="exampleCaption">Replace container by container.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  replaceContainer(existingContainer, replaceContainer);</code></pre>
-    </div>
-<div class="example-doc" data-ice="exampleDoc">
-      <div class="example-caption" data-ice="exampleCaption">Replace container by ids.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  replaceContainer(existingId, replacementId);</code></pre>
-    </div>
-<div class="example-doc" data-ice="exampleDoc">
-      <div class="example-caption" data-ice="exampleCaption">Replace container by DOM elements.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  replaceContainer(existingDomElement, replacementDomElement);</code></pre>
-    </div>
-<div class="example-doc" data-ice="exampleDoc">
-      <div class="example-caption" data-ice="exampleCaption">Replace container by object with id.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  replaceContainer({id: existingId}, {id: replacementId});</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  removeContainer({id: id})</code></pre>
     </div>
 </div>
 
@@ -1489,11 +1359,11 @@ existing input container does not exist or is not a Container.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber1008">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber975">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {replaceDOMElement} from &apos;<span><a href="file/src/index.js.html#lineNumber1008">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {replaceDOMElement} from &apos;<span><a href="file/src/index.js.html#lineNumber975">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Replace container element with another. This will remove all
@@ -1563,11 +1433,11 @@ children containers and realign the container tree.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber518">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber550">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreContainerFromJSON} from &apos;<span><a href="file/src/index.js.html#lineNumber518">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreContainerFromJSON} from &apos;<span><a href="file/src/index.js.html#lineNumber550">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Create or restore a Container instance
@@ -1635,15 +1505,15 @@ exist internally.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Restore or create a container from JSON.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = restoreContainerFromJSON(json);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = restoreContainerFromJSON(json)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Restore or create a container from JSON with initial state.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = restoreContainerFromJSON(json, {value: 0});</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = restoreContainerFromJSON(json, {value: 0})</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Restore or create a container from JSON with initial state and reducers.</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = restoreContainerFromJSON(json, {value: 0}, ...reducers);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  const container = restoreContainerFromJSON(json, {value: 0}, ...reducers)</code></pre>
     </div>
 </div>
 
@@ -1663,11 +1533,11 @@ exist internally.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber678">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber710">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreOrphanedTree} from &apos;<span><a href="file/src/index.js.html#lineNumber678">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {restoreOrphanedTree} from &apos;<span><a href="file/src/index.js.html#lineNumber710">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Restores orphaned children containers
@@ -1731,11 +1601,11 @@ container&apos;s DOM element).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber770">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber802">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {saveContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber770">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {saveContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber802">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Save a container to the known containers map. A
@@ -1787,11 +1657,11 @@ a Container instance.</p>
     
   <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Save a container</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  saveContainer(container);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  saveContainer(container)</code></pre>
     </div>
 <div class="example-doc" data-ice="exampleDoc">
       <div class="example-caption" data-ice="exampleCaption">Save a container by DOM element</div>
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">  saveContainer(domElement);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">  saveContainer(domElement)</code></pre>
     </div>
 </div>
 
@@ -1811,11 +1681,11 @@ a Container instance.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber871">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber903">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {traverseContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber871">stardux/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {traverseContainer} from &apos;<span><a href="file/src/index.js.html#lineNumber903">stardux/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Traverse a container&apos;s tree recursively.</p>
@@ -1868,8 +1738,8 @@ a Container instance.</p>
   <div class="example-doc" data-ice="exampleDoc">
       
       <pre class="prettyprint source-code"><code data-ice="exampleCode">  traverseContainer(container, child =&gt; {
-    console.log(child);
-  });</code></pre>
+    console.log(child)
+  })</code></pre>
     </div>
 </div>
 

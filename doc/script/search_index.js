@@ -78,12 +78,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "stardux/src/index.js~replacecontainer",
-    "function/index.html#static-function-replaceContainer",
-    "<span>replaceContainer</span> <span class=\"search-result-import-path\">stardux/src/index.js</span>",
-    "function"
-  ],
-  [
     "stardux/src/index.js~replacedomelement",
     "function/index.html#static-function-replaceDOMElement",
     "<span>replaceDOMElement</span> <span class=\"search-result-import-path\">stardux/src/index.js</span>",

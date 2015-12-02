@@ -12,7 +12,6 @@ Stardux API Reference
 * [makeContainer()](#makecontainer)
 * [realignContainerTree()](#realigncontainertree)
 * [removeContainer()](#removecontainer)
-* [replaceContainer()](#replacecontainer)
 * [replaceDOMElement()](#replacedomelement)
 * [restoreContainerFromJSON()](#restorecontainerfromjson)
 * [restoreOrphanedTree()](#restoreorphanedtree)
@@ -129,14 +128,6 @@ function removeContainer(arg: String | Container | Element): Boolean
 ```
 
 Removes a container from the internal tree.
-
-## replaceContainer
-
-```js
-function replaceContainer(existing: String | Container | Element, replacement: String | Container | Element, create: Boolen): Container
-```
-
-Replace a container with another.
 
 ## replaceDOMElement
 
