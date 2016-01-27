@@ -331,48 +331,72 @@ function ensureContainerStateIdentifiers (container) {
  * @return {Function}
  */
 
-function createRootReducer (container) {
-  return (state = {}, action = {data: {}}) => {
+function createRootReducer (container, ...reducers) {
+  return (state = {}, action = {}) => {
     const identifiers = ensureContainerStateIdentifiers(container)
     const domElement = container[$domElement]
     const template = getTemplateFromDomElement(domElement)
     const middleware = container[$middleware].entries()
     const isBody = domElement == document.body
 
-    action.data = action.data || {}
+    if (action.data) {
+      state = extend(state, action.data)
+    }
 
     /**
-     * Loops over each middleware function
+     * Loops over each pipe function
      * providing state and action values
      * given to use from redux.
      *
      * @private
      */
 
-    void function next () {
-      const step = middleware.next()
+    const reducerSet = new Set([ ...reducers ])
+    const reducerEntires = reducerSet.entries()
+    reduce()
+    function reduce () {
+      const step = reducerEntires.next()
       const done = step.done
-      const reducer = step.value ? step.value[0] : null
+      const reducer = step.value ? step.value[1] : null
       if (done) return
-      else if (null == reducer) next()
-      else if (false === reducer(state, action)) return
-      else next()
-    }()
-
-    switch (action.type) {
-      case $UPDATE_ACTION:
-        container.define(action.data)
-        if (!isBody && identifiers) {
-          const parser = new Parser()
-          const partial = new Template(template)
-          const src = partial.render(container.state, container)
-          const patch = parser.createPatch(src)
-          patch(domElement)
-      }
-      break
+      const newState = reducer(state, action)
+      if (null != newState)
+        state = newState
+      reduce()
     }
 
-    return extend(true, container.state, state, action.data)
+    if ($UPDATE_ACTION == action.type) {
+
+      /**
+       * Loops over each middleware function
+       * providing state and action values
+       * given to use from redux.
+       *
+       * @private
+       */
+
+      void function next () {
+        const step = middleware.next()
+        const done = step.done
+        const reducer = step.value ? step.value[0] : null
+        if (done) return
+        else if (null == reducer) next()
+        else if (false === reducer(state, action)) return
+        else next()
+      }()
+
+      container.define(state)
+
+      if (!isBody && identifiers) {
+        const parser = new Parser()
+        const partial = new Template(template)
+        const src = partial.render(container.state, container)
+        const patch = parser.createPatch(src)
+        patch(domElement)
+      }
+    }
+
+    return state
   }
 }
 
@@ -386,11 +410,10 @@ function createRootReducer (container) {
  */
 
 function createPipeReducer (container) {
-  return (_, action = {data: {}}) => {
-    const state = container.state
+  return (state, action = {data: {}}) => {
     const pipes = container[$pipes].entries()
     reduce()
-    return container.state
+    return state
 
     /**
      * Loops over each pipe function
@@ -1115,32 +1138,35 @@ export class Container {
      * @type {Object}
      */
 
-    this[$store] = createStore(combineReducers([
-      // The root reducer handles container state updates
-      // and propagates them to the internal DOM element
-      // via starplate templates. The DOM tree is patched,
-      // not redrawn. Middleware consumption is also applied
-      // here. The state and action objects provided by redux
-      // may be modified.
-      createRootReducer(this),
+    this[$store] = createStore(
+      createRootReducer(
+        // The root reducer handles container state updates
+        // and propagates them to the internal DOM element
+        // via starplate templates. The DOM tree is patched,
+        // not redrawn. Middleware consumption is also applied
+        // here. The state and action objects provided by redux
+        // may be modified.
+        this,
 
-      // User provided reducers from the class constructor. The
-      // state and action objects may be modified from their original
-      // states when dispatched due to middleware side effects applied
-      // in  the root reducer.
-      ...reducers,
+        // User provided reducers from the class
+        // constructor. The state and action objects may be modified
+        // from their original states when dispatched due to
+        // middleware side effects applied in the root reducer.
+        ...reducers.concat(
+          // Piped reducers are applied when composition occurs between
+          // two containers. They are achievd with the pipe() method. All
+          // dispatched actions are propagated to the piped container via
+          // this reducer. They actually don't reduce state, but simply pass
+          // it on. When an update action occurs via an update() on a container
+          // all containers it has been piped to will effectively have their
+          // update() methods called with the provided data arguments. Please
+          // note that any middleware applied to parent of a pipe chain will
+          // affect the input of the child of a pipe chain.
+          createPipeReducer(this)
+        )
+      )
+    )
 
-      // Piped reducers are applied when composition occurs between
-      // two containers. They are achievd with the pipe() method. All
-      // dispatched actions are propagated to the piped container via
-      // this reducer. They actually don't reduce state, but simply pass
-      // it on. When an update action occurs via an update() on a container
-      // all containers it has been piped to will effectively have their
-      // update() methods called with the provided data arguments. Please
-      // note that any middleware applied to parent of a pipe chain will
-      // affect the input of the child of a pipe chain.
-      createPipeReducer(this),
-    ]))
 
     // Replace DOM element with itself effectively
     // restoring orphaned or lost stardux data.
@@ -1154,16 +1180,17 @@ export class Container {
     // Save this container to the internal container map
     saveContainer(this)
 
-    // Realign parent tree recursively if it exists and restore
-    // orphaned child containers. This will cause all
-    // child containers to realign themselves recursively.
-    if (this.parent)
+    if (this.parent) {
+      // Realign parent tree recursively if it exists and restore
+      // orphaned child containers. This will cause all
+      // child containers to realign themselves recursively.
       realignContainerTree(this.parent, true, true)
-    // Realign container and all orphaned child containers if
-    // found in the tree. This will cause child containers to
-    // realign themselves.
-    else
+    } else {
+      // Realign container and all orphaned child containers if
+      // found in the tree. This will cause child containers to
+      // realign themselves.
       realignContainerTree(this, true, true)
+    }
   }
 
   /**
@@ -1271,6 +1298,7 @@ export class Container {
       value = ''
     const data = mkdux(this)
     data.src = String(value)
+    ensureContainerStateIdentifiers(this)
     this.update()
   }
 

@@ -96,6 +96,19 @@ describe('class Container { ... }', () => {
       const container = new Container(null, () => (done(), true));
     });
 
+    it("Should apply a given reducer and update view from changes.", () => {
+      const domElement = document.createElement('div')
+      domElement.innerHTML = '${value}'
+      const container = new Container(domElement, (state, action) => {
+        return stardux.UPDATE == action.type ? {value: 'red'} : {}
+      }, (state, action) => {
+        return state ? {value: state.value + 'blue'} : {}
+      })
+
+      container.update()
+      assert('redblue' == container.state.value)
+    });
+
     it("Should set an accessible id", () => {
       const container = new Container();
       assert(container.id);

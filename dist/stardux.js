@@ -383,9 +383,13 @@ function ensureContainerStateIdentifiers(container) {
  */
 
 function createRootReducer(container) {
+  for (var _len = arguments.length, reducers = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    reducers[_key - 1] = arguments[_key];
+  }
+
   return function () {
     var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-    var action = arguments.length <= 1 || arguments[1] === undefined ? { data: {} } : arguments[1];
+    var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     var identifiers = ensureContainerStateIdentifiers(container);
     var domElement = container[$domElement];
@@ -393,37 +397,60 @@ function createRootReducer(container) {
     var middleware = container[$middleware].entries();
     var isBody = domElement == document.body;
 
-    action.data = action.data || {};
+    if (action.data) {
+      state = (0, _extend2.default)(state, action.data);
+    }
 
     /**
-     * Loops over each middleware function
+     * Loops over each pipe function
      * providing state and action values
      * given to use from redux.
      *
      * @private
      */
 
-    void (function next() {
-      var step = middleware.next();
+    var reducerSet = new Set([].concat(reducers));
+    var reducerEntires = reducerSet.entries();
+    reduce();
+    function reduce() {
+      var step = reducerEntires.next();
       var done = step.done;
-      var reducer = step.value ? step.value[0] : null;
-      if (done) return;else if (null == reducer) next();else if (false === reducer(state, action)) return;else next();
-    })();
-
-    switch (action.type) {
-      case $UPDATE_ACTION:
-        container.define(action.data);
-        if (!isBody && identifiers) {
-          var parser = new _starplate.Parser();
-          var partial = new _starplate.Template(template);
-          var src = partial.render(container.state, container);
-          var patch = parser.createPatch(src);
-          patch(domElement);
-        }
-        break;
+      var reducer = step.value ? step.value[1] : null;
+      if (done) return;
+      var newState = reducer(state, action);
+      if (null != newState) state = newState;
+      reduce();
     }
 
-    return (0, _extend2.default)(true, container.state, state, action.data);
+    if ($UPDATE_ACTION == action.type) {
+
+      /**
+       * Loops over each middleware function
+       * providing state and action values
+       * given to use from redux.
+       *
+       * @private
+       */
+
+      void (function next() {
+        var step = middleware.next();
+        var done = step.done;
+        var reducer = step.value ? step.value[0] : null;
+        if (done) return;else if (null == reducer) next();else if (false === reducer(state, action)) return;else next();
+      })();
+
+      container.define(state);
+
+      if (!isBody && identifiers) {
+        var parser = new _starplate.Parser();
+        var partial = new _starplate.Template(template);
+        var src = partial.render(container.state, container);
+        var patch = parser.createPatch(src);
+        patch(domElement);
+      }
+    }
+
+    return state;
   };
 }
 
@@ -437,13 +464,12 @@ function createRootReducer(container) {
  */
 
 function createPipeReducer(container) {
-  return function (_) {
+  return function (state) {
     var action = arguments.length <= 1 || arguments[1] === undefined ? { data: {} } : arguments[1];
 
-    var state = container.state;
     var pipes = container[$pipes].entries();
     reduce();
-    return container.state;
+    return state;
 
     /**
      * Loops over each pipe function
@@ -562,8 +588,8 @@ var UPDATE = exports.UPDATE = $UPDATE_ACTION;
 function createContainer(domElement) {
   var initialState = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-  for (var _len = arguments.length, reducers = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    reducers[_key - 2] = arguments[_key];
+  for (var _len2 = arguments.length, reducers = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+    reducers[_key2 - 2] = arguments[_key2];
   }
 
   var container = fetchContainer(domElement) || new (Function.prototype.bind.apply(Container, [null].concat([domElement], reducers)))();
@@ -627,8 +653,8 @@ function restoreContainerFromJSON(json) {
   var container = fetchContainer(id);
   var domElement = null;
 
-  for (var _len2 = arguments.length, reducers = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-    reducers[_key2 - 2] = arguments[_key2];
+  for (var _len3 = arguments.length, reducers = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+    reducers[_key3 - 2] = arguments[_key3];
   }
 
   if (null == container) container = new (Function.prototype.bind.apply(Container, [null].concat([null], reducers)))();
@@ -729,8 +755,8 @@ function restoreContainerFromJSON(json) {
  */
 
 function composeContainers(root) {
-  for (var _len3 = arguments.length, containers = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-    containers[_key3 - 1] = arguments[_key3];
+  for (var _len4 = arguments.length, containers = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+    containers[_key4 - 1] = arguments[_key4];
   }
 
   var composed = null;
@@ -1015,7 +1041,7 @@ function createContainerUid() {
  *     console.log(pair)
  *
  * @public
- * @return {Array<MapIterator>}
+ * @return {MapIterator<String, Container>}
  */
 
 function getAllContainers() {
@@ -1372,19 +1398,18 @@ var Container = exports.Container = (function () {
      * @type {Object}
      */
 
-    for (var _len4 = arguments.length, reducers = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-      reducers[_key4 - 1] = arguments[_key4];
+    for (var _len5 = arguments.length, reducers = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+      reducers[_key5 - 1] = arguments[_key5];
     }
 
-    this[$store] = (0, _redux.createStore)((0, _redux.combineReducers)([
+    this[$store] = (0, _redux.createStore)(createRootReducer.apply(undefined, [
     // The root reducer handles container state updates
     // and propagates them to the internal DOM element
     // via starplate templates. The DOM tree is patched,
     // not redrawn. Middleware consumption is also applied
     // here. The state and action objects provided by redux
     // may be modified.
-    createRootReducer(this)].concat(reducers, [
-
+    this].concat(_toConsumableArray(reducers.concat(
     // Piped reducers are applied when composition occurs between
     // two containers. They are achievd with the pipe() method. All
     // dispatched actions are propagated to the piped container via
@@ -1394,7 +1419,7 @@ var Container = exports.Container = (function () {
     // update() methods called with the provided data arguments. Please
     // note that any middleware applied to parent of a pipe chain will
     // affect the input of the child of a pipe chain.
-    createPipeReducer(this)])));
+    createPipeReducer(this))))));
 
     // Replace DOM element with itself effectively
     // restoring orphaned or lost stardux data.
@@ -1408,14 +1433,17 @@ var Container = exports.Container = (function () {
     // Save this container to the internal container map
     saveContainer(this);
 
-    // Realign parent tree recursively if it exists and restore
-    // orphaned child containers. This will cause all
-    // child containers to realign themselves recursively.
-    if (this.parent) realignContainerTree(this.parent, true, true);
-    // Realign container and all orphaned child containers if
-    // found in the tree. This will cause child containers to
-    // realign themselves.
-    else realignContainerTree(this, true, true);
+    if (this.parent) {
+      // Realign parent tree recursively if it exists and restore
+      // orphaned child containers. This will cause all
+      // child containers to realign themselves recursively.
+      realignContainerTree(this.parent, true, true);
+    } else {
+      // Realign container and all orphaned child containers if
+      // found in the tree. This will cause child containers to
+      // realign themselves.
+      realignContainerTree(this, true, true);
+    }
   }
 
   /**
@@ -1460,8 +1488,8 @@ var Container = exports.Container = (function () {
     value: function use() {
       var middleware = this[$middleware];
 
-      for (var _len5 = arguments.length, plugins = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        plugins[_key5] = arguments[_key5];
+      for (var _len6 = arguments.length, plugins = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+        plugins[_key6] = arguments[_key6];
       }
 
       var _iteratorNormalCompletion9 = true;
@@ -2048,6 +2076,7 @@ var Container = exports.Container = (function () {
       if (null === value) value = '';
       var data = mkdux(this);
       data.src = String(value);
+      ensureContainerStateIdentifiers(this);
       this.update();
     }
 
