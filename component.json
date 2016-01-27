@@ -2,7 +2,7 @@
   "name": "stardux",
   "repo": "littlstar/stardux",
   "description": "Functional DOM containers based on Starplate and Redux",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "src/stardux.min.js",
   "author": "Joseph Werle <werle@littlstar.com>",
   "license": "MIT",

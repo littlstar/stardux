@@ -1,6 +1,6 @@
 {
   "name": "stardux",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Functional DOM containers based on Starplate and Redux",
   "main": "lib/index.js",
   "scripts": {
